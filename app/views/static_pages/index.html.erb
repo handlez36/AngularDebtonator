@@ -1,3 +1,11 @@
+<% if current_user.present? %>
+  <div class="col-xs-3 pull-right user-box">
+    <b>User logged in:</b> <span class="user-credentials"><%= current_user.email %></span><br />
+    <b>Time logged in:</b> <span class="user-credentials"><%= current_user.current_sign_in_at %></span>
+  </div>
+<% end %>
+
+<br class="clr" />
 <br />
 <br />
 

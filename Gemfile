@@ -32,9 +32,15 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'sass', '~> 3.4.0'
-gem 'bootstrap-sass', '~> 3.3', '>= 3.3.5.1'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
+# This is what was causing so many issues, when it was set to 3.3.6
+gem 'bootstrap-sass', '3.3.5.1'
+gem 'sprockets-rails', '~> 2.0.0'
+
+gem 'devise'
+
+gem 'simple_form'
+
+gem 'factory_girl_rails', '~> 4.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

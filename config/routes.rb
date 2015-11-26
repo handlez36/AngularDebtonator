@@ -4,6 +4,9 @@ MyBudget::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   root 'static_pages#index'
+  resources :expenses, :only => [:new, :edit, :create, :index, :show]
+  resources :expenses, as: 'destroy_expense', :only => [:destroy]
+  resources :expenses, as: 'update_expense', :only => [:update]
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

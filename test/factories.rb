@@ -27,6 +27,13 @@ FactoryGirl.define do
     amt_paid 0
     how_to_pay "TBD"
     payment_status 0
+    association :user
   end
 end
 
+# FactoryGirl instance for a responsible_party
+FactoryGirl.define do
+  factory :responsible_party do
+    name "Brandon"
+  end
+end

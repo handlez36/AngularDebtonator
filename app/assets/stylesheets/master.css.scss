@@ -56,3 +56,15 @@ h2, h3 {
   font-size: 12px;
   color: #f4f6f7;
 }
+
+.expense-section {
+  margin-left: 10px;
+  padding: 10px;
+}
+
+.field_with_errors {
+  color: #ff3333;
+  background-color: #FFEEEE;
+  border-radius: 3px;
+  padding: 8px;
+}

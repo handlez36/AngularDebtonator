@@ -1,0 +1,15 @@
+<br />
+
+<div class="expense-section">
+  <div class="pull-left">
+    <%= link_to "Add expense", new_expense_path, :class => "btn btn-info" %>
+  </div>
+  <br class="clr" />
+  <br />
+  <h2>Expenses for <%=current_user.email%></h2>
+  <% current_expenses.each do |expense| %>
+  <%= expense.retailer %> -- <%= number_to_currency expense.amt_charged %>
+  <%= link_to "Edit", edit_expense_path(expense), :class => "btn btn-info" %>
+  <%= link_to "Delete", destroy_expense_path(expense), :method => :delete, :class => "btn btn-info" %>
+  <% end %>
+</div>  

@@ -1,0 +1,33 @@
+.navbar.navbar-default {
+  background-color: #557F95;
+  border-radius: 0;
+  box-shadow: 1px 3px 1px grey;
+}
+
+.navbar-default .navbar-nav li a {
+  color: white;
+}
+
+.navbar-default .navbar-nav li a.submenu {
+  color: black;
+}
+
+.navbar-default .navbar-brand {
+  color: white;
+  font-size: 24px;
+}
+
+.booyah-box {
+  -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  box-shadow: 1px 1px 2px 0 #d0d0d0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+  padding: 10px;
+}
+
+h3 {
+  padding-top: 0;
+  margin-top: 10px;
+}

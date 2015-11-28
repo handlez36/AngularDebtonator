@@ -4,10 +4,27 @@
   <h2>Create new expense</h2>
   
   <%= simple_form_for @expense do |e| %>
-    <%= e.input :date, error: "Please enter a date", input_html: { class: 'expense-date' } %><br />
-    <%= e.input :retailer, error: "Who charged you?" %><br />
-    <%= e.input :amt_charged, error: "How much they charged you was" %><br />
-  
+    <%#= e.input :date, error: "Please enter a date", input_html: { class: 'expense-date' } %><br />
+    <div class="col-xs-3">
+      <label for="date-field">Date:</label>
+      <input id="date-field" name="expense[date]" class='expense-date form-control col-lg-1' />
+    </div>
+    <br class="clr" />
+    <br />
+    <div class="col-xs-3">
+      <%= e.input :retailer, error: "Who charged you?", input_html: { class: 'form-field' } %><br />
+    </div>
+    <br class="clr" />
+    <div class="col-xs-3">
+      <label for="amt-field">* Amt Charged:</label>
+      <input id="amt-field" name='expense[amt_charged]' type='number' min=0.00, max=100.00 step=0.01 class="form-control" /><br />
+    </div>
+    <br class="clr" />
+    <div class="col-xs-3">
+      <%= e.association :card, :label_method => lambda { |card| card.card_retailer }, input_html: {class: 'form-control'} %><br />
+    </div>
+    <br class="clr"/>
+    <br />
     <%= e.submit "Create", :class => "btn btn-info" %>
   <% end %>
 </div>

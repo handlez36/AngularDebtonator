@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700);
+
 body {
   background: url('subtlenet2.png');
 }
@@ -67,4 +69,55 @@ h2, h3 {
   background-color: #FFEEEE;
   border-radius: 3px;
   padding: 8px;
+}
+
+.expense {
+  box-shadow: 1px 1px 2px 0 #d0d0d0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-family: 'PT Sans Narrow', sans-serif;
+  background-color: aliceblue;
+}
+
+.date-field {
+  font-size: 18px;
+}
+
+.retailer-field {
+  font-size: 22px;
+}
+
+.card {
+  font-weight: 200;
+  font-size: 22px;
+}
+
+.table-content {
+  text-align: center;
+  border: 1px solid black;
+  width: 100%;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.option-group {
+  padding-right: 0;
+}
+
+.option-group .edit {
+  //background-color: cyan;
+}
+
+.option-group .del {
+  //background-color: crimson;
+}
+
+.pay {
+  width: 100%;
+}
+
+.option {
+  border: 1px solid black;
 }

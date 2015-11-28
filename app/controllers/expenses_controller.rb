@@ -5,11 +5,16 @@ class ExpensesController < ApplicationController
   end
   
   def create
-    @expense = current_user.expenses.create(expense_params)
+    
+    params = expense_params
+    params[:date] = Date.strptime("10/30/2015","%m/%d/%Y")
+    @expense = current_user.expenses.create(params)
     
     if @expense.valid?
       redirect_to expenses_path
     else
+      puts "Expense params is: #{expense_params}"
+      puts "Invalid: #{current_expense.errors.messages}"
       flash[alert] = "Validation error!"
       render :new, :status => :unprocessable_entity
     end
@@ -30,7 +35,6 @@ class ExpensesController < ApplicationController
       #puts "This is a valid update"
       redirect_to expenses_path
     else
-      #puts "This is not a valid update"
       redirect_to edit_expense_path(updated_expense)
     end
   end
@@ -55,7 +59,12 @@ class ExpensesController < ApplicationController
   end
   
   def expense_params
-    params.require('expense').permit(:date, :retailer, :amt_charged, :amt_paid, :split, :how_to_pay, :payment_status)
+    #params[:expense][:date] = Date.new(params[:expense][:date])
+    params.require('expense').permit(:date, :retailer, :amt_charged, :amt_paid, :split, :how_to_pay, :payment_status, :card_id)
+    #params[:expense][:date] = Date.parse params[:expense][:date]
+    # 11/18/2015
+    #params[:expense][:date] = Date.strptime("10/30/2015","%m/%d/%Y")
+    #params
   end
 end
 

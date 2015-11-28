@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151126202029) do
+ActiveRecord::Schema.define(version: 20151128231422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,22 @@ ActiveRecord::Schema.define(version: 20151126202029) do
   end
 
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree
+
+  create_table "payments", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "expense_id"
+    t.integer  "payplans_id"
+    t.float    "amt_paid"
+  end
+
+  create_table "payplans", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "date"
+    t.integer  "card_id"
+    t.text     "comments"
+  end
 
   create_table "responsible_parties", force: true do |t|
     t.string   "name"

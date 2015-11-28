@@ -79,6 +79,13 @@ h2, h3 {
   background-color: aliceblue;
 }
 
+.accordion-body.collapse {
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-family: 'PT Sans Narrow', sans-serif;
+  background-color: white;
+}
+
 .date-field {
   font-size: 18px;
 }
@@ -106,12 +113,15 @@ h2, h3 {
   padding-right: 0;
 }
 
-.option-group .edit {
-  //background-color: cyan;
+.edit-title {
+  color: white;
+  font-size: 14px;
+  border: 1px solid cornflowerblue;
+  background-color: cornflowerblue;
 }
 
-.option-group .del {
-  //background-color: crimson;
+.accordion-body.collapse {
+  padding-left: 0;
 }
 
 .pay {

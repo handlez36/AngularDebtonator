@@ -4,6 +4,8 @@ class Expense < ActiveRecord::Base
   belongs_to :card
   belongs_to :responsible_party
   belongs_to :user
+  has_many :payments
+  has_many :payplans, through: :payments
   
   validates :retailer, :amt_charged, :date, :card, :presence => true
   validates :retailer, :length => { :maximum => 50}
@@ -19,6 +21,14 @@ class Expense < ActiveRecord::Base
   
   def amt_remaining
     self.amt_charged - self.amt_paid
+  end
+  
+  def date_to_string
+    self.date.strftime('%b %d, %Y')
+  end
+  
+  def amt_two_decimal_places
+    number_with_precision( self.amt_charged, precision: 2 )
   end
   
 end

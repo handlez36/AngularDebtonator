@@ -28,6 +28,7 @@ FactoryGirl.define do
     how_to_pay "TBD"
     payment_status 0
     association :user
+    association :card
   end
 end
 
@@ -35,5 +36,23 @@ end
 FactoryGirl.define do
   factory :responsible_party do
     name "Brandon"
+  end
+end
+
+FactoryGirl.define do
+  factory :payplan do
+    date Date.today
+    comments "Test comment"
+    association :card
+  end
+end
+
+FactoryGirl.define do
+  factory :payment do
+    amt_paid 1.00
+    date Date.today
+    association :expense
+    association :payplan
+    association :card
   end
 end

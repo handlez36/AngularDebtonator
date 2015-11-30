@@ -1,21 +1,19 @@
-<%= simple_form_for expense do |e| %>
+<%= simple_form_for expense, as: 'payment', :url => expense_payments_path(expense), :method => "post" do |e| %>
   <div class="col-xs-3">
     <%= e.input :date, :as => :string %>
-    <%= e.input :retailer %>
   </div>
   <div class="col-xs-3">
-    <label for="amt-field-charged">* Amt Charged:</label>
-    <input id="amt-field-charged" name='expense[amt_charged]' type='number' min="0.00", max="100.00" step="0.01" class="form-control" value=<%= number_with_precision(expense.amt_charged, precision: 2) %> />
-    <%= e.input :how_to_pay %>
+    <label for="amt-field-paid">* Amt To Pay:</label>
+    <input id="amt-field-paid" name='payment[amt_paid]' type='number' min="0.00", max="100.00" step="0.01" class="form-control" value=<%= number_with_precision(expense.amt_remaining, precision: 2) %> /><br class="clr" />
+    <%= e.submit 'Pay', :class => 'pay-button btn btn-success pull-right' %>
   </div>
   <div class="col-xs-3">              
-    <%= e.association :card, :label_method => lambda {|card| card.card_retailer} %>
-    <%= e.association :responsible_party, :label_method => lambda {|party| party.name } %>
+    <%= e.association :responsible_party, :label_method => lambda {|party| party.name } %><br class="clr" />
+    <input type="hidden" name="payment[card_id]" value="<%= expense.card.id %>" />
+    <%= link_to 'Cancel', '#', :class => 'cancel-button btn btn-danger' %>
   </div>
   <div class="col-xs-3">
-    <br />
-    <%= e.submit 'Change', :class => 'btn btn-warning btn-sm' %>
-    <%= link_to 'Cancel', '#', :class => 'btn btn-danger btn-sm' %>
+    <%= e.input :how_to_pay %>
   </div>
   <br class="clr" />
 <% end %>

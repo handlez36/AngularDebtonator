@@ -1,11 +1,21 @@
 <br />
 
-<div class="expense-section col-xs-6">
-  <div class="pull-left">
-    <%= link_to "Add expense", new_expense_path, :class => "btn btn-info" %>
+<div class="col-xs-12">
+  <div class="expense-section col-xs-6">
+    <div class="pull-left">
+      <%= link_to "Add expense", new_expense_path, :class => "btn btn-info" %>
+    </div>
+    <br class="clr" />
+    <br />
+    <h2>Expenses for <%=current_user.email%></h2>
+    <%= render current_expenses %>
   </div>
-  <br class="clr" />
-  <br />
-  <h2>Expenses for <%=current_user.email%></h2>
-  <%= render current_expenses %>
-</div>  
+  <div class="payplan-section col-xs-4">
+    <h2>Payment Plans:</h2><br class="clr" />
+    <% current_plans.each do |plan| %>
+      <%= plan.date %> --
+      <%= plan.card.card_retailer %> --
+      <%= plan.total_payment %>
+    <% end %>
+  </div>
+</div>

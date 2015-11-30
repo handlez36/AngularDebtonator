@@ -19,9 +19,15 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_response :found
   end
   
+  # TO DO
+  test "show specific expenses for two different users" do
+  end
+  
   test "add new expenses (user logged in)" do
     user = create(:user)
     sign_in user
+    
+    card = create(:card)
     
     assert_difference "user.expenses.count" do
       post :create, :expense => {
@@ -32,6 +38,7 @@ class ExpensesControllerTest < ActionController::TestCase
         :split => false,
         :how_to_pay => "TBD",
         :payment_status => 0,
+        :card_id => card.id,
         :user_id => user.id
         }
     end
@@ -61,10 +68,14 @@ class ExpensesControllerTest < ActionController::TestCase
     user = create(:user)
     sign_in user
     
+    card = create(:card)
+    
     post :create, :expense => {
       :date => Date.today,
       :retailer => "Best Buy",
-      :amt_charged => 200.00
+      :amt_charged => 200.00,
+      :card_id => card.id,
+      :user_id => user.id
       }
     
     new_expense = user.expenses.last
@@ -111,9 +122,10 @@ class ExpensesControllerTest < ActionController::TestCase
     user = create(:user)
     sign_in user
     
-    expense = create(:expense, :user => user)
+    card = create(:card)
     
-    puts "Expenses before: #{user.expenses.count}"
+    expense = create(:expense, :user => user, :card => card)
+    
     delete :destroy, :id => expense.id
     
     assert_nil Expense.find_by_id(expense.id)

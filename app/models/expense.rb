@@ -5,7 +5,7 @@ class Expense < ActiveRecord::Base
   belongs_to :responsible_party
   belongs_to :user
   has_many :payments
-  has_many :payplans, through: :payments
+  has_many :payplan, through: :payments
   
   validates :retailer, :amt_charged, :date, :card, :presence => true
   validates :retailer, :length => { :maximum => 50}

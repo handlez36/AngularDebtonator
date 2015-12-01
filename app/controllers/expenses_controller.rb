@@ -13,7 +13,7 @@ class ExpensesController < ApplicationController
     if @expense.valid?
       redirect_to expenses_path
     else
-      flash[alert] = "Validation error!"
+      flash[:alert] = "Validation error!"
       render :new, :status => :unprocessable_entity
     end
   end
@@ -27,6 +27,12 @@ class ExpensesController < ApplicationController
   
   def update
     updated_expense = current_expense
+    
+    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f)
+      flash[:alert] = "Please delete pending payment first"
+      redirect_to expenses_path and return
+    end
+      
     current_expense.update_attributes(expense_params)
     
     if current_expense.valid?
@@ -37,9 +43,11 @@ class ExpensesController < ApplicationController
   end
   
   def destroy
-    @expense = current_expense
-    @expense.destroy
-
+    if !current_expense.nil?
+      current_expense.remove_planned_payments
+      current_expense.destroy
+    end
+    
     redirect_to expenses_path
   end
     

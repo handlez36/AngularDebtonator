@@ -23,7 +23,7 @@
             </div>
             <div class="col-xs-2 option-group">
               <span class="edit text-center" style="float:left; margin-right: 3px; margin-left:10px;"><%= link_to 'Edit', "#edit#{expense.id}", :class => 'btn btn-primary btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span>
-              <span class="del text-center" style="float:left"><%= link_to 'Delete', "#del#{expense.id}", :class => 'btn btn-danger btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span><br class="clr" />
+              <span class="del text-center" style="float:left"><%= link_to 'Delete', destroy_expense_path(expense), :class => 'btn btn-danger btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span><br class="clr" />
               <div class="text-center" style="width:100%; margin-top:3px;"><%= link_to 'Pay', "#pay#{expense.id}", :class => 'pay btn btn-success', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></div>
             </div>
           </div>

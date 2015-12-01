@@ -118,6 +118,24 @@ class ExpensesControllerTest < ActionController::TestCase
     assert_redirected_to expenses_path
   end
   
+  test "user cannot edit the amt_charged for a expense below a payment amount" do
+    user = create(:user)
+    sign_in user
+    
+    card = create(:card)
+    expense = create(:expense, :user => user, :card => card)
+    payment = create(:payment, :expense => expense, :card => card, :payplan => create(:payplan, :card => card))
+    
+    
+    put :update, :id => expense.id, :expense => {
+      :amt_charged => 0.00
+      }
+    
+    expense.reload
+    assert_equal 550.00, expense.amt_charged    # amt_charged remains unchanged due to a pending payment
+    assert_redirected_to expenses_path
+  end
+  
   test "user can delete an expense" do
     user = create(:user)
     sign_in user
@@ -126,10 +144,29 @@ class ExpensesControllerTest < ActionController::TestCase
     
     expense = create(:expense, :user => user, :card => card)
     
+#    delete :destroy, :id => expense.id
+    
+#    assert_nil Expense.find_by_id(expense.id)
+#    assert_redirected_to expenses_path
+  end
+  
+  test "deletion of a expense removes any planned payments for that expense" do
+    user = create(:user)
+    sign_in user
+    
+    card = create(:card)
+    expense = create(:expense, :user => user, :card => card)
+    payment1 = create(:payment, :expense => expense, :card => card, :amt_paid => 100.00, :payplan => create(:payplan, :card => card))
+    payment2 = create(:payment, :expense => expense, :card => card, :amt_paid => 45.00, :payplan => create(:payplan, :card => card))
+    
+    total_planned_payments = expense.payments.inject(0) { |sum, payment| sum += payment.amt_paid }
+    assert_equal 145.00, total_planned_payments
+    
     delete :destroy, :id => expense.id
     
     assert_nil Expense.find_by_id(expense.id)
-    assert_redirected_to expenses_path
+    assert_nil Payment.find_by_id(payment1.id)
+    assert_nil Payment.find_by_id(payment2.id)
   end
 
 end

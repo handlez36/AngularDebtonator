@@ -10,6 +10,8 @@ class PaymentsController < ApplicationController
     new_payment = current_expense.payments.create( params.merge(:payplan_id => payment_plan.id))
     
     if new_payment.valid?
+      current_expense.amt_pending += new_payment.amt_paid
+      current_expense.save
       redirect_to expenses_path
     else
       return render :text => "Entry invalid", :status => :unprocessable_entity
@@ -21,16 +23,26 @@ class PaymentsController < ApplicationController
     params = payment_params
     params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
     
-    if !current_payment.valid_expense?
+    params[:amt_paid] = current_payment.amt_paid if params[:amt_paid].nil?
+    if !current_payment.valid_payment?(params[:amt_paid].to_f)
       flash[:alert] = "Payment is not allowed for this expense"
-      redirect_to expenses_path
+      redirect_to expenses_path and return
     end
     
-    current_payment.update_expense
+    current_payment.update_expense(params[:amt_paid].to_f)
     updated_payment = current_payment.update_attributes(params)
     
-    if !updated_payment.valid?
+    if !updated_payment
       flash[:alert] = "Invalid payment update"
+    end
+    
+    redirect_to expenses_path
+  end
+  
+  def destroy
+    if !current_payment.nil?
+      current_payment.update_expense(0)
+      current_payment.destroy
     end
     
     redirect_to expenses_path

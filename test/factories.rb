@@ -25,6 +25,7 @@ FactoryGirl.define do
     end
     amt_charged 550
     amt_paid 0
+    amt_pending 1.00
     how_to_pay "TBD"
     payment_status 0
     association :user

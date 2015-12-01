@@ -3,6 +3,7 @@
     <%= e.input :date, :as => :string %>
   </div>
   <div class="col-xs-3">
+    <% "Amt charged: #{expense.amt_charged.inspect}" %>
     <label for="amt-field-paid">* Amt To Pay:</label>
     <input id="amt-field-paid" name='payment[amt_paid]' type='number' min="0.00", max="100.00" step="0.01" class="form-control" value=<%= number_with_precision(expense.amt_remaining, precision: 2) %> /><br class="clr" />
     <%= e.submit 'Pay', :class => 'pay-button btn btn-success pull-right' %>

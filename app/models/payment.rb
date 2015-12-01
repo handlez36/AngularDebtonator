@@ -25,8 +25,23 @@ class Payment < ActiveRecord::Base
   # Determine if the change in payment details is allowed based on the expense
   # i.e., if the payment is increased over the remaining balance of the expense,
   # do not allow payment
-  def valid_expense?
-    # TO DO
+  def valid_payment?(updated_payment)
+    expense = self.expense
+
+    if expense.amt_charged - expense.amt_paid - updated_payment < 0
+      return false
+    end
+    
+    return true    
+  end
+  
+  # Re-adjust expense amt_pending with updated payment
+  def update_expense(new_payment)
+    expense = self.expense
+    
+    expense.amt_pending -= self.amt_paid
+    expense.amt_pending += new_payment
+    expense.save
   end
 
 end

@@ -139,3 +139,39 @@ h2, h3 {
 .pay-button, .cancel-button {
   width: 100%;
 }
+
+.payment-header {
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
+
+.payment-cell {
+  text-align: center;
+  font-size: 12px;
+}
+
+.payment-cell.action {
+  width: 250px;
+}
+
+.payment-cell.date {
+  width: 300px;
+}
+
+.total {
+  color: red;
+}
+
+#paymentplan {
+  width: 450px;
+}
+
+.payment-row {
+  background-color: white;
+}
+
+.crossed-out {
+  color: red;
+  text-decoration: line-through;
+}

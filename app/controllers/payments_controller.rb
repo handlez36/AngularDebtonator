@@ -5,13 +5,12 @@ class PaymentsController < ApplicationController
     params = payment_params
     params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
     
-    payment_plan = Payment.get_proper_plan(params[:date], params[:card_id])
+    payment_plan = Payment.get_proper_plan(params[:date], params[:card_id], current_user)
 
-    new_payment = current_expense.payments.create( params.merge(:payplan_id => payment_plan.id))
+    new_payment = current_expense.payments.create( params.merge(:payplan_id => payment_plan.id, :user => current_user))
     
     if new_payment.valid?
-      current_expense.amt_pending += new_payment.amt_paid
-      current_expense.save
+      current_expense.update_amt_pending(new_payment.amt_paid)
       redirect_to expenses_path
     else
       return render :text => "Entry invalid", :status => :unprocessable_entity
@@ -20,32 +19,35 @@ class PaymentsController < ApplicationController
   end
   
   def update
-    params = payment_params
-    params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
+    id = params[:id]
+    params = payment_params_from_inline_edit
+    #params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
+    #puts "Params: #{params}"
     
-    params[:amt_paid] = current_payment.amt_paid if params[:amt_paid].nil?
-    if !current_payment.valid_payment?(params[:amt_paid].to_f)
-      flash[:alert] = "Payment is not allowed for this expense"
-      redirect_to expenses_path and return
+    params[:value] = current_payment.amt_paid if params[:value].nil?     # used to be params[:amt_paid]
+    if !current_payment.valid_payment?(params[:value].to_f, id)
+      #flash[:alert] = "Payment is not allowed for this expense"
+      #redirect_to expenses_path and return
+      #response :text => "payment not allowed", :status => :unprocessable_entity
+      render :json => { status: "error", msg: 'Payment not allowed' } and return
     end
     
-    current_payment.update_expense(params[:amt_paid].to_f)
-    updated_payment = current_payment.update_attributes(params)
+    current_payment.remove_from_expense
+    updated_payment = current_payment.update(:amt_paid => params[:value].to_f)
+    current_payment.update_expense params[:value].to_f
     
     if !updated_payment
       flash[:alert] = "Invalid payment update"
     end
     
-    redirect_to expenses_path
+    render :text => "success", :status => :ok
   end
   
   def destroy
-    if !current_payment.nil?
-      current_payment.update_expense(0)
-      current_payment.destroy
-    end
+    current_payment.destroy if !current_payment.nil?
+    current_payment.payplan.destroy if current_payment.payplan.payments.count == 0
     
-    redirect_to expenses_path
+    render :json => { status: "success", msg: 'Test message' } and return
   end
   
   private
@@ -61,6 +63,14 @@ class PaymentsController < ApplicationController
   end
   
   def payment_params
-    params.require('payment').permit(:amt_paid, :date, :card_id)
+    params.require('payment').permit(:amt_paid, :date, :card_id, :responsible_party_id)
+  end
+  
+  def payment_params_from_inline_edit
+    p = {}
+    p[:date] = params[:date] if !params[:date].nil?
+    p[:value] = params[:value] if !params[:value].nil?
+    p[:id] = params[:id] if !params[:id].nil?
+    return p
   end
 end

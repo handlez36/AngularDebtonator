@@ -1,0 +1,53 @@
+<!-- Modal -->
+
+<!-- Nav section for list of parties responsible for payment -->
+<ul class="nav nav-tabs" id="payeeTab">
+<% plan.get_payees.each_with_index do |party, index| %>
+  <% active = (index == 0) ? "active" : "" %>
+  <li role="presentation" class="<%=active%>"><%= link_to party, "##{party}", :data => {:toggle => "tab"} %></li>
+<% end %>
+</ul>
+
+<div class="tab-content">
+<% plan.get_payees.each_with_index do |party, index| %>
+  <% active = (index == 0) ? "active" : "" %>
+  <div class="tab-pane <%=active%>" id="<%= party %>">
+    <% plan.get_expenses_for_payee(party).each do |payment| %>
+      <br />
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.date %></div>
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :class => "amt_field", :data => { :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
+      <div class="col-xs-3"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>"></i></div>
+      <br class="clr" />
+    <% end %>
+  </div>
+<% end %>
+</div>
+
+<script>
+  $(function() {
+    $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
+    $(".amt_field").editable({
+      success: function(response, newValue) {
+        if(response.status == 'error') return response.msg
+      },
+      error: function(errors) {
+        return "Error processing"
+      }
+    });
+    
+    $(".glyphicon.glyphicon-trash").click(function(event) {
+      var id = $(this).data("id")
+
+      $.ajax({
+        url: "/payments/" + id,
+        method: "DELETE"
+      }).done(function(msg) {
+          //alert("Response" + msg.msg);
+          $('.payment-'+id).addClass("crossed-out");
+          $('#myModal<%=plan.id%>').modal('toggle');
+          $('#myModal<%=plan.id%>').modal('toggle');
+        });
+    });
+  })
+</script>

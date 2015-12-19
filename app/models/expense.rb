@@ -14,6 +14,7 @@ class Expense < ActiveRecord::Base
   # Set defaults for newly added expenses, if not provided explicitly
   def set_defaults
     self.amt_paid ||= 0.00
+    self.amt_pending ||= 0.00
     self.split ||= false
     self.how_to_pay ||= "Not sure"
     self.payment_status ||= 0
@@ -24,6 +25,11 @@ class Expense < ActiveRecord::Base
   # amt_charged - amt_paid - amt_pending
   def amt_remaining
     self.amt_charged - self.amt_paid - self.amt_pending
+  end
+  
+  def update_amt_pending(add_amt)
+    self.amt_pending += add_amt
+    self.save
   end
   
   # Return string formatted date
@@ -60,6 +66,14 @@ class Expense < ActiveRecord::Base
       payment.destroy
     end
     self.payments.delete_all
+  end
+  
+  def print_expense_stats
+    puts "Expense: #{self.id}"
+    puts " -- amt charged: #{self.amt_charged}"
+    puts " -- amt paid: #{self.amt_paid}"
+    puts " -- amt pending: #{self.amt_pending}"
+    puts " -- amt remaining: #{self.amt_remaining}"
   end
   
 end

@@ -1,6 +1,10 @@
 <%= simple_form_for expense, as: 'payment', :url => expense_payments_path(expense), :method => "post" do |e| %>
+  <br class="clr"/>
+  <br />
   <div class="col-xs-3">
-    <%= e.input :date, :as => :string %>
+    <%#= e.input :date, :as => :string %>
+    <label for="paydate-field">* Date</label>
+    <input id="paydate-field" name="payment[date]" class="form-control paydate" value=<%= expense.date.to_s %> />
   </div>
   <div class="col-xs-3">
     <% "Amt charged: #{expense.amt_charged.inspect}" %>
@@ -18,3 +22,9 @@
   </div>
   <br class="clr" />
 <% end %>
+
+<script>
+  $(function() {
+    $('.paydate').datepicker({dateFormat: 'yy-mm-dd'}); 
+  })
+</script>

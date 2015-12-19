@@ -37,6 +37,9 @@ end
 FactoryGirl.define do
   factory :responsible_party do
     name "Brandon"
+    sequence :name do |n|
+      "Party#{n}"
+    end
   end
 end
 
@@ -51,7 +54,7 @@ end
 FactoryGirl.define do
   factory :payment do
     amt_paid 1.00
-    date Date.today
+    date Date.new(2015, 10, 30)
     association :expense
     association :payplan
     association :card

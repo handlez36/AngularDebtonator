@@ -9,21 +9,22 @@
               <%= expense.date.strftime("%b %d") %><br />
               <span class="retailer-field"><b><%= expense.retailer %></b></span>
             </div>
-            <div class="col-xs-4 who-how-field">
+            <div class="col-xs-3 who-how-field">
               <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
               <span class="text-center">How: <%= expense.how_to_pay %></span>
             </div>
-            <div class="col-xs-4 expense-field">
+            <div class="col-xs-5 expense-field">
               <div class="card text-center"><%= expense.card.card_retailer %></div>
               <div class="text-center">
-                <%= number_to_currency expense.amt_charged %> - &nbsp; &nbsp; 
-                <%= number_to_currency expense.amt_paid %> = &nbsp; &nbsp;
+                <%= number_to_currency expense.amt_charged %> - &nbsp;
+                <%= number_to_currency expense.amt_paid %> - &nbsp;
+                <%= number_to_currency expense.amt_pending %> = &nbsp;
                 <%= number_to_currency expense.amt_remaining %><br class="clr" />
               </div>
             </div>
             <div class="col-xs-2 option-group">
-              <span class="edit text-center" style="float:left; margin-right: 3px; margin-left:10px;"><%= link_to 'Edit', "#edit#{expense.id}", :class => 'btn btn-primary btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span>
-              <span class="del text-center" style="float:left"><%= link_to 'Delete', destroy_expense_path(expense), :class => 'btn btn-danger btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span><br class="clr" />
+              <span class="edit text-center" style="float:left;width:50%"><%= link_to 'Edit', "#edit#{expense.id}", :class => 'btn btn-primary btn-xs', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></span>
+              <span class="del text-center" style="float:left; width:50%"><%= link_to 'Delete', destroy_expense_path(expense), :method => :delete, :class => 'btn btn-danger btn-xs' %></span><br class="clr" />
               <div class="text-center" style="width:100%; margin-top:3px;"><%= link_to 'Pay', "#pay#{expense.id}", :class => 'pay btn btn-success', :data => { :toggle => 'collapse', :parent => '#accordion2'} %></div>
             </div>
           </div>

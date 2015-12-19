@@ -10,12 +10,7 @@
     <h2>Expenses for <%=current_user.email%></h2>
     <%= render current_expenses %>
   </div>
-  <div class="payplan-section col-xs-4">
-    <h2>Payment Plans:</h2><br class="clr" />
-    <% current_plans.each do |plan| %>
-      <%= plan.date %> --
-      <%= plan.card.card_retailer %> --
-      <%= plan.total_payment %>
-    <% end %>
-  </div>
+  <%= render :partial => '/payments/payment' %>
+  
 </div>
+

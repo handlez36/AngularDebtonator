@@ -65,7 +65,8 @@ class ExpensesController < ApplicationController
   
   helper_method :current_plans
   def current_plans
-    @plans ||= Payplan.all
+    #@plans ||= Payplan.all
+    @plans ||= current_user.payplans
   end
   
   def expense_params

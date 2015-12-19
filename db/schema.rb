@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201013217) do
+ActiveRecord::Schema.define(version: 20151203040218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,8 @@ ActiveRecord::Schema.define(version: 20151201013217) do
     t.float    "amt_paid"
     t.date     "date"
     t.integer  "card_id"
+    t.integer  "user_id"
+    t.integer  "responsible_party_id"
   end
 
   create_table "payplans", force: true do |t|
@@ -56,6 +58,7 @@ ActiveRecord::Schema.define(version: 20151201013217) do
     t.date     "date"
     t.integer  "card_id"
     t.text     "comments"
+    t.integer  "user_id"
   end
 
   create_table "responsible_parties", force: true do |t|

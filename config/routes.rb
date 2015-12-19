@@ -1,15 +1,20 @@
 MyBudget::Application.routes.draw do
+  get "payplans/destroy"
+  get "payplan/destroy"
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   root 'static_pages#index'
-  resources :payments, :only => [:edit, :update, :destroy]
+  
+  resources :payments, :only => [:edit, :update]
+  resources :payments, as: 'delete_payment', :only => [:destroy]
   resources :expenses, :only => [:new, :edit, :create, :index, :show] do
     resource :payments, :only => [:create]
   end
   resources :expenses, as: 'destroy_expense', :only => [:destroy]
   resources :expenses, as: 'update_expense', :only => [:update]
+  resources :payplans, :only => [:destroy]
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

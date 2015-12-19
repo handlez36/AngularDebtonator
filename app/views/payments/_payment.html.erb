@@ -1,0 +1,49 @@
+<div class="payplan-section col-xs-4">
+    <h2>Payment Plans:</h2><br class="clr" />
+    
+    <table id="paymentplan" class="table table-bordered table-hover table-condensed">
+      <thead>
+      <tr class="success">
+        <th class="payment-header">Date</th>
+        <% ResponsibleParty.all.each do |party| %>
+          <th class="payment-header"><%= party.name%></th>
+        <% end %>
+        <th class="payment-header total">Total</th>
+        <th class="payment-header">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% current_plans.each do |plan| %>
+        <tr class="payment-row">
+          <td class="payment-cell date"><%= plan.date%></td>
+          <% ResponsibleParty.all.each do |party| %>
+            <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
+          <% end %>
+          <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
+          <td id="<%= plan.id %>" class="payment-cell action"><%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;<%= link_to "Danger", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Are you sure?"} %></td>
+        </tr>
+        <%#= render '/payments/payment_edit_popup', :plan => plan %>
+        <!-- Modal -->
+
+        <div class="modal fade" id="myModal<%=plan.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+              </div>
+              <div class="modal-body">
+                <%= render 'payplan_edit', :plan => plan %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      </tbody>
+    </table>
+    
+  </div>

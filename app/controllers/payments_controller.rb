@@ -47,7 +47,9 @@ class PaymentsController < ApplicationController
     current_payment.destroy if !current_payment.nil?
     current_payment.payplan.destroy if current_payment.payplan.payments.count == 0
     
-    render :json => { status: "success", msg: 'Test message' } and return
+    puts "Payment count: #{current_payment.payplan.payments.count}"
+    payment_count = current_payment.payplan.payments.count.to_i
+    render :json => { status: "success", count: payment_count, plan: current_payment.payplan } and return
   end
   
   private

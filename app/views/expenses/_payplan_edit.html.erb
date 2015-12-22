@@ -4,11 +4,11 @@
 <ul class="nav nav-tabs" id="payeeTab">
 <% plan.get_payees.each_with_index do |party, index| %>
   <% active = (index == 0) ? "active" : "" %>
-  <li role="presentation" class="<%=active%>"><%= link_to party, "##{party}", :data => {:toggle => "tab"} %></li>
+  <li role="presentation" class="<%=active%>"><%= link_to party, "##{party}", :class => "payee-link", :data => {:toggle => "tab"} %></li>
 <% end %>
 </ul>
 
-<div class="tab-content">
+<div class="tab-content" id="payment-section" data-plan-total="<%=plan.get_plan_total%>">
 <% plan.get_payees.each_with_index do |party, index| %>
   <% active = (index == 0) ? "active" : "" %>
   <div class="tab-pane <%=active%>" id="<%= party %>">
@@ -17,16 +17,39 @@
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.date %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :class => "amt_field", :data => { :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
-      <div class="col-xs-3"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>"></i></div>
+      <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
       <br class="clr" />
     <% end %>
+    <br class="clr" />
+    <hr />
+    <div class="col-xs-5 col-xs-offset-1 payment-total">
+      <b>Total for <%= party %>:</b> <span id="total-for-party" data-total="<%= plan.get_payee_amt party %>"><%= number_to_currency plan.get_payee_amt party %></span>
+    </div>
+    <div class="col-xs-5 payment-total">
+      <b>Total for plan:</b> <span class="total-for-plan" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
+    </div>
+    <br />
   </div>
 <% end %>
 </div>
 
 <script>
   $(function() {
+    var del_queue = [];
+    var total_party = 0.00;
+    var total_plan = $("#payment-section").data("plan-total");
+    
+    $("#save-changes").hide();
+    
     $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
+        
+    $(".nav.nav-tabs").click(function() {
+      $(".total-for-plan").data("total", total_plan );
+      $(".total-for-plan").html(total_plan);
+      $(".total-for-plan").formatCurrency();
+    })
+    
+    //Make amount paid field inline editable
     $(".amt_field").editable({
       success: function(response, newValue) {
         if(response.status == 'error') return response.msg
@@ -36,18 +59,71 @@
       }
     });
     
+    // Mark a payment as deleted when the trash icon is clicked
     $(".glyphicon.glyphicon-trash").click(function(event) {
       var id = $(this).data("id")
-
-      $.ajax({
-        url: "/payments/" + id,
-        method: "DELETE"
-      }).done(function(msg) {
-          //alert("Response" + msg.msg);
-          $('.payment-'+id).addClass("crossed-out");
-          $('#myModal<%=plan.id%>').modal('toggle');
-          $('#myModal<%=plan.id%>').modal('toggle');
-        });
+      total_party = parseFloat($("#total-for-party").data("total"),10)
+      total_plan = parseFloat($(".total-for-plan").data("total"),10)
+      selected_payment = parseFloat($(this).data("payment"),10);
+      
+      // Add id to queue of payment ids to remove
+      if($.inArray(id, del_queue) != -1) {
+        var index = del_queue.indexOf(id);
+        if (index > -1) {
+          del_queue.splice(index, 1);
+          total_party += selected_payment;
+          total_plan += selected_payment;
+        }
+      } else {
+        del_queue.push(id);
+        total_party -= selected_payment;
+        total_plan -= selected_payment;
+      }
+      $("#total-for-party").html( total_party );
+      $("#total-for-party").data("total", total_party);
+      $("#total-for-party").formatCurrency();
+      
+      $(".total-for-plan").html( total_plan );
+      $(".total-for-plan").data("total", total_plan);
+      $(".total-for-plan").formatCurrency();
+      
+      $("#payment-section").data("plan-total", total_plan);
+      
+      $('.payment-'+id).toggleClass("crossed-out");
+      
+      if(del_queue.length > 0) {
+        $("#save-changes").show();
+        $("#save-changes").html("Remove selected");
+      } else {
+        $("#save-changes").hide();
+        $("#save-changes").html("Save changes");
+      }
+      
     });
+    
+    $("#save-changes").click(function() {
+      del_queue.forEach(function(id, index, array) {
+        $.ajax({
+          url: "/payments/" + id,
+          method: "DELETE"
+        }).done(function(response) {
+          if(response.count == 0) {
+            $(".tab-pane.active").html("No more payments for this party.");
+            $("#save-changes").hide();
+          } else {
+            //$("#total-for-party").html( parseInt($("#total-for-party").html) - 10.00 );
+            $(".modal-body").load();
+          }
+          
+        });
+      })
+      del_queue.splice(0, del_queue.length);
+      window.location.reload();
+    });
+    
+    $("#close-modal").click(function() {
+      window.location.reload();
+    })
+        
   })
 </script>

@@ -20,7 +20,7 @@
             <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
           <% end %>
           <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
-          <td id="<%= plan.id %>" class="payment-cell action"><%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;<%= link_to "Danger", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Are you sure?"} %></td>
+          <td id="<%= plan.id %>" class="payment-cell action"><%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;<%= link_to "Delete", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Are you sure?"} %></td>
         </tr>
         <%#= render '/payments/payment_edit_popup', :plan => plan %>
         <!-- Modal -->

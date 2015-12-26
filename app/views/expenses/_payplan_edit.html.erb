@@ -15,7 +15,7 @@
     <% plan.get_expenses_for_payee(party).each do |payment| %>
       <br />
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.date %></div>
-      <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :class => "amt_field", :data => { :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
       <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
       <br class="clr" />
@@ -23,7 +23,7 @@
     <br class="clr" />
     <hr />
     <div class="col-xs-5 col-xs-offset-1 payment-total">
-      <b>Total for <%= party %>:</b> <span id="total-for-party" data-total="<%= plan.get_payee_amt party %>"><%= number_to_currency plan.get_payee_amt party %></span>
+      <b>Total for <%= party %>:</b> <span id="total-for-party-<%= party %>" data-total="<%= plan.get_payee_amt party %>"><%= number_to_currency plan.get_payee_amt party %></span>
     </div>
     <div class="col-xs-5 payment-total">
       <b>Total for plan:</b> <span class="total-for-plan" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
@@ -52,7 +52,16 @@
     //Make amount paid field inline editable
     $(".amt_field").editable({
       success: function(response, newValue) {
+        // Grab current value of payment
         if(response.status == 'error') return response.msg
+        
+        // Update party and plan totals
+        var currentPayment = $(this).data("payment");
+        var paymentDifference = newValue - parseFloat(currentPayment);
+        var party = $(".tab-pane.active").attr("id");
+        
+        setTotalPartyAndPlan(party);      
+        updateTotals(true, paymentDifference, party);
       },
       error: function(errors) {
         return "Error processing"
@@ -62,33 +71,22 @@
     // Mark a payment as deleted when the trash icon is clicked
     $(".glyphicon.glyphicon-trash").click(function(event) {
       var id = $(this).data("id")
-      total_party = parseFloat($("#total-for-party").data("total"),10)
-      total_plan = parseFloat($(".total-for-plan").data("total"),10)
-      selected_payment = parseFloat($(this).data("payment"),10);
+      var party = $(".tab-pane.active").attr("id")
+      selected_payment = parseFloat($(this).data("payment"));
+      
+      setTotalPartyAndPlan(party);
       
       // Add id to queue of payment ids to remove
       if($.inArray(id, del_queue) != -1) {
         var index = del_queue.indexOf(id);
         if (index > -1) {
           del_queue.splice(index, 1);
-          total_party += selected_payment;
-          total_plan += selected_payment;
+          updateTotals(true, selected_payment, party);
         }
       } else {
         del_queue.push(id);
-        total_party -= selected_payment;
-        total_plan -= selected_payment;
-      }
-      $("#total-for-party").html( total_party );
-      $("#total-for-party").data("total", total_party);
-      $("#total-for-party").formatCurrency();
-      
-      $(".total-for-plan").html( total_plan );
-      $(".total-for-plan").data("total", total_plan);
-      $(".total-for-plan").formatCurrency();
-      
-      $("#payment-section").data("plan-total", total_plan);
-      
+        updateTotals(false, selected_payment, party);
+      }      
       $('.payment-'+id).toggleClass("crossed-out");
       
       if(del_queue.length > 0) {
@@ -100,6 +98,29 @@
       }
       
     });
+    
+    function setTotalPartyAndPlan(party) {
+     total_party = parseFloat($("#total-for-party-"+party).data("total"));
+     total_plan = parseFloat($(".total-for-plan").data("total"));
+    }
+    
+    function updateTotals(add, amt, party) {
+      if(add==1) {
+        total_party += amt;
+        total_plan += amt;
+      } else if(add==0) {
+        total_party -= amt;
+        total_plan -= amt; 
+      }
+      
+      $("#total-for-party-"+party).html( total_party );
+      $("#total-for-party-"+party).data("total", total_party);
+      $("#total-for-party-"+party).formatCurrency();
+      
+      $(".total-for-plan").html( total_plan );
+      $(".total-for-plan").data("total", total_plan);
+      $(".total-for-plan").formatCurrency();
+    }
     
     $("#save-changes").click(function() {
       del_queue.forEach(function(id, index, array) {

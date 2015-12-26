@@ -8,7 +8,10 @@
     <br class="clr" />
     <br />
     <h2>Expenses for <%=current_user.email%></h2>
-    <%= render current_expenses %>
+<!--    <div class="accordion" id="accordion2" style="padding: 0;">-->
+    <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
+      <%= render current_expenses %>
+    </div>
   </div>
   <%= render :partial => '/payments/payment' %>
   

@@ -1,6 +1,4 @@
 <%= simple_form_for expense, as: 'payment', :url => expense_payments_path(expense), :method => "post" do |e| %>
-  <br class="clr"/>
-  <br />
   <div class="col-xs-3">
     <%#= e.input :date, :as => :string %>
     <label for="paydate-field">* Date</label>
@@ -25,6 +23,6 @@
 
 <script>
   $(function() {
-    $('.paydate').datepicker({dateFormat: 'yy-mm-dd'}); 
-  })
+    $('.paydate').datepicker({dateFormat: 'yy-mm-dd'});
+  });
 </script>

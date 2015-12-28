@@ -56,7 +56,7 @@ class PaymentsControllerTest < ActionController::TestCase
     
     expense = create(:expense, :user => user)
     card = create(:card)
-    payment = create(:payment, :expense => expense)
+    payment = create(:payment, :expense => expense, :user => user)
     
     put :update, :id => payment.id, :value => 10.00
     payment.reload
@@ -74,8 +74,8 @@ class PaymentsControllerTest < ActionController::TestCase
     
     expense = create(:expense, :user => user, :amt_paid => 30, :amt_pending => 85)
     card = create(:card)
-    payment1 = create(:payment, :expense => expense, :amt_paid => 25)
-    payment2 = create(:payment, :expense => expense, :amt_paid => 60)
+    payment1 = create(:payment, :expense => expense, :amt_paid => 25, :user => user)
+    payment2 = create(:payment, :expense => expense, :amt_paid => 60, :user => user)
     
     #put :update, :id => payment.id, :payment => {
     #  :date => Date.new(2015, 9, 20),   # Updated date
@@ -91,28 +91,6 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal Date.new(2015, 10, 30), payment1.date
     assert_response :ok
   end
-  
-  # Test no longer valid. User can submit an update with no payment change
-#  test "update payment with no amount included after previously added" do
-#    user = create(:user)
-#    sign_in user
-#    
-#    expense = create(:expense, :user => user)
-#    card = create(:card)
-#    payment = create(:payment, :expense => expense)
-#    
-#    put :update, :id => payment.id, :payment => {
-#      :date => Date.new(2015, 9, 20),   # Updated date
-#      :card_id => payment.card.id
-#      }
-#    payment.reload
-#    expense.reload
-#    
-#    assert_equal 1.00, payment.amt_paid
-#    assert_equal 1.00, expense.amt_pending
-#    assert_equal Date.new(2015, 10, 30), payment.date
-#    assert_redirected_to expenses_path
-#  end
   
   test "delete payment after previously added" do
     user = create(:user)
@@ -156,9 +134,9 @@ class PaymentsControllerTest < ActionController::TestCase
     user = create(:user)
     sign_in user
     
-    expense = create(:expense, :amt_charged => 200.00, :amt_paid => 0.00, :amt_pending => 40.00)
-    payplan = create(:payplan)
-    payment1 = create(:payment, :expense => expense, :payplan => payplan, :amt_paid => 40.00)
+    expense = create(:expense, :amt_charged => 200.00, :amt_paid => 0.00, :amt_pending => 40.00, :user => user)
+    payplan = create(:payplan, :user => user)
+    payment1 = create(:payment, :expense => expense, :payplan => payplan, :amt_paid => 40.00, :user => user)
     
     id = payplan.id
     assert_difference "Payplan.count", -1 do

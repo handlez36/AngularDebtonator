@@ -35,6 +35,7 @@
 
 <script>
   $(function() {
+    alert("Opened modal")
     var del_queue = [];
     var total_party = 0.00;
     var total_plan = $("#payment-section").data("plan-total");
@@ -82,10 +83,12 @@
         if (index > -1) {
           del_queue.splice(index, 1);
           updateTotals(true, selected_payment, party);
+          $("#payment-"+id).editable('enable');
         }
       } else {
         del_queue.push(id);
         updateTotals(false, selected_payment, party);
+        $("#payment-"+id).editable('disable');
       }      
       $('.payment-'+id).toggleClass("crossed-out");
       

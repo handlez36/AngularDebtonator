@@ -1,5 +1,7 @@
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_user_for_payment_creation, :only => [:create]
+  before_action :authorize_user_for_payment_modification, :only => [:update, :destroy]
   
   def create
     params = payment_params
@@ -22,13 +24,9 @@ class PaymentsController < ApplicationController
     id = params[:id]
     params = payment_params_from_inline_edit
     #params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
-    #puts "Params: #{params}"
     
     params[:value] = current_payment.amt_paid if params[:value].nil?     # used to be params[:amt_paid]
     if !current_payment.valid_payment?(params[:value].to_f, id)
-      #flash[:alert] = "Payment is not allowed for this expense"
-      #redirect_to expenses_path and return
-      #response :text => "payment not allowed", :status => :unprocessable_entity
       render :json => { status: "error", msg: 'Payment not allowed' } and return
     end
     
@@ -36,9 +34,7 @@ class PaymentsController < ApplicationController
     updated_payment = current_payment.update(:amt_paid => params[:value].to_f)
     current_payment.update_expense params[:value].to_f
     
-    if !updated_payment
-      flash[:alert] = "Invalid payment update"
-    end
+    flash[:alert] = "Invalid payment update" unless updated_payment
     
     render :text => "success", :status => :ok
   end
@@ -47,7 +43,6 @@ class PaymentsController < ApplicationController
     current_payment.destroy if !current_payment.nil?
     current_payment.payplan.destroy if current_payment.payplan.payments.count == 0
     
-    puts "Payment count: #{current_payment.payplan.payments.count}"
     payment_count = current_payment.payplan.payments.count.to_i
     render :json => { status: "success", count: payment_count, plan: current_payment.payplan } and return
   end
@@ -62,6 +57,20 @@ class PaymentsController < ApplicationController
   helper_method :current_payment
   def current_payment
     @current_payment ||= Payment.find_by_id(params[:id])
+  end
+  
+  def authorize_user_for_payment_creation
+    if current_user != current_expense.user
+      flash[:alert] = "Unauthorized User!"
+      render :text => "Unauthorized action", :status => :unprocessable_entity
+    end
+  end
+  
+  def authorize_user_for_payment_modification
+    if current_user != current_payment.user
+      flash[:alert] = "Unauthorized User!"
+      render :text => "Unauthorized action", :status => :unprocessable_entity
+    end
   end
   
   def payment_params

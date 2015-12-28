@@ -79,11 +79,13 @@ h2, h3 {
   background-color: aliceblue;
 }
 
-.accordion-body.collapse {
+.panel-body {
   border: 1px solid #ccc;
   padding: 5px;
   font-family: 'PT Sans Narrow', sans-serif;
   background-color: white;
+  padding-left: 0;
+  padding-top: 0;
 }
 
 .date-field {
@@ -118,6 +120,13 @@ h2, h3 {
   font-size: 14px;
   border: 1px solid cornflowerblue;
   background-color: cornflowerblue;
+}
+
+.pay-title {
+  color: white;
+  font-size: 14px;
+  border: 1px solid forestgreen;
+  background-color: forestgreen;
 }
 
 .accordion-body.collapse {
@@ -176,7 +185,18 @@ h2, h3 {
   text-decoration: line-through;
 }
 
+.amt_field.editable.editable-click.editable-disabled {
+  color: red;
+}
+
 .payment-total {
   font-size: 16px;
   color: cornflowerblue;
+}
+
+.expense-chart {
+  float:left;
+  margin-right:10px;
+  text-align:center;
+  font-size: 10px;
 }

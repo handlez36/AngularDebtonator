@@ -3,7 +3,6 @@ class ExpensesController < ApplicationController
   before_action :authorize_user, :only => [:edit, :update, :destroy]
   
   def index
-    puts "In Expense#index method"
   end
   
   def create    
@@ -27,22 +26,18 @@ class ExpensesController < ApplicationController
   end
   
   def update
-    puts "In Expense#update method"
     updated_expense = current_expense
     
-#    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f)
-#      flash[:alert] = "Please delete pending payment first"
-#      redirect_to expenses_path and return
-#    end
+    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f)
+      flash[:alert] = "Please delete pending payment first"
+      redirect_to expenses_path and return
+    end
       
     current_expense.update_attributes(expense_params.merge(:user => current_user))
     
-#    if current_expense.valid?
-#      redirect_to expenses_path
-#    else
-#      redirect_to edit_expense_path(updated_expense)
-#    end
-    render :index
+    flash[:alert] = "Validation errors with expense update" unless current_expense.valid?
+    
+    redirect_to expenses_path
   end
   
   def destroy

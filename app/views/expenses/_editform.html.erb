@@ -19,13 +19,3 @@
   </div>
   <br class="clr" />
 <% end %>
-
-<script>
-  $(function() {
-    var expense_id = $(".col-xs-3.active").data("section");
-    console.log( "Expense id: " + expense_id );
-    $(".col-xs-3.active #expense_date").click(function() {
-      alert("Date field clicked for expense " + expense_id);
-    })
-  })
-</script>

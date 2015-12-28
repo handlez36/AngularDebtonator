@@ -44,6 +44,8 @@ gem 'factory_girl_rails', '~> 4.0'
 
 gem 'jquery-ui-rails'
 
+gem 'easy_as_pie'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

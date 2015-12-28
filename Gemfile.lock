@@ -48,6 +48,8 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    easy_as_pie (0.1.2)
+      rails (>= 3.0)
     erubis (2.7.0)
     execjs (2.6.0)
     factory_girl (4.5.0)
@@ -140,6 +142,7 @@ DEPENDENCIES
   bootstrap-sass (= 3.3.5.1)
   coffee-rails (~> 4.0.0)
   devise
+  easy_as_pie
   factory_girl_rails (~> 4.0)
   jbuilder (~> 1.2)
   jquery-rails

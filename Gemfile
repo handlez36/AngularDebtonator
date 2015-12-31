@@ -46,6 +46,12 @@ gem 'jquery-ui-rails'
 
 gem 'easy_as_pie'
 
+gem 'chartkick'
+
+gem 'chartjs-ror'
+
+gem 'modernizr-rails'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

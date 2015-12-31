@@ -142,7 +142,7 @@ h2, h3 {
 }
 
 .payplan-section {
-  margin-top: 60px;
+//  margin-top: 60px;
 }
 
 .pay-button, .cancel-button {
@@ -199,4 +199,33 @@ h2, h3 {
   margin-right:10px;
   text-align:center;
   font-size: 10px;
+}
+
+.chart-box {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background-color: rgba(0,0,0,0);
+}
+
+.summary-box {
+//  border: 1px solid black;
+//  background-color: rgba(0,0,0,0.5);
+}
+
+.summary-header {
+  text-align: center;
+}
+
+.summary-content {
+  text-align: center;
+}
+
+.summary-totals {
+  color: darkseagreen;
+}
+
+.col-xs-12 {
+  padding: 3px;
 }

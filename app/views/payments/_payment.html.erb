@@ -1,3 +1,6 @@
+<br />
+<br />
+<br />
 <div class="payplan-section col-xs-4">
     <h2>Payment Plans:</h2><br class="clr" />
     
@@ -22,10 +25,9 @@
           <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
           <td id="<%= plan.id %>" class="payment-cell action"><%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;<%= link_to "Delete", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Are you sure?"} %></td>
         </tr>
-        <%#= render '/payments/payment_edit_popup', :plan => plan %>
-        <!-- Modal -->
 
-        <div class="modal fade" id="myModal<%=plan.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <!-- Modal -->
+        <div class="modal fade" id="myModal<%=plan.id%>" data-plan="<%= plan.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -46,23 +48,59 @@
       </tbody>
     </table>
     
+    <br class="clr" />
+    <br />
+  
+    <div>
+    <h2>Expense Summary:</h2><br class="clr" />
+    <div><h3 class="summary-totals">Total owed: <%= number_to_currency current_user.get_total_expense_amt %></h3></div>
+    <br class="clr" />
+    <table width="450px" class="table table-bordered table-hover table-condensed">
+      <thead>
+        <tr>
+          <th class="summary-header">Total owed by card</th>
+          <th class="summary-header">Total owed by party</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 150, :width => 150, :class => "chart-box" } %></td>
+          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 150, :width => 150, :class => "chart-box" } %></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  
   </div>
+
 
 <script>
   $(function() {
-    alert("Opened modal");
     var del_queue = [];
     var total_party = 0.00;
+    var plan_id;
     var total_plan = $("#payment-section").data("plan-total");
+    var default_party = $(".tab-pane.active").attr("id");
     
     $("#save-changes").hide();
     
     $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
         
+    $('.modal').on('shown.bs.modal', function() {
+      del_queue = [];
+      total_party = 0.00;
+      
+      plan_id = $(this).data("plan");
+      total_plan = $("#payment-section-" + plan_id).data("plan-total");
+      default_party = $(".tab-pane.active." + plan_id).attr("id");
+      
+      setTotalPartyAndPlan(default_party);
+    })
+    
     $(".nav.nav-tabs").click(function() {
-      $(".total-for-plan").data("total", total_plan );
-      $(".total-for-plan").html(total_plan);
-      $(".total-for-plan").formatCurrency();
+      $(".total-for-plan-"+plan_id).data("total", total_plan );
+      $(".total-for-plan-"+plan_id).html(total_plan);
+      $(".total-for-plan-"+plan_id).formatCurrency();
     })
     
     //Make amount paid field inline editable
@@ -74,7 +112,7 @@
         // Update party and plan totals
         var currentPayment = $(this).data("payment");
         var paymentDifference = newValue - parseFloat(currentPayment);
-        var party = $(".tab-pane.active").attr("id");
+        var party = $(".tab-pane.active").data("plan-id");          // used to be attr("id")
         
         setTotalPartyAndPlan(party);      
         updateTotals(true, paymentDifference, party);
@@ -86,26 +124,27 @@
     
     // Mark a payment as deleted when the trash icon is clicked
     $(".glyphicon.glyphicon-trash").click(function(event) {
-      var id = $(this).data("id")
-      var party = $(".tab-pane.active").attr("id")
+      var payment_id = $(this).data("id")
+      var party = $(".tab-pane.active."+plan_id).data("party")
+      
       selected_payment = parseFloat($(this).data("payment"));
       
       setTotalPartyAndPlan(party);
       
       // Add id to queue of payment ids to remove
-      if($.inArray(id, del_queue) != -1) {
-        var index = del_queue.indexOf(id);
+      if($.inArray(payment_id, del_queue) != -1) {
+        var index = del_queue.indexOf(payment_id);
         if (index > -1) {
           del_queue.splice(index, 1);
           updateTotals(true, selected_payment, party);
-          $("#payment-"+id).editable('enable');
+          $("#payment-"+payment_id).editable('enable');
         }
       } else {
-        del_queue.push(id);
+        del_queue.push(payment_id);
         updateTotals(false, selected_payment, party);
-        $("#payment-"+id).editable('disable');
+        $("#payment-"+payment_id).editable('disable');
       }      
-      $('.payment-'+id).toggleClass("crossed-out");
+      $('.payment-'+payment_id).toggleClass("crossed-out");
       
       if(del_queue.length > 0) {
         $("#save-changes").show();
@@ -118,8 +157,8 @@
     });
     
     function setTotalPartyAndPlan(party) {
-     total_party = parseFloat($("#total-for-party-"+party).data("total"));
-     total_plan = parseFloat($(".total-for-plan").data("total"));
+      total_party = parseFloat($("#total-for-party-"+party+"-"+plan_id).data("total"));
+      total_plan = parseFloat($(".total-for-plan-"+plan_id).data("total"));
     }
     
     function updateTotals(add, amt, party) {
@@ -131,13 +170,13 @@
         total_plan -= amt; 
       }
       
-      $("#total-for-party-"+party).html( total_party );
-      $("#total-for-party-"+party).data("total", total_party);
-      $("#total-for-party-"+party).formatCurrency();
+      $("#total-for-party-"+party+"-"+plan_id).html( total_party );
+      $("#total-for-party-"+party+"-"+plan_id).data("total", total_party);
+      $("#total-for-party-"+party+"-"+plan_id).formatCurrency();
       
-      $(".total-for-plan").html( total_plan );
-      $(".total-for-plan").data("total", total_plan);
-      $(".total-for-plan").formatCurrency();
+      $(".total-for-plan-"+plan_id).html( total_plan );
+      $(".total-for-plan-"+plan_id).data("total", total_plan);
+      $(".total-for-plan-"+plan_id).formatCurrency();
     }
     
     $("#save-changes").click(function() {
@@ -150,7 +189,6 @@
             $(".tab-pane.active").html("No more payments for this party.");
             $("#save-changes").hide();
           } else {
-            //$("#total-for-party").html( parseInt($("#total-for-party").html) - 10.00 );
             $(".modal-body").load();
           }
           

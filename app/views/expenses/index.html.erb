@@ -13,7 +13,6 @@
     </div>
   </div>
   <%= render :partial => '/payments/payment' %>
-  
 </div>
 
 <script>
@@ -21,6 +20,10 @@
     $("input#expense_date.string.required.form-control").click(function() {
       $(this).datepicker({ dateFormat: 'yy-mm-dd' });
       $(this).datepicker('show');
-    });
+    });    
+    
+    $("figure.chart").attr("width", "150px");
+    $("figure.chart").attr("display", "inline");
+    
   })
 </script>

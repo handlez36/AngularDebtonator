@@ -32,7 +32,7 @@ class ExpensesController < ApplicationController
       flash[:alert] = "Please delete pending payment first"
       redirect_to expenses_path and return
     end
-      
+    
     current_expense.update_attributes(expense_params.merge(:user => current_user))
     
     flash[:alert] = "Validation errors with expense update" unless current_expense.valid?

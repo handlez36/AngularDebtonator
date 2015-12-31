@@ -4,6 +4,8 @@
   <title>MyBudget</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+  <%= javascript_include_tag :modernizr %>
   <%= csrf_meta_tags %>
   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -45,16 +47,13 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-  
   <!-- Display flash messages when required -->
   <% if notice.present? %>
     <p class="alert alert-info"><%= notice %></p>
   <% end %>
-  
   <% if alert.present? %>
     <p class="alert alert-danger"><%= alert %></p>
   <% end %>
-  
 <%= yield %>
 
 </body>

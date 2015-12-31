@@ -29,4 +29,41 @@ class User < ActiveRecord::Base
     self.expenses.map { |expense| expense.responsible_party.name }.uniq
   end
   
+  def get_expense_total_by_card
+    
+    colors = ["#F7464A", "#46BFBD", "#FDB45C", "blue"]
+    highlights = ["#FF5A5E", "#5AD3D1", "#FFC870", "#BC3421"]
+    data = []
+    
+    self.expenses.group(:card).sum(:amt_charged).each_with_index do |ring, index|
+      data_hash = Hash.new
+      data_hash[:value] = ring[1].round(2)
+      data_hash[:color] = colors[index]
+      data_hash[:highlight] = highlights[index]
+      data_hash[:label] = ring[0].card_retailer
+      data.push data_hash
+    end
+    
+    return data
+  end
+
+  def get_expense_total_by_party
+    
+    colors = ["red", "orange", "green", "blue"]
+    highlights = ["#FF5A5E", "#5AD3D1", "#FFC870", "#BC3421"]
+    data = []
+    
+    self.expenses.group(:responsible_party).sum(:amt_charged).each_with_index do |ring, index|
+      data_hash = Hash.new
+      data_hash[:value] = ring[1].round(2)
+      data_hash[:color] = colors[index]
+      data_hash[:highlight] = highlights[index]
+      data_hash[:label] = ring[0].name
+      data.push data_hash
+    end
+    
+    return data
+  end
+
+  
 end

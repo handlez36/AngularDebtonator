@@ -68,6 +68,13 @@ class Expense < ActiveRecord::Base
     self.payments.delete_all
   end
   
+  def adjust_charge(amt_pending)
+    self.amt_pending -= amt_pending
+    self.amt_paid += amt_pending
+    self.amt_charged -= amt_pending
+    self.save
+  end
+  
   def print_expense_stats
     puts "Expense: #{self.id}"
     puts " -- amt charged: #{self.amt_charged}"

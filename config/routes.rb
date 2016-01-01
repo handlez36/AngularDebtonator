@@ -6,6 +6,8 @@ MyBudget::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   root 'static_pages#index'
+  put 'payplans/:id/lock', to: 'payplans#lock', as: 'lock_payment'
+  get 'payplans/', to: 'payplans#archived', as: 'archived_payments'
   
   resources :payments, :only => [:edit, :update]
   resources :payments, as: 'delete_payment', :only => [:destroy]

@@ -63,8 +63,7 @@ class ExpensesController < ApplicationController
   
   helper_method :current_plans
   def current_plans
-    #@plans ||= Payplan.all
-    @plans ||= current_user.payplans
+    @plans ||= current_user.payplans.where(:archived => false)
   end
   
   def authorize_user

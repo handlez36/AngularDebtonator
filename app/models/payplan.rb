@@ -40,10 +40,12 @@ class Payplan < ActiveRecord::Base
       # Archive all payments of this payplan
       payment.archived = true
       payment.save
+      
     end
   
     # Archive the payplan
     self.archived = true
+    self.save
     
   end
     

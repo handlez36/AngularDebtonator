@@ -21,10 +21,16 @@ class Expense < ActiveRecord::Base
     self.responsible_party ||= ResponsibleParty.find_by(:name => "Brandon")
   end
   
-  # Calculate amt_remaining
+  # Calculate amt_remaining, inclusive of amt_pending
   # amt_charged - amt_paid - amt_pending
   def amt_remaining
     self.amt_charged - self.amt_paid - self.amt_pending
+  end
+  
+  # Calculate amt_remaining, excluding amt_pending
+  # amt_charged - amt_paid
+  def amt_remaining_to_pay
+    self.amt_charged - self.amt_paid
   end
   
   def update_amt_pending(add_amt)
@@ -71,7 +77,6 @@ class Expense < ActiveRecord::Base
   def adjust_charge(amt_pending)
     self.amt_pending -= amt_pending
     self.amt_paid += amt_pending
-    self.amt_charged -= amt_pending
     self.save
   end
   

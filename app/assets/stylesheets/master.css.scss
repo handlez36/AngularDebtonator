@@ -209,6 +209,10 @@ h2, h3 {
   background-color: rgba(0,0,0,0);
 }
 
+.summary {
+  width: 450px;
+}
+
 .summary-box {
 //  border: 1px solid black;
 //  background-color: rgba(0,0,0,0.5);
@@ -228,4 +232,14 @@ h2, h3 {
 
 .col-xs-12 {
   padding: 3px;
+}
+
+.payment-side {
+  width: 500px;
+}
+
+.archived_link {
+  font-weight: 200;
+  font-size: 14px;
+  color: cadetblue;
 }

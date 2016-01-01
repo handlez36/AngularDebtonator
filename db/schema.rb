@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160101060528) do
+ActiveRecord::Schema.define(version: 20160101211716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20160101060528) do
     t.integer  "card_id"
     t.integer  "responsible_party_id"
     t.float    "amt_pending"
+    t.boolean  "archived",             default: false
   end
 
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree

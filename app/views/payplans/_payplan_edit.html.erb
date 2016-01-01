@@ -1,0 +1,35 @@
+<!-- Modal -->
+
+<!-- Nav section for list of parties responsible for payment -->
+<ul class="nav nav-tabs" id="payeeTab">
+<% plan.get_payees.each_with_index do |party, index| %>
+  <% active = (index == 0) ? "active" : "" %>
+  <li role="presentation" class="<%=active%>"><%= link_to party, "##{party}-#{plan.id}", :class => "payee-link", :data => {:toggle => "tab"} %></li>
+<% end %>
+</ul>
+
+<div class="tab-content" id="payment-section-<%= plan.id %>" data-plan-total="<%=plan.get_plan_total%>">
+<% plan.get_payees.each_with_index do |party, index| %>
+  <% active = (index == 0) ? "active" : "" %>
+  <div class="tab-pane <%=active%> <%= plan.id %>" id="<%= "#{party}-#{plan.id}" %>" data-plan-id="<%= plan.id %>" data-party="<%= party %>">
+    <% plan.get_expenses_for_payee(party).each do |payment| %>
+      <%= payment.inspect %>
+      <br />
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.date %></div>
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
+      <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
+      <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
+      <br class="clr" />
+    <% end %>
+    <br class="clr" />
+    <hr />
+    <div class="col-xs-5 col-xs-offset-1 payment-total">
+      <b>Total for <%= party %>:</b> <span id="total-for-party-<%= party %>-<%= plan.id %>" data-total="<%= plan.get_payee_amt party %>"><%= number_to_currency plan.get_payee_amt party %></span>
+    </div>
+    <div class="col-xs-5 payment-total">
+      <b>Total for plan:</b> <span class="total-for-plan-<%= plan.id %>" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
+    </div>
+    <br />
+  </div>
+<% end %>
+</div>

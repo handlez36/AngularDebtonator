@@ -1,0 +1,217 @@
+<br />
+<br />
+<br />
+<div class="payplan-section col-xs-4">
+    
+    <div class="payment-side">
+      <h2>Payment Plans:</h2><br class="clr" />
+      <table id="paymentplan" class="table table-bordered table-hover table-condensed">
+        <thead>
+        <tr class="success">
+          <th class="payment-header">Date</th>
+          <% ResponsibleParty.all.each do |party| %>
+            <th class="payment-header"><%= party.name%></th>
+          <% end %>
+          <th class="payment-header total">Total</th>
+          <th class="payment-header">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% current_plans.each do |plan| %>
+          <tr class="payment-row">
+            <td class="payment-cell date"><%= plan.date%></td>
+            <% ResponsibleParty.all.each do |party| %>
+              <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
+            <% end %>
+            <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
+            <td id="<%= plan.id %>" class="payment-cell action">
+              <%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;
+              <%= link_to "Delete", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Deleting this plan will delete all payments included in the plan. Are you sure you want to delete this plan?"} %>&nbsp;
+              <%= link_to "", lock_payment_path(plan), :class => "glyphicon glyphicon-lock", :method => :put, :data => {:confirm => "Clicking OK will archive this payment for good. Are you sure?"} %>
+            </td>
+          </tr>
+
+          <!-- Modal -->
+          <div class="modal fade" id="myModal<%=plan.id%>" data-plan="<%= plan.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                  <%= render 'payplans/payplan_edit', :plan => plan %>
+                </div>
+                <div class="modal-footer">
+                  <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button id="save-changes" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        </tbody>
+      </table>
+      <%= link_to ">> Archived Payments", archived_payments_path, :class => "archived_link pull-right" %>
+    <br class="clr" />
+    </div>
+  
+    <br class="clr" />
+    <br /><br />
+  
+    <div class="booyah-box payment-side">
+    <h2>Expense Summary:</h2><br class="clr" />
+    <div class="summary"><h3 class="summary-totals">Total owed before payments: <%= number_to_currency current_user.get_total_expense_amt %></h3></div>
+    <div class="summary"><h3 class="summary-totals">Total owed after payments: <%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h3></div>
+    <br class="clr" />
+    <table width="450px" class="table table-bordered table-hover table-condensed">
+      <thead>
+        <tr>
+          <th class="summary-header">Total owed by card</th>
+          <th class="summary-header">Total owed by party (before pending payments)</th>
+          <th class="summary-header">Total owed by party (after pending payments)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 150, :width => 150, :class => "chart-box" } %></td>
+          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 150, :width => 150, :class => "chart-box" } %></td>
+          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 150, :width => 150, :class => "chart-box" } %></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  
+  </div>
+
+
+<script>
+  $(function() {
+    var del_queue = [];
+    var total_party = 0.00;
+    var plan_id;
+    var total_plan = $("#payment-section").data("plan-total");
+    var default_party = $(".tab-pane.active").attr("id");
+    
+    $("#save-changes").hide();
+    
+    $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
+        
+    $('.modal').on('shown.bs.modal', function() {
+      del_queue = [];
+      total_party = 0.00;
+      
+      plan_id = $(this).data("plan");
+      total_plan = $("#payment-section-" + plan_id).data("plan-total");
+      default_party = $(".tab-pane.active." + plan_id).attr("id");
+      
+      setTotalPartyAndPlan(default_party);
+    })
+    
+    $(".nav.nav-tabs").click(function() {
+      $(".total-for-plan-"+plan_id).data("total", total_plan );
+      $(".total-for-plan-"+plan_id).html(total_plan);
+      $(".total-for-plan-"+plan_id).formatCurrency();
+    })
+    
+    //Make amount paid field inline editable
+    $(".amt_field").editable({
+      success: function(response, newValue) {
+        // Grab current value of payment
+        if(response.status == 'error') return response.msg
+        
+        // Update party and plan totals
+        var currentPayment = $(this).data("payment");
+        var paymentDifference = newValue - parseFloat(currentPayment);
+        var party = $(".tab-pane.active").data("plan-id");          // used to be attr("id")
+        
+        setTotalPartyAndPlan(party);      
+        updateTotals(true, paymentDifference, party);
+      },
+      error: function(errors) {
+        return "Error processing"
+      }
+    });
+    
+    // Mark a payment as deleted when the trash icon is clicked
+    $(".glyphicon.glyphicon-trash").click(function(event) {
+      var payment_id = $(this).data("id")
+      var party = $(".tab-pane.active."+plan_id).data("party")
+      
+      selected_payment = parseFloat($(this).data("payment"));
+      
+      setTotalPartyAndPlan(party);
+      
+      // Add id to queue of payment ids to remove
+      if($.inArray(payment_id, del_queue) != -1) {
+        var index = del_queue.indexOf(payment_id);
+        if (index > -1) {
+          del_queue.splice(index, 1);
+          updateTotals(true, selected_payment, party);
+          $("#payment-"+payment_id).editable('enable');
+        }
+      } else {
+        del_queue.push(payment_id);
+        updateTotals(false, selected_payment, party);
+        $("#payment-"+payment_id).editable('disable');
+      }      
+      $('.payment-'+payment_id).toggleClass("crossed-out");
+      
+      if(del_queue.length > 0) {
+        $("#save-changes").show();
+        $("#save-changes").html("Remove selected");
+      } else {
+        $("#save-changes").hide();
+        $("#save-changes").html("Save changes");
+      }
+      
+    });
+    
+    function setTotalPartyAndPlan(party) {
+      total_party = parseFloat($("#total-for-party-"+party+"-"+plan_id).data("total"));
+      total_plan = parseFloat($(".total-for-plan-"+plan_id).data("total"));
+    }
+    
+    function updateTotals(add, amt, party) {
+      if(add==1) {
+        total_party += amt;
+        total_plan += amt;
+      } else if(add==0) {
+        total_party -= amt;
+        total_plan -= amt; 
+      }
+      
+      $("#total-for-party-"+party+"-"+plan_id).html( total_party );
+      $("#total-for-party-"+party+"-"+plan_id).data("total", total_party);
+      $("#total-for-party-"+party+"-"+plan_id).formatCurrency();
+      
+      $(".total-for-plan-"+plan_id).html( total_plan );
+      $(".total-for-plan-"+plan_id).data("total", total_plan);
+      $(".total-for-plan-"+plan_id).formatCurrency();
+    }
+    
+    $("#save-changes").click(function() {
+      del_queue.forEach(function(id, index, array) {
+        $.ajax({
+          url: "/payments/" + id,
+          method: "DELETE"
+        }).done(function(response) {
+          if(response.count == 0) {
+            $(".tab-pane.active").html("No more payments for this party.");
+            $("#save-changes").hide();
+          } else {
+            $(".modal-body").load();
+          }
+          
+        });
+      })
+      del_queue.splice(0, del_queue.length);
+      window.location.reload();
+    });
+    
+    $("#close-modal").click(function() {
+      window.location.reload();
+    })
+        
+  })
+</script>

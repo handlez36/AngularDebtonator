@@ -29,5 +29,22 @@ class Payplan < ActiveRecord::Base
   def get_expenses_for_payee(payee)
     self.payments.select {|payment| payment.responsible_party.name == payee }
   end
+  
+  def lock
+    
+    self.payments.each do |payment|
+      # Adjust the expense amt_charged, amt_pending, and amt_paid
+      expense = payment.expense
+      expense.adjust_charge(payment.amt_paid)
+      
+      # Archive all payments of this payplan
+      payment.archived = true
+      payment.save
+    end
+  
+    # Archive the payplan
+    self.archived = true
+    
+  end
     
 end

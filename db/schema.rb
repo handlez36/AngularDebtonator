@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203040218) do
+ActiveRecord::Schema.define(version: 20160101060528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20151203040218) do
     t.integer  "card_id"
     t.integer  "user_id"
     t.integer  "responsible_party_id"
+    t.boolean  "archived",             default: false
   end
 
   create_table "payplans", force: true do |t|
@@ -59,6 +60,7 @@ ActiveRecord::Schema.define(version: 20151203040218) do
     t.integer  "card_id"
     t.text     "comments"
     t.integer  "user_id"
+    t.boolean  "archived",   default: false
   end
 
   create_table "responsible_parties", force: true do |t|

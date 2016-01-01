@@ -146,5 +146,6 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_nil Payplan.find_by_id(id)
 
   end
+  
 
 end

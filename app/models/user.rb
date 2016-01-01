@@ -46,24 +46,68 @@ class User < ActiveRecord::Base
     
     return data
   end
-
-  def get_expense_total_by_party
+  
+  def get_expense_total_by_card(exclude_pending = true)
     
-    colors = ["red", "orange", "green", "blue"]
+    colors = ["#F7464A", "#46BFBD", "#FDB45C", "blue"]
     highlights = ["#FF5A5E", "#5AD3D1", "#FFC870", "#BC3421"]
     data = []
     
-    self.expenses.group(:responsible_party).sum(:amt_charged).each_with_index do |ring, index|
-      data_hash = Hash.new
-      data_hash[:value] = ring[1].round(2)
-      data_hash[:color] = colors[index]
-      data_hash[:highlight] = highlights[index]
-      data_hash[:label] = ring[0].name
-      data.push data_hash
+    self.expenses.each_with_index do |expense, index|
+      if data.select { |hash| hash[:label] == expense.card.card_retailer  }.count == 0
+        data_hash = Hash.new
+        data_hash[:label] = expense.card.card_retailer
+        data_hash[:value] = (exclude_pending) ? expense.amt_charged : expense.amt_charged - expense.amt_pending
+        data_hash[:highlight] = highlights[data.count]
+        data_hash[:color] = colors[data.count]
+        data << data_hash
+      else
+        data.select { |hash| hash[:label] == expense.card.card_retailer }.first[:value] += (expense.amt_charged - expense.amt_pending)
+      end
     end
     
     return data
   end
+  
+  def get_expense_total_by_party(exclude_pending = true)
+    
+    colors = ["#F7464A", "#46BFBD", "#FDB45C", "blue"]
+    highlights = ["#FF5A5E", "#5AD3D1", "#FFC870", "#BC3421"]
+    data = []
+    
+    self.expenses.each_with_index do |expense, index|
+      if data.select { |hash| hash[:label] == expense.responsible_party.name  }.count == 0
+        data_hash = Hash.new
+        data_hash[:label] = expense.responsible_party.name
+        data_hash[:value] = (exclude_pending) ? expense.amt_charged : expense.amt_charged - expense.amt_pending
+        data_hash[:highlight] = highlights[data.count]
+        data_hash[:color] = colors[data.count]
+        data << data_hash
+      else
+        data.select { |hash| hash[:label] == expense.responsible_party.name }.first[:value] += (expense.amt_charged - expense.amt_pending)
+      end
+    end
+    
+    return data
+  end
+
+#  def get_expense_total_by_party(exclude_pending = true)
+#    
+#    colors = ["red", "orange", "green", "blue"]
+#    highlights = ["#FF5A5E", "#5AD3D1", "#FFC870", "#BC3421"]
+#    data = []
+#    
+#    self.expenses.group(:responsible_party).sum(:amt_charged).each_with_index do |ring, index|
+#      data_hash = Hash.new
+#      data_hash[:value] = ring[1].round(2)
+#      data_hash[:color] = colors[index]
+#      data_hash[:highlight] = highlights[index]
+#      data_hash[:label] = ring[0].name
+#      data.push data_hash
+#    end
+#    
+#    return data
+#  end
 
   
 end

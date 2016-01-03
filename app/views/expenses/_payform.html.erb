@@ -13,7 +13,7 @@
   <div class="col-xs-3">              
     <%= e.association :responsible_party, :label_method => lambda {|party| party.name } %><br class="clr" />
     <input type="hidden" name="payment[card_id]" value="<%= expense.card.id %>" />
-    <%= link_to 'Cancel', '#', :class => 'cancel-button btn btn-danger' %>
+    <%= link_to 'Cancel', "#pay#{expense.id}", :class => 'cancel-button btn btn-danger', :data => { :toggle => 'collapse', :parent => '#accordion' } %>
   </div>
   <div class="col-xs-3">
     <%= e.input :how_to_pay %>

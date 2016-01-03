@@ -13,12 +13,13 @@
   <% active = (index == 0) ? "active" : "" %>
   <div class="tab-pane <%=active%> <%= plan.id %>" id="<%= "#{party}-#{plan.id}" %>" data-plan-id="<%= plan.id %>" data-party="<%= party %>">
     <% plan.get_expenses_for_payee(party).each do |payment| %>
-      <%= payment.inspect %>
       <br />
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.date %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
-      <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
+      <% if request.original_fullpath == "/expenses" %>
+        <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
+      <% end %>
       <br class="clr" />
     <% end %>
     <br class="clr" />

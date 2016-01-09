@@ -27,23 +27,13 @@
     <% end %>
     <br class="clr"/>
     <br />
-    <div class="chart-box">
+    <div class="chart-box" style="text-align:center">
       <%= pie_chart Expense.joins(:responsible_party).includes(:responsible_party).group(:name).sum(:amt_charged) %>
     </div>
   <% else %>
     <h3 class="text-center">Go to credit card ledger</h3>
   <% end %>
 </div>
-
-<!--
-<div class="booyah-box col-xs-4 col-xs-offset-2">
-  <%# if user_signed_in? %>
-    <%#= link_to "Go to monthly budget planner", "#", :class => "btn btn-warning" %>
-  <%# else %>
-    <h3 class="text-center">Go to monthly budget planner</h3>
-  <%# end %>
-</div>
--->
 
 <script>
   

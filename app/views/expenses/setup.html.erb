@@ -24,7 +24,7 @@
         <%= simple_form_for Card.new, :url => "/cards", :method => "post" do |e| %>
           <%= e.input :card_retailer, :label => "Card", wrapper_html: { class: "form-inline" } do %>
             <%= e.input_field :card_retailer, :label => "Card", :style => "margin-left: 30px;" %>
-            <%= e.button :submit, "Add", :class => "btn btn-info", :style => "margin-left: 30px;" %>
+        <%= e.button :submit, "Add", :class => "btn btn-info card-add-button", :style => "margin-left: 30px;" %>
           <% end %>
         <% end %>
       </div>
@@ -40,7 +40,7 @@
       <% current_user.responsible_parties.each_with_index do |party, index| %>
         <div class="col-xs-2"><%= index + 1 %>:</div>
         <div class="col-xs-4"><%= link_to party.name, "#", :class => "party-name", :data => { :id => party.id, :url => "/responsible_parties/#{party.id}", :type => :text, :name => "party_name", :pk => party.id } %></div>
-        <div class="col-xs-4"><i id="new-card-<%= party.id %>" class="glyphicon glyphicon-trash del-party"></i></div>
+        <div class="col-xs-4"><i id="<%= party.id %>" class="glyphicon glyphicon-trash del-party"></i></div>
         <br />
       <% end %>
       </div>
@@ -50,12 +50,20 @@
         <%= simple_form_for ResponsibleParty.new, :url => "/responsible_parties", :method => "post" do |e| %>
           <%= e.input :name, :label => "Party", wrapper_html: { class: "form-inline" } do %>
             <%= e.input_field :name, :label => "Name", :style => "margin-left: 30px;" %>
-            <%= e.button :submit, "Add", :class => "btn btn-info", :style => "margin-left: 30px;" %>
+            <%= e.button :submit, "Add", :class => "btn btn-info party-add-button", :style => "margin-left: 30px;" %>
           <% end %>
         <% end %>
       </div>
     </div>
   </div>
+</div>
+<br class="clr" />
+<br />
+<br />
+<br />
+<br />
+<div class="expense-button-section">
+  <%= link_to "Go to Expense Page", expenses_path, :class => "btn btn-primary expense-button"%>
 </div>
 
 <script>
@@ -63,8 +71,21 @@
     
     $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
     
+    //$(".expense-button").hide();
+    toggle_expense_button();
+    
+    function toggle_expense_button() {
+      if ( $("*").hasClass("card-name") && $("*").hasClass("party-name") ) {
+        $(".expense-button").show();
+      } else {
+        $(".expense-button").hide();
+      }
+    };
+    
     $(".card-name").editable({
       success: function(response, newValue) {
+        //toggle_expense_button();
+        
         // Grab current value of payment
         if(response.status == 'error') return response.msg
       },
@@ -75,6 +96,8 @@
     
     $(".party-name").editable({
       success: function(response, newValue) {
+        //toggle_expense_button();
+        
         // Grab current value of payment
         if(response.status == 'error') return response.msg
       },

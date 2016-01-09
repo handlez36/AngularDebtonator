@@ -33,18 +33,19 @@ class Payplan < ActiveRecord::Base
   def lock
     
     self.payments.each do |payment|
-      # Adjust the expense amt_charged, amt_pending, and amt_paid
-      payment.expense.adjust_charge(payment.amt_paid)
-      
-      if payment.expense.amt_charged - payment.expense.amt_paid == 0.00
-        payment.expense.archived = true
-        payment.expense.save
-      end
-      
       # Archive all payments of this payplan
       payment.archived = true
-      payment.save
+      status = payment.save
       
+      if status
+        # Adjust the expense amt_charged, amt_pending, and amt_paid
+        payment.expense.adjust_charge(payment.amt_paid)
+
+        if payment.expense.amt_charged - payment.expense.amt_paid == 0.00
+          payment.expense.archived = true
+          payment.expense.save
+        end
+      end
     end
   
     # Archive the payplan

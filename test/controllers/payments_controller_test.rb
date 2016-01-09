@@ -77,11 +77,6 @@ class PaymentsControllerTest < ActionController::TestCase
     payment1 = create(:payment, :expense => expense, :amt_paid => 25, :user => user)
     payment2 = create(:payment, :expense => expense, :amt_paid => 60, :user => user)
     
-    #put :update, :id => payment.id, :payment => {
-    #  :date => Date.new(2015, 9, 20),   # Updated date
-    #  :amt_paid => 600.00,       # Updated amt_paid
-    #  :card_id => payment.card.id
-    #  }
     put :update, :id => payment1.id, :value => 460.00
     payment1.reload
     expense.reload
@@ -146,6 +141,31 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_nil Payplan.find_by_id(id)
 
   end
+  
+  test "locking a payplan archives its respective payments" do
+    user = create(:user)
+    sign_in user
+    
+    expense = create(:expense, :amt_charged => 500.00, :amt_pending => 0.00, :user_id => user.id)
+    
+    # Submit pending payment
+    assert_difference "Payment.count" do
+      post :create, :expense_id => expense.id, :payment => {
+        :amt_paid => 500.00,
+        :date => Date.today,
+        :card_id => expense.card.id,
+        :responsible_party_id => expense.responsible_party_id
+      }
+    end
+    
+    payplan = Payplan.last
+    payplan.lock
+        
+    assert_equal true, payplan.payments.first.archived
+    
+  end
+  
+
   
 
 end

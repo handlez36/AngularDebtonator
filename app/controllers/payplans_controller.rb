@@ -30,7 +30,7 @@ class PayplansController < ApplicationController
   
   helper_method :current_plans
   def current_plans
-    @payplans ||= Payplan.where(:archived => true)
+    @payplans ||= current_user.payplans.where(:archived => true)
   end
   
   def authorize_user

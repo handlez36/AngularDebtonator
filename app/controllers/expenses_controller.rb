@@ -3,6 +3,10 @@ class ExpensesController < ApplicationController
   before_action :authorize_user, :only => [:edit, :update, :destroy]
   
   def index
+    if current_user.cards.count == 0 || current_user.responsible_parties.count == 0
+      redirect_to setup_path
+    end
+    
   end
   
   def create    
@@ -26,9 +30,7 @@ class ExpensesController < ApplicationController
   end
   
   def update
-    updated_expense = current_expense
-    
-    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f)
+    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f) && expense_params[:amt_charged].to_f >= 0.00
       flash[:alert] = "Please delete pending payment first"
       redirect_to expenses_path and return
     end
@@ -47,6 +49,9 @@ class ExpensesController < ApplicationController
     end
     
     redirect_to expenses_path
+  end
+  
+  def setup
   end
     
   private

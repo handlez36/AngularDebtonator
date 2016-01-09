@@ -14,9 +14,18 @@ class Payment < ActiveRecord::Base
   
   # Validator for the amt_paid field
   def amt_valid
-    unless self.amt_paid <= expense.amt_remaining && self.amt_paid > 0
+#    puts "******************"
+#    puts "Payment amt_paid <= expense.amt_remaining && amt_paid > 0"
+#    puts "Validating payment #{self.id}..."
+#    puts "Payment in question #{self.amt_paid}"
+#    self.expense.print_expense_stats
+    
+    unless is_valid_new_payment? || is_valid_payment_update?
       errors.add(:amt, "You cannot pay over the expense's remaining balance")
+#      puts "Payment invalid"
     end
+    
+#    puts "******************"
   end
   
   # After a payment is removed, refactor the amt_pending value
@@ -57,5 +66,15 @@ class Payment < ActiveRecord::Base
     expense = self.expense
     expense.amt_pending += new_payment
     expense.save
+  end
+  
+  private
+  
+  def is_valid_new_payment?
+    self.amt_paid <= expense.amt_remaining && self.amt_paid > 0
+  end
+  
+  def is_valid_payment_update?
+    !self.new_record? && self.amt_paid <= expense.amt_remaining_to_pay
   end
 end

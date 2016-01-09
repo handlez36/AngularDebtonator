@@ -18,7 +18,7 @@ class Expense < ActiveRecord::Base
     self.split ||= false
     self.how_to_pay ||= "Not sure"
     self.payment_status ||= 0
-    self.responsible_party ||= ResponsibleParty.find_by(:name => "Brandon")
+    self.responsible_party ||= ResponsibleParty.where(:user_id => self.user.id).first
   end
   
   # Calculate amt_remaining, inclusive of amt_pending
@@ -86,6 +86,7 @@ class Expense < ActiveRecord::Base
     puts " -- amt paid: #{self.amt_paid}"
     puts " -- amt pending: #{self.amt_pending}"
     puts " -- amt remaining: #{self.amt_remaining}"
+    puts " -- amt remaining without pending: #{self.amt_remaining_to_pay}"
   end
   
 end

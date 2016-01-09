@@ -21,7 +21,7 @@
     </div>
     <br class="clr" />
     <div class="col-xs-3">
-      <%= e.association :card, :label_method => lambda { |card| card.card_retailer }, input_html: {class: 'form-control'} %><br />
+      <%= e.association :card, :collection => current_user.get_available_cards, :label_method => lambda { |card| card.card_retailer }, input_html: {class: 'form-control'} %><br />
     </div>
     <br class="clr"/>
     <br />

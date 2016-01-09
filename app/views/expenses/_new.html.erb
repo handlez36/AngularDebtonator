@@ -1,0 +1,27 @@
+<%= simple_form_for Expense.new do |e| %>
+  <%#= e.input :date, error: "Please enter a date", input_html: { class: 'expense-date' } %><br />
+  <div class="col-xs-6">
+    <label for="date-field">Date:</label>
+    <input id="date-field" name="expense[date]" class='expense-date form-control col-lg-1' />
+  </div>
+  <br class="clr" />
+  <br />
+  <div class="col-xs-6">
+    <%= e.input :retailer, error: "Who charged you?", input_html: { class: 'form-field' } %><br />
+  </div>
+  <br class="clr" />
+  <div class="col-xs-6">
+    <label for="amt-field">* Amt Charged:</label>
+    <input id="amt-field" name='expense[amt_charged]' type='number' min=0.00, max=100.00 step=0.01 class="form-control" /><br />
+  </div>
+  <br class="clr" />
+  <div class="col-xs-6">
+    <label for="amt-field">* Who's Responsible:</label>
+    <%= e.association :responsible_party, :collection => current_user.get_available_parties, :label_method => lambda { |party| party.name }, input_html: {class: 'form-control'}, :label => false %><br />
+  </div>
+  <br class="clr" />
+  <div class="col-xs-6">
+    <%= e.association :card, :collection => current_user.get_available_cards, :label_method => lambda { |card| card.card_retailer }, input_html: {class: 'form-control'} %><br />
+  </div>
+  <br class="clr"/>
+<% end %>

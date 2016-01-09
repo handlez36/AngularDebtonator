@@ -8,7 +8,11 @@ MyBudget::Application.routes.draw do
   root 'static_pages#index'
   put 'payplans/:id/lock', to: 'payplans#lock', as: 'lock_payment'
   get 'payplans/', to: 'payplans#archived', as: 'archived_payments'
+  get 'setup/', to: 'expenses#setup', as: 'setup'
   
+  resources :cards
+  resources :responsible_parties
+  resources :setups
   resources :payments, :only => [:edit, :update]
   resources :payments, as: 'delete_payment', :only => [:destroy]
   resources :expenses, :only => [:new, :edit, :create, :index, :show] do

@@ -4,51 +4,63 @@
 <div class="payplan-section col-xs-4">
     
     <div class="payment-side">
-      <h2>Payment Plans:</h2><br class="clr" />
-      <table id="paymentplan" class="table table-bordered table-hover table-condensed">
-        <thead>
-        <tr class="success">
-          <th class="payment-header">Date</th>
-          <% ResponsibleParty.all.each do |party| %>
-            <th class="payment-header"><%= party.name%></th>
-          <% end %>
-          <th class="payment-header total">Total</th>
-          <th class="payment-header">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% current_plans.each do |plan| %>
-          <tr class="payment-row">
-            <td class="payment-cell date"><%= plan.date%></td>
-            <% ResponsibleParty.all.each do |party| %>
-              <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
+      <% if current_plans.count == 0 %>
+          <div class="no-payments-block">
+            Click the <span style="color:green">Green</span> Pay button on the left for any expense you would like to initiate a payment for.
+          </div>
+      <% else %>  
+        <h2>Payment Plans:</h2><br class="clr" />
+        <table id="paymentplan" class="table table-bordered table-hover table-condensed">
+          <thead>
+          <tr class="success">
+            <th class="payment-header">Date</th>
+            <% current_user.responsible_parties.each do |party| %>
+              <th class="payment-header"><%= party.name%></th>
             <% end %>
-            <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
-            <td id="<%= plan.id %>" class="payment-cell action">
-              <%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;
-              <%= link_to "Delete", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Deleting this plan will delete all payments included in the plan. Are you sure you want to delete this plan?"} %>&nbsp;
-              <%= link_to "", lock_payment_path(plan), :class => "glyphicon glyphicon-lock", :method => :put, :data => {:confirm => "Clicking OK will archive this payment for good. Are you sure?"} %>
-            </td>
+            <th class="payment-header total">Total</th>
+            <th class="payment-header">Action</th>
           </tr>
+          </thead>
+          <tbody>
+            
+          <% current_plans.each do |plan| %>
+            <tr class="payment-row">
+              <td class="payment-cell date">
+                <div class="label label-primary pull-left card-test">
+                  <%= plan.card.card_retailer %>
+                </div> 
+                <div class="card-label pull-right"><%= plan.date%></div>
+              </td>
+              <% current_user.responsible_parties.each do |party| %>
+                <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
+              <% end %>
+              <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
+              <td id="<%= plan.id %>" class="payment-cell action">
+                <%= link_to "Edit", "#", :class => "btn btn-primary btn-xs", :data => {:toggle => "modal", :target => "#myModal#{plan.id}"} %>&nbsp;
+                <%= link_to "Delete", payplan_path(plan), :class => "btn btn-danger btn-xs del_payment", :method => :delete, :data => {:confirm => "Deleting this plan will delete all payments included in the plan. Are you sure you want to delete this plan?"} %>&nbsp;
+                <%= link_to "", lock_payment_path(plan), :class => "glyphicon glyphicon-lock", :method => :put, :data => {:confirm => "Clicking OK will archive this payment for good. Are you sure?"} %>
+              </td>
+            </tr>
 
-          <!-- Modal -->
-          <div class="modal fade" id="myModal<%=plan.id%>" data-plan="<%= plan.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                </div>
-                <div class="modal-body">
-                  <%= render 'payplans/payplan_edit', :plan => plan %>
-                </div>
-                <div class="modal-footer">
-                  <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button id="save-changes" type="button" class="btn btn-primary">Save changes</button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal<%=plan.id%>" data-plan="<%= plan.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                  </div>
+                  <div class="modal-body">
+                    <%= render 'payplans/payplan_edit', :plan => plan %>
+                  </div>
+                  <div class="modal-footer">
+                    <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="save-changes" type="button" class="btn btn-primary">Save changes</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
         </tbody>
       </table>
@@ -58,29 +70,14 @@
   
     <br class="clr" />
     <br /><br />
-  
-    <div class="booyah-box payment-side">
-    <h2>Expense Summary:</h2><br class="clr" />
-    <div class="summary"><h3 class="summary-totals">Total owed before payments: <%= number_to_currency current_user.get_total_expense_amt %></h3></div>
-    <div class="summary"><h3 class="summary-totals">Total owed after payments: <%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h3></div>
-    <br class="clr" />
-    <table width="450px" class="table table-bordered table-hover table-condensed">
-      <thead>
-        <tr>
-          <th class="summary-header">Total owed by card</th>
-          <th class="summary-header">Total owed by party (before pending payments)</th>
-          <th class="summary-header">Total owed by party (after pending payments)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 150, :width => 150, :class => "chart-box" } %></td>
-          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 150, :width => 150, :class => "chart-box" } %></td>
-          <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 150, :width => 150, :class => "chart-box" } %></td>
-        </tr>
-      </tbody>
-    </table>
+    
+  <% if current_user.expenses.count == 0 %>
+    <div class="no-expenses-block">
+      Once one or more expenses and/or payments are added, this section will provide a summary of what is owed, before and after any planned payments.
     </div>
+  <% else %>
+    <%= render '/payplans/expense_payment_summary' %>
+  <% end %>
   
   </div>
 

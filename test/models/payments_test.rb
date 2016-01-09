@@ -17,4 +17,5 @@ class PaymentsTest < ActiveSupport::TestCase
     #assert_equal false, payment.valid_payment?(591, )
   end
   
+  
 end

@@ -1,6 +1,6 @@
 <%= simple_form_for expense do |e| %>
   <div class="col-xs-3" data-section="<%= expense.id %>">
-    <%= e.input :date, :as => :string %>
+    <%= e.input :date, :as => :string, :input_html => { :id => "expense_date_#{expense.id}", :class => "edit-date" } %>
     <%= e.input :retailer %>
   </div>
   <div class="col-xs-3">
@@ -9,8 +9,8 @@
     <%= e.input :how_to_pay %>
   </div>
   <div class="col-xs-3">              
-    <%= e.association :card, :label_method => lambda {|card| card.card_retailer} %>
-    <%= e.association :responsible_party, :label_method => lambda {|party| party.name } %>
+    <%= e.association :card, :collection => Card.where(:user_id => current_user.id), :label_method => lambda {|card| card.card_retailer} %>
+    <%= e.association :responsible_party, :collection => ResponsibleParty.where(:user_id => current_user.id), :label_method => lambda {|party| party.name } %>
   </div>
   <div class="col-xs-3">
     <br />

@@ -79,6 +79,10 @@ h2, h3 {
   background-color: aliceblue;
 }
 
+.expense.archived {
+  background-color: darksalmon;
+}
+
 .panel-body {
   border: 1px solid #ccc;
   padding: 5px;
@@ -161,11 +165,13 @@ h2, h3 {
 }
 
 .payment-cell.action {
-  width: 250px;
+  //width: 250px;
+  width: 130px;
 }
 
 .payment-cell.date {
-  width: 300px;
+  //width: 300px;
+  width: auto;
 }
 
 .total {
@@ -173,7 +179,7 @@ h2, h3 {
 }
 
 #paymentplan {
-  width: 465px;
+  width: 550px;
 }
 
 .payment-row {
@@ -242,4 +248,40 @@ h2, h3 {
   font-weight: 200;
   font-size: 14px;
   color: cadetblue;
+}
+
+.back_to_expenses {
+  margin-left: 10px;
+}
+
+.setup-box {
+  border: 2px solid #333333;
+  border-top-style: none;
+  border-bottom-style: none;
+  padding: 5px;
+}
+
+.setup-title {
+  display: inline-block;
+  width: 425px;
+  text-align: center;
+  font-weight: 200;
+}
+
+.card-add-form {
+  margin-left: 20px;
+}
+
+.no-payments-block, .no-expenses-block {
+  font-weight: 200;
+  margin-top: 15px;
+}
+
+.card-label {
+  padding-right: 35px;
+}
+
+.card-test {
+  //background-color: darkorange;
+  background-color: cadetblue;
 }

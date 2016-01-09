@@ -13,6 +13,7 @@ end
 FactoryGirl.define do
   factory :card do
     card_retailer "AmEx"
+    association :user
   end
 end
 
@@ -36,10 +37,10 @@ end
 # FactoryGirl instance for a responsible_party
 FactoryGirl.define do
   factory :responsible_party do
-    name "Brandon"
     sequence :name do |n|
       "Party#{n}"
     end
+    association :user
   end
 end
 

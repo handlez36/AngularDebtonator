@@ -2,7 +2,7 @@
   <div class="col-xs-3">
     <%#= e.input :date, :as => :string %>
     <label for="paydate-field">* Date</label>
-    <input id="paydate-field" name="payment[date]" class="form-control paydate" value=<%= expense.date.to_s %> />
+    <input id="paydate-field-<%= expense.id %>" name="payment[date]" class="form-control paydate" value=<%= expense.date.to_s %> />
   </div>
   <div class="col-xs-3">
     <% "Amt charged: #{expense.amt_charged.inspect}" %>
@@ -11,7 +11,7 @@
     <%= e.submit 'Pay', :class => 'pay-button btn btn-success pull-right' %>
   </div>
   <div class="col-xs-3">              
-    <%= e.association :responsible_party, :label_method => lambda {|party| party.name } %><br class="clr" />
+    <%= e.association :responsible_party, :collection => current_user.get_available_parties, :label_method => lambda {|party| party.name } %><br class="clr" />
     <input type="hidden" name="payment[card_id]" value="<%= expense.card.id %>" />
     <%= link_to 'Cancel', "#pay#{expense.id}", :class => 'cancel-button btn btn-danger', :data => { :toggle => 'collapse', :parent => '#accordion' } %>
   </div>

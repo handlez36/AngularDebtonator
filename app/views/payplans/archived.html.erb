@@ -1,15 +1,16 @@
 <br />
 <br />
 <br />
-<div class="payplan-section col-xs-4">
-  <h2>Payment Plans:</h2><br class="clr" />
-
+<%= link_to "<< Back to Expenses", expenses_path, :class => "archived_link back_to_expenses" %>
+<div class="payplan-section col-xs-6 pull-right">
+  <br />
+  <h2>Archived Payment Plans:</h2><br class="clr" />
   <table id="paymentplan" class="table table-bordered table-hover table-condensed">
     <% if current_plans.count > 0 %>
     <thead>
     <tr class="success">
       <th class="payment-header">Date</th>
-      <% ResponsibleParty.all.each do |party| %>
+      <% current_user.responsible_parties.all.each do |party| %>
         <th class="payment-header"><%= party.name%></th>
       <% end %>
       <th class="payment-header total">Total</th>
@@ -20,7 +21,7 @@
     <% current_plans.each do |plan| %>
       <tr class="payment-row">
         <td class="payment-cell date"><%= plan.date%></td>
-        <% ResponsibleParty.all.each do |party| %>
+        <% current_user.responsible_parties.all.each do |party| %>
           <td class="payment-cell"><%= number_to_currency plan.get_payee_amt(party.name) %></td>
         <% end %>
         <td class="payment-cell total info"><b><%= number_to_currency plan.get_plan_total %></b></td>
@@ -57,5 +58,28 @@
 
 </div>
 
-<script>
-</script>
+<div class="col-xs-6 pull-left">
+  <h2>Archived Expenses:</h2><br class="clr" />
+  <% current_user.get_archived_expenses.each do |expense| %>
+    <div class="col-xs-12 expense <%= "archived" if expense.archived %>">
+    <!-- Main expense row -->
+
+    <div class="col-xs-2 date-field">
+      <%= expense.date.strftime("%b %d") %><br />
+      <span class="retailer-field"><b><%= expense.retailer %></b></span>
+    </div>
+    <div class="col-xs-3 who-how-field">
+      <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
+      <span class="text-center">How: <%= expense.how_to_pay %></span>
+    </div>
+    <div class="col-xs-5 expense-field">
+      <div class="card text-center"><%= expense.card.card_retailer %></div>
+      <div class="text-center">
+        <%= number_to_currency expense.amt_charged %> - &nbsp;
+        <%= number_to_currency expense.amt_paid %> - &nbsp;
+        <%= number_to_currency expense.amt_pending %> = &nbsp;
+        <%= number_to_currency expense.amt_remaining %><br class="clr" />
+      </div>
+    </div>
+  <% end %>
+</div>

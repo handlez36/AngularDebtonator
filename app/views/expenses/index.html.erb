@@ -3,27 +3,54 @@
 <div class="col-xs-12">
   <div class="expense-section col-xs-6">
     <div class="pull-left">
-      <%= link_to "Add expense", new_expense_path, :class => "btn btn-info" %>
+      <%= link_to "Add expense", "#", :class => "btn btn-info", :data => { :toggle => :modal, :target => "#addExpenseModal" } %>
     </div>
     <br class="clr" />
     <br />
     <h2>Expenses for <%=current_user.email%></h2>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
-      <%= render current_expenses.order("date DESC") %>
+      <%= render current_expenses.where(:archived => false).order("date DESC") %>
     </div>
   </div>
   <%= render :partial => '/payplans/payplan' %>
 </div>
 
+<!-- New expense modal -->
+<%= simple_form_for Expense.new do |e| %>
+<div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add new expense</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'expenses/new' %>
+      </div>
+      <div class="modal-footer">
+        <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= e.submit "Add", :class => "btn btn-info" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>
+
 <script>
   $(function() {
-    $("input#expense_date.string.required.form-control").click(function() {
-      $(this).datepicker({ dateFormat: 'yy-mm-dd' });
-      $(this).datepicker('show');
-    });    
+//    $("input#expense_date.string.required.form-control").click(function() {
+//      $(this).datepicker({ dateFormat: 'yy-mm-dd' });
+//      $(this).datepicker('show');
+//    });    
     
-    $("figure.chart").attr("width", "150px");
-    $("figure.chart").attr("display", "inline");
+    $(".edit-date").datepicker({ dateFormat: 'yy-mm-dd' });
+    
+//    $("figure.chart").attr("width", "150px");
+//    $("figure.chart").attr("display", "inline");
+    
+    // For new expense
+    $('.expense-date').datepicker({dateFormat: 'yy-mm-dd'});
     
   })
 </script>

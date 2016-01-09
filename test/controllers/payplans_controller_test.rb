@@ -68,7 +68,7 @@ class PayplansControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
     
   end
-  
+    
   test "user can access the archived payments page" do
     user = create(:user)
     sign_in user

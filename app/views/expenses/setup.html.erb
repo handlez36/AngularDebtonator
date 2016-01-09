@@ -1,0 +1,112 @@
+<br />
+<br />
+<br />
+<div class="setup-section col-xs-12">
+  <h2>Initial Setup:</h2><br class="clr" />
+  <div class="col-xs-4 col-xs-offset-1">
+    <span class="setup-title"><b>Setup Cards:</b></span><br />
+    <div class="setup-box">
+      Please add one or more credit cards to your profile. Setting up a card allows users to add credit card expenses for that specific cards.
+    </div>
+    <br />
+    <div class="card-list">
+      <div class="col-xs-12">
+      <% current_user.cards.each_with_index do |card, index| %>
+        <div class="col-xs-2"><%= index + 1 %>:</div>
+        <div class="col-xs-4"><%= link_to card.card_retailer, "#", :class => "card-name", :data => { :id => card.id, :url => "/cards/#{card.id}", :type => :text, :name => "card_name", :pk => card.id } %></div>
+        <div class="col-xs-4"><i id="<%= card.id %>" class="glyphicon glyphicon-trash del-card"></i></div>
+        <br />
+      <% end %>
+      </div>
+      <br class="clr"/>
+      <br />
+      <div class="card-add-form">
+        <%= simple_form_for Card.new, :url => "/cards", :method => "post" do |e| %>
+          <%= e.input :card_retailer, :label => "Card", wrapper_html: { class: "form-inline" } do %>
+            <%= e.input_field :card_retailer, :label => "Card", :style => "margin-left: 30px;" %>
+            <%= e.button :submit, "Add", :class => "btn btn-info", :style => "margin-left: 30px;" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4 col-xs-offset-1">
+    <span class="setup-title"><b>Setup Responsible Parties for Payments:</b></span><br />
+    <div class="setup-box">Please add one or more responsible parties to your profile. Setting up a responsible party allows users to assign someone responsible for paying that credit card expense.
+    </div>
+    <br />
+    <div class="party-list">
+      <div class="col-xs-12">
+      <% current_user.responsible_parties.each_with_index do |party, index| %>
+        <div class="col-xs-2"><%= index + 1 %>:</div>
+        <div class="col-xs-4"><%= link_to party.name, "#", :class => "party-name", :data => { :id => party.id, :url => "/responsible_parties/#{party.id}", :type => :text, :name => "party_name", :pk => party.id } %></div>
+        <div class="col-xs-4"><i id="new-card-<%= party.id %>" class="glyphicon glyphicon-trash del-party"></i></div>
+        <br />
+      <% end %>
+      </div>
+      <br class="clr"/>
+      <br />
+      <div class="party-add-form">
+        <%= simple_form_for ResponsibleParty.new, :url => "/responsible_parties", :method => "post" do |e| %>
+          <%= e.input :name, :label => "Party", wrapper_html: { class: "form-inline" } do %>
+            <%= e.input_field :name, :label => "Name", :style => "margin-left: 30px;" %>
+            <%= e.button :submit, "Add", :class => "btn btn-info", :style => "margin-left: 30px;" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    
+    $.fn.editable.defaults.ajaxOptions = {type: "PATCH"};
+    
+    $(".card-name").editable({
+      success: function(response, newValue) {
+        // Grab current value of payment
+        if(response.status == 'error') return response.msg
+      },
+      error: function(errors) {
+        return "Error processing"
+      }
+    });
+    
+    $(".party-name").editable({
+      success: function(response, newValue) {
+        // Grab current value of payment
+        if(response.status == 'error') return response.msg
+      },
+      error: function(errors) {
+        return "Error processing"
+      }
+    });
+    
+    $('.glyphicon.glyphicon-trash.del-card').click(function() {
+      var id = $(this).attr("id");
+      
+      $.ajax({
+        url: "/cards/" + id,
+        method: "DELETE",
+        success: function() {
+          window.location.reload();
+        }
+      })
+    })
+    
+    $('.glyphicon.glyphicon-trash.del-party').click(function() {
+      var id = $(this).attr("id");
+      
+      $.ajax({
+        url: "/responsible_parties/" + id,
+        method: "DELETE",
+        success: function() {
+          window.location.reload();
+        }
+      })
+    })
+    
+  })
+  
+</script>

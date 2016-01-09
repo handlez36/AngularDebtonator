@@ -3,9 +3,21 @@ require 'test_helper'
 class ExpensesControllerTest < ActionController::TestCase
   include FactoryGirl::Syntax::Methods
   
+  test "go to card setup page when user is logged in with no cards/responsible parties setup" do
+    user = create(:user)
+    sign_in user
+    
+    get :index
+    
+    assert_redirected_to setup_path
+  end
+  
   test "go to expense page when user is logged in" do
     user = create(:user)
     sign_in user
+    
+    create(:card, :user => user)
+    create(:responsible_party, :user => user)
     
     get :index
     
@@ -134,6 +146,36 @@ class ExpensesControllerTest < ActionController::TestCase
     expense.reload
     assert_equal 550.00, expense.amt_charged    # amt_charged remains unchanged due to a pending payment
     assert_redirected_to expenses_path
+  end
+  
+  test "user is given the right validation message when editing with a negative amt" do
+    user = create(:user)
+    sign_in user
+    
+    expense = create(:expense, :user => user)
+    
+    # :date, :retailer, :amt_charged, :amt_paid, :split, :how_to_pay, :payment_status, :card_id, "responsible_party_id"
+    put :update, :id => expense.id, :expense => {
+      :amt_charged => -5.00
+    }
+    
+    assert_equal "Validation errors with expense update", flash[:alert]
+    
+  end
+  
+  test "user is given the right validation message when editing with a non-numeric amt" do
+    user = create(:user)
+    sign_in user
+    
+    expense = create(:expense, :user => user)
+    
+    # :date, :retailer, :amt_charged, :amt_paid, :split, :how_to_pay, :payment_status, :card_id, "responsible_party_id"
+    put :update, :id => expense.id, :expense => {
+      :amt_charged => 'a'
+    }
+    
+    assert_equal "Validation errors with expense update", flash[:alert]
+    
   end
   
   test "user can delete an expense" do

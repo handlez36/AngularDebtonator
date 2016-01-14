@@ -11,10 +11,8 @@ class PaymentsTest < ActiveSupport::TestCase
     payment2 = create(:payment, :expense => expense, :payplan => payplan, :amt_paid => 100.00)
     payment3 = create(:payment, :expense => expense, :payplan => payplan, :amt_paid => 140.00)
     
-    assert_equal true, payment3.valid_payment?(490, payment3.id)
-    assert_equal false, payment3.valid_payment?(491, payment3.id)
-    #assert_equal true, payment.valid_payment?(590, )
-    #assert_equal false, payment.valid_payment?(591, )
+    assert_equal true, payment3.valid_payment?(490)
+    assert_equal false, payment3.valid_payment?(491)
   end
   
   

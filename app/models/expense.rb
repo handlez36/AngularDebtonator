@@ -33,6 +33,7 @@ class Expense < ActiveRecord::Base
     self.amt_charged - self.amt_paid
   end
   
+  # Add amount to this expense's amt_pending
   def update_amt_pending(add_amt)
     self.amt_pending += add_amt
     self.save
@@ -52,9 +53,7 @@ class Expense < ActiveRecord::Base
   # amt_paid
   def transfer_pending_to_paid(paid)
     self.amt_paid += paid
-    if self.amt_pending - paid < 0
-      return false
-    end
+    return false if self.amt_pending - paid < 0
     self.amt_pending -= paid
   end
   
@@ -68,18 +67,17 @@ class Expense < ActiveRecord::Base
   
   # Remove payments connected to this expense
   def remove_planned_payments
-    self.payments.each do |payment|
-      payment.destroy
-    end
-    self.payments.delete_all
+    self.payments.each { |payment| payment.destroy }
   end
   
+  # Adjust expense amounts after payment is locked
   def adjust_charge(amt_pending)
     self.amt_pending -= amt_pending
     self.amt_paid += amt_pending
     self.save
   end
   
+  # Print expense data to the console
   def print_expense_stats
     puts "Expense: #{self.id}"
     puts " -- amt charged: #{self.amt_charged}"

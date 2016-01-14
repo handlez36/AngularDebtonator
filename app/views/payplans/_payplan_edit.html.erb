@@ -12,7 +12,7 @@
 <% plan.get_payees.each_with_index do |party, index| %>
   <% active = (index == 0) ? "active" : "" %>
   <div class="tab-pane <%=active%> <%= plan.id %>" id="<%= "#{party}-#{plan.id}" %>" data-plan-id="<%= plan.id %>" data-party="<%= party %>">
-    <% plan.get_expenses_for_payee(party).each do |payment| %>
+    <% plan.get_payments_for_payee(party).each do |payment| %>
       <br />
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.date %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>

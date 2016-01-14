@@ -14,7 +14,7 @@
     <tbody>
       <tr>
         <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 150, :width => 150, :class => "chart-box" } %></td>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party2, { :height => 150, :width => 150, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 150, :width => 150, :class => "chart-box" } %></td>
         <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 150, :width => 150, :class => "chart-box" } %></td>
       </tr>
     </tbody>

@@ -1,0 +1,20 @@
+<div class="card-list">
+  <div class="col-xs-12">
+  <% current_user.cards.each_with_index do |card, index| %>
+    <div class="col-xs-2"><%= index + 1 %>:</div>
+    <div class="col-xs-4"><%= link_to card.card_retailer, "#", :class => "card-name", :data => { :id => card.id, :url => "/cards/#{card.id}", :type => :text, :name => "card_name", :pk => card.id } %></div>
+    <div class="col-xs-4"><i id="<%= card.id %>" class="glyphicon glyphicon-trash del-card"></i></div>
+    <br />
+  <% end %>
+  </div>
+  <br class="clr"/>
+  <br />
+  <div class="card-add-form">
+    <%= simple_form_for Card.new, :url => "/cards", :method => "post" do |e| %>
+      <%= e.input :card_retailer, :label => "Card", wrapper_html: { class: "form-inline" } do %>
+        <%= e.input_field :card_retailer, :label => "Card", :style => "margin-left: 30px;" %>
+    <%= e.button :submit, "Add", :class => "btn btn-info card-add-button", :style => "margin-left: 30px;" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

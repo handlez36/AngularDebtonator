@@ -4,6 +4,8 @@
   <div class="expense-section col-xs-6">
     <div class="pull-left">
       <%= link_to "Add expense", "#", :class => "btn btn-info", :data => { :toggle => :modal, :target => "#addExpenseModal" } %>
+      <%= link_to "Manage cards", "#", :class => "btn btn-info", :data => { :toggle => :modal, :target => "#manageCardsModal" } %>
+      <%= link_to "Manage payees", "#", :class => "btn btn-info", :data => { :toggle => :modal, :target => "#managePayeesModal" } %>
     </div>
     <br class="clr" />
     <br />
@@ -34,8 +36,43 @@
     </div>
   </div>
 </div>
-
 <% end %>
+
+<!-- New card modal -->
+<div class="modal fade" id="manageCardsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add new card</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'cards/new' %>
+      </div>
+      <div class="modal-footer">
+        <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New party modal -->
+<div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add new party</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'expenses/new' %>
+      </div>
+      <div class="modal-footer">
+        <button id="close-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   $(function() {

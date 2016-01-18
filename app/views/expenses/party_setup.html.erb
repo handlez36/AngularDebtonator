@@ -1,0 +1,28 @@
+<div class="setup-section col-xs-12">
+  <div class="col-xs-4 col-xs-offset-1">
+    <span class="setup-title"><b>Setup Responsible Parties for Payments:</b></span><br />
+    <div class="setup-box">Please add one or more responsible parties to your profile. Setting up a responsible party allows users to assign someone responsible for paying that credit card expense.
+    </div>
+    <br />
+    <div class="party-list">
+      <div class="col-xs-12">
+      <% current_user.responsible_parties.each_with_index do |party, index| %>
+        <div class="col-xs-2"><%= index + 1 %>:</div>
+        <div class="col-xs-4"><%= link_to party.name, "#", :class => "party-name", :data => { :id => party.id, :url => "/responsible_parties/#{party.id}", :type => :text, :name => "party_name", :pk => party.id } %></div>
+        <div class="col-xs-4"><i id="<%= party.id %>" class="glyphicon glyphicon-trash del-party"></i></div>
+        <br />
+      <% end %>
+      </div>
+      <br class="clr"/>
+      <br />
+      <div class="party-add-form">
+        <%= simple_form_for ResponsibleParty.new, :url => "/responsible_parties", :method => "post" do |e| %>
+          <%= e.input :name, :label => "Party", wrapper_html: { class: "form-inline" } do %>
+            <%= e.input_field :name, :label => "Name", :style => "margin-left: 30px;" %>
+            <%= e.button :submit, "Add", :class => "btn btn-info party-add-button", :style => "margin-left: 30px;" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

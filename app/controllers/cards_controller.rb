@@ -10,7 +10,8 @@ class CardsController < ApplicationController
       flash[:alert] = "Error while adding card"
     end
     
-    redirect_to setup_path
+    #redirect_to setup_path
+    render :json => { status: "success" } and return
   end
   
   # Controller action for updating an existing card

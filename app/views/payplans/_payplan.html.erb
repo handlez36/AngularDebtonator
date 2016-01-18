@@ -9,7 +9,12 @@
             Click the <span style="color:green">Green</span> Pay button on the left for any expense you would like to initiate a payment for.
           </div>
       <% else %>  
-        <h2>Payment Plans:</h2><br class="clr" />
+        <h2 class="pull-left">Payment Plans:</h2>
+        <div class="pull-right">
+          <span class="summary"><h4 class="summary-totals">Total before payments: <%= number_to_currency current_user.get_total_expense_amt %></h4></span>
+          <span class="summary"><h4 class="summary-totals">Total after payments: <%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h4></span>
+        </div>
+        <br class="clr" />
         <table id="paymentplan" class="table table-bordered table-hover table-condensed">
           <thead>
           <tr class="success">

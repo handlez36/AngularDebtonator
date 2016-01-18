@@ -216,8 +216,14 @@ h2, h3 {
   background-color: rgba(0,0,0,0);
 }
 
+thead {
+  border: none;
+}
+
+
 .summary {
   width: 450px;
+  text-align: right;
 }
 
 .summary-box {
@@ -295,4 +301,8 @@ h2, h3 {
 .expense-button-section {
   //margin: auto auto;
   text-align: center;
+}
+
+.summary-table {
+  border: none;
 }

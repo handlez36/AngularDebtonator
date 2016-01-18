@@ -10,11 +10,30 @@
   <br class="clr"/>
   <br />
   <div class="card-add-form">
-    <%= simple_form_for Card.new, :url => "/cards", :method => "post" do |e| %>
+    <%= simple_form_for Card.new, :html => { :id => "card-form" } do |e| %>
       <%= e.input :card_retailer, :label => "Card", wrapper_html: { class: "form-inline" } do %>
         <%= e.input_field :card_retailer, :label => "Card", :style => "margin-left: 30px;" %>
-    <%= e.button :submit, "Add", :class => "btn btn-info card-add-button", :style => "margin-left: 30px;" %>
+        <%= e.button :submit, "Add", :class => "btn btn-info card-add-button", :style => "margin-left: 30px;" %>
       <% end %>
     <% end %>
+    <%= link_to "New card", "#", :id => "card-button", :class => "btn btn-primary" %>
   </div>
 </div>
+
+<script>
+  $(function() {
+    $('#card-button').click(function() {
+      card_val = $('#card_card_retailer').val();
+      $.ajax({
+        type: 'POST',
+        url: "/cards",
+        data: { card: { card_retailer: card_val}}
+      }).done(function(data) {
+        //$('#manageCardsModal').empty();
+        $('#manageCardsModal').show();
+        //$('#manageCardsModal').removeData("modal");
+        //$('#manageCardsModal').modal();
+      })
+    })
+  })
+</script>

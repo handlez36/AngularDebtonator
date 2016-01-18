@@ -1,0 +1,25 @@
+<div class="payment-side pull-right">
+  <table width="450px" class="table table-hover table-condensed summary-table">
+    <thead>
+      <tr>
+        <th class="summary-header col-xs-4">Total owed by card</th>
+        <th class="summary-header col-xs-4">Total owed by party (before pending payments)</th>
+        <th class="summary-header col-xs-4">Total owed by party (after pending payments)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 120, :width => 120, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 120, :width => 120, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 120, :width => 120, :class => "chart-box" } %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!--
+<div class="summary"><h3 class="summary-totals">Total owed before payments: <%#= number_to_currency current_user.get_total_expense_amt %></h3></div>
+<div class="summary"><h3 class="summary-totals">Total owed after payments: <%#= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h3></div>
+<br class="clr" />
+-->

@@ -1,16 +1,18 @@
 <div class="payment-side">
-  <h3>Expense Summary</h3>
-  <table>
-    <tr class="summary-totals"><td><b>Total before payments:</b></td><td class="label label-success summary-amt"><%= number_to_currency current_user.get_total_expense_amt %></td></tr>
-    <tr class="summary-totals"><td><b>Total after payments:</b></td><td class="label label-success summary-amt"><%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></td></tr>
-  </table>
+  <div>
+    <h3 class="pull-left">Expense Summary</h3>
+    <table class="pull-right">
+      <tr class="summary-totals"><td>Total before payments:</td><td class="summary-amt"><%= number_to_currency current_user.get_total_expense_amt %></td></tr>
+      <tr class="summary-totals"><td>Total after payments:</td><td class="summary-amt"><%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></td></tr>
+    </table>
+  </div>
   <br />
   <table width="450px" class="table table-condensed">
     <thead>
       <tr>
         <th class="summary-header">Total owed by card</th>
-        <th class="summary-header">Total owed by party (before pending payments)</th>
-        <th class="summary-header">Total owed by party (after pending payments)</th>
+        <th class="summary-header">Total owed by party<br />(before pending payments)</th>
+        <th class="summary-header">Total owed by party<br />(after pending payments)</th>
       </tr>
     </thead>
     <tbody>

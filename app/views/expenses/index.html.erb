@@ -8,7 +8,7 @@
     </div>
     <br class="clr" />
     <br />
-    <h2>Expenses for <%=current_user.email%></h2>
+    <h3>Expenses for <%=current_user.email%></h3>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
       <%= render current_expenses.where(:archived => false).order("date DESC") %>
     </div>

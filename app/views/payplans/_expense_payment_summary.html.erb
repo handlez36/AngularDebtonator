@@ -1,9 +1,11 @@
-<div class="booyah-box payment-side">
-  <h2>Expense Summary:</h2><br class="clr" />
-  <div class="summary"><h3 class="summary-totals">Total owed before payments: <%= number_to_currency current_user.get_total_expense_amt %></h3></div>
-  <div class="summary"><h3 class="summary-totals">Total owed after payments: <%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h3></div>
-  <br class="clr" />
-  <table width="450px" class="table table-bordered table-hover table-condensed">
+<div class="payment-side">
+  <h3>Expense Summary</h3>
+  <table>
+    <tr class="summary-totals"><td><b>Total before payments:</b></td><td class="label label-success summary-amt"><%= number_to_currency current_user.get_total_expense_amt %></td></tr>
+    <tr class="summary-totals"><td><b>Total after payments:</b></td><td class="label label-success summary-amt"><%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></td></tr>
+  </table>
+  <br />
+  <table width="450px" class="table table-condensed">
     <thead>
       <tr>
         <th class="summary-header">Total owed by card</th>
@@ -13,9 +15,9 @@
     </thead>
     <tbody>
       <tr>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 150, :width => 150, :class => "chart-box" } %></td>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 150, :width => 150, :class => "chart-box" } %></td>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 150, :width => 150, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 110, :width => 110, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box" } %></td>
       </tr>
     </tbody>
   </table>

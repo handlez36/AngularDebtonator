@@ -9,11 +9,7 @@
             Click the <span style="color:green">Green</span> Pay button on the left for any expense you would like to initiate a payment for.
           </div>
       <% else %>  
-        <h2 class="pull-left">Payment Plans:</h2>
-        <div class="pull-right">
-          <span class="summary"><h4 class="summary-totals">Total before payments: <%= number_to_currency current_user.get_total_expense_amt %></h4></span>
-          <span class="summary"><h4 class="summary-totals">Total after payments: <%= number_to_currency(current_user.get_total_expense_amt - current_user.get_total_pending_expense_amt) %></h4></span>
-        </div>
+        <h3 class="pull-left">Payment Plans:</h3>
         <br class="clr" />
         <table id="paymentplan" class="table table-bordered table-hover table-condensed">
           <thead>
@@ -69,21 +65,19 @@
         <% end %>
         </tbody>
       </table>
-      <%= link_to ">> Archived Payments", archived_payments_path, :class => "archived_link pull-right" %>
+      <%= link_to ">> Archived Payments", archived_payments_path, :class => "archived_link" %>
+      <hr class="shadowed" />
     <br class="clr" />
     </div>
-  
-    <br class="clr" />
-    <br /><br />
-    
-  <% if current_user.expenses.count == 0 %>
-    <div class="no-expenses-block">
-      Once one or more expenses and/or payments are added, this section will provide a summary of what is owed, before and after any planned payments.
-    </div>
-  <% else %>
-    <%= render '/payplans/expense_payment_summary' %>
-  <% end %>
-  
+    <% if current_user.expenses.count == 0 %>
+      <div class="no-expenses-block">
+        Once one or more expenses and/or payments are added, this section will provide a summary of what is owed, before and after any planned payments.
+      </div>
+    <% else %>
+      <div class="col-xs-12">
+        <%= render '/payplans/expense_payment_summary' %>
+      </div>
+    <% end %>
   </div>
 
 

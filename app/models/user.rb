@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
         data << data_hash
       else
         data.select { |hash| hash[:label] == expense.card.card_retailer }.first[:value] += 
-          exclude_pending ? expense.amt_remaining_to_pay : expense.amt_remaining
+          exclude_pending ? (expense.amt_remaining_to_pay).round(2) : (expense.amt_remaining).round(2)
       end
     end
     

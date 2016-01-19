@@ -58,7 +58,8 @@ class ExpensesController < ApplicationController
   # Return current expenses for the current user
   helper_method :current_expenses
   def current_expenses
-    @expenses ||= current_user.expenses
+    #@expenses ||= current_user.expenses
+    @expenses ||= current_user.expenses.paginate( :page => params[:page], :per_page => 6 )
   end
   
   # Return the current expense for this specific request

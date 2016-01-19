@@ -14,6 +14,7 @@
     <h3>Expenses for <%=current_user.email%></h3>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
       <%= render current_expenses.where(:archived => false).order("date DESC") %>
+      <%= will_paginate current_expenses.where(:archived => false).order("date DESC") %>
     </div>
   </div>
   <%= render :partial => '/payplans/payplan' %>

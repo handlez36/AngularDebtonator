@@ -73,6 +73,9 @@ class User < ActiveRecord::Base
       end
     end
     
+    data.each do |hash|
+      hash[:value] = hash[:value].round(2)
+    end
     return data
   end
   

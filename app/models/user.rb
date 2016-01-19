@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
       if data.select { |hash| hash[:label] == expense.card.card_retailer  }.count == 0
         data_hash = Hash.new
         data_hash[:label] = expense.card.card_retailer
-        data_hash[:value] = (exclude_pending) ? expense.amt_remaining_to_pay : expense.amt_remaining
+        data_hash[:value] = (exclude_pending) ? expense.amt_remaining_to_pay.round(2) : expense.amt_remaining.round(2)
         data_hash[:highlight] = highlights[data.count % 4]
         data_hash[:color] = colors[data.count]
         data << data_hash

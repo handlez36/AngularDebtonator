@@ -12,15 +12,18 @@
       </div>
       <div class="col-xs-3 who-how-field">
         <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
-        <span class="text-center">How: <%= expense.how_to_pay %></span>
+        <span class="text-center">How: <%= expense.how_to_pay %></span><br />
+        <span class="text-center label" style="background-color: <%= current_user.get_card_color(expense.card) %>">Card: <%= expense.card.card_retailer %></span>
       </div>
       <div class="col-xs-5 expense-field">
-        <div class="card text-center"><%= expense.card.card_retailer %></div>
-        <div class="text-center">
-          <%= number_to_currency expense.amt_charged %> - &nbsp;
-          <%= number_to_currency expense.amt_paid %> - &nbsp;
-          <%= number_to_currency expense.amt_pending %> = &nbsp;
-          <%= number_to_currency expense.amt_remaining %><br class="clr" />
+        <div class="pull-left">
+          Amt Charged: <span class="expense-amt"><%= number_to_currency expense.amt_charged %></span><br />
+          <span class="expense-amt label label-success"><%= number_to_currency expense.amt_paid %>&nbsp;(Paid)</span><br />
+          <span class="expense-amt label label-warning"><%= number_to_currency expense.amt_pending %>&nbsp;(Pending)</span>
+        </div>
+        <div class="pull-right">
+          Amt Remaining:<br />
+          <span style="font-size: 22px"><%= number_to_currency expense.amt_remaining %></span>
         </div>
       </div>
       <div class="col-xs-2 option-group">

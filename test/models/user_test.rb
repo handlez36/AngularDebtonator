@@ -49,5 +49,22 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 175.00, devin_total
     
   end
+  
+  test "correct card color is returned" do
+    user = create(:user)
+    card1 = create(:card, :card_retailer => "Card1", :user => user)
+    card2 = create(:card, :card_retailer => "Card2", :user => user)
+    card3 = create(:card, :card_retailer => "Card3", :user => user)
+    card4 = create(:card, :card_retailer => "Card4", :user => user)
+    card5 = create(:card, :card_retailer => "Card5", :user => user)
+    card6 = create(:card, :card_retailer => "Card6", :user => user)
+    card7 = create(:card, :card_retailer => "Card7", :user => user)
+    
+    assert_equal "orange", user.get_card_color(card1)
+    assert_equal "red", user.get_card_color(card2)
+    assert_equal "violet", user.get_card_color(card3)
+    assert_equal "orange", user.get_card_color(card7)
+    
+  end
 
 end

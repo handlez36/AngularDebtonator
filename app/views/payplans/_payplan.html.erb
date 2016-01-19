@@ -24,7 +24,7 @@
           <% current_plans.each do |plan| %>
             <tr class="payment-row">
               <td class="payment-cell date">
-                <div class="label label-primary pull-left card-test">
+                <div class="label pull-left card-test" style="background-color: <%= current_user.get_card_color(plan.card) %>">
                   <%= plan.card.card_retailer %>
                 </div> 
                 <div class="card-label pull-right"><%= plan.date%></div>
@@ -63,10 +63,11 @@
         </tbody>
       </table>
       <span>* Lock a payment with the lock icon once it is officially paid. Until a payment is locked, it will be pending.</span><br />
-      <%= link_to ">> Archived Payments", archived_payments_path, :class => "archived_link" %>
+      <%= link_to ">> Go to completed payment plans", archived_payments_path, :class => "archived_link" %>
       <hr class="shadowed" />
     <br class="clr" />
     </div>
+    <br />
     <% if current_user.expenses.count == 0 %>
       <div class="no-expenses-block">
         Once one or more expenses and/or payments are added, this section will provide a summary of what is owed, before and after any planned payments.

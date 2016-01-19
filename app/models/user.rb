@@ -100,6 +100,13 @@ class User < ActiveRecord::Base
     return data
   end
   
+  def get_card_color(card)
+    colors = ["skyblue", "crimson", "orange", "violet", "green", "yellow"]
+    
+    mycards = self.cards.order('id ASC').to_a
+    return colors[ mycards.find_index(card) % 6 ]
+  end
+  
   private 
   
   # Return a hash of how much each party owes for the user's expenses and planned payments

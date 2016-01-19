@@ -17,12 +17,11 @@ class ExpensesController < ApplicationController
     params[:date] = Date.strptime(params[:date],"%Y-%m-%d")
     @expense = current_user.expenses.create(params)
     
-    if @expense.valid?
-      redirect_to expenses_path
-    else
-      flash[:alert] = "Validation error!"
-      render :new, :status => :unprocessable_entity
+    unless @expense.valid?
+      flash[:alert] = "Validation error!"  
     end
+    
+    redirect_to expenses_path
   end
   
   # Controller action for processing expense updates

@@ -111,7 +111,7 @@ class ExpensesControllerTest < ActionController::TestCase
         }
     end
     
-    assert_response :unprocessable_entity
+    assert_equal "Validation error!", flash[:alert]
     
   end
   

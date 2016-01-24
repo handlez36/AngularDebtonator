@@ -1,7 +1,7 @@
 <%= link_to "<< Back to Expenses", expenses_path, :class => "archived_link back_to_expenses" %>
 <div class="payplan-section col-xs-6 pull-right">
   <br />
-  <h2>Archived Payment Plans:</h2><br class="clr" />
+  <h2>Archived Payment Plans:</h2>
   <table id="paymentplan" class="table table-bordered table-hover table-condensed">
     <% if current_plans.count > 0 %>
     <thead>
@@ -59,27 +59,35 @@
 <br />
 <br />
 <div class="col-xs-6 pull-left">
-  <h2>Archived Expenses:</h2><br class="clr" />
-  <% current_user.get_archived_expenses.each do |expense| %>
-    <div class="col-xs-12 expense <%= "archived" if expense.archived %>">
-    <!-- Main expense row -->
-
-    <div class="col-xs-2 date-field">
-      <%= expense.date.strftime("%b %d") %><br />
-      <span class="retailer-field"><b><%= expense.retailer %></b></span>
-    </div>
-    <div class="col-xs-3 who-how-field">
-      <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
-      <span class="text-center">How: <%= expense.how_to_pay %></span>
-    </div>
-    <div class="col-xs-5 expense-field">
-      <div class="card text-center"><%= expense.card.card_retailer %></div>
-      <div class="text-center">
-        <%= number_to_currency expense.amt_charged %> - &nbsp;
-        <%= number_to_currency expense.amt_paid %> - &nbsp;
-        <%= number_to_currency expense.amt_pending %> = &nbsp;
-        <%= number_to_currency expense.amt_remaining %><br class="clr" />
+  <br /><h2>Archived Expenses <span class="badge"><%= current_archived_expenses.count %></span></h2>
+<!--  <br class="clr" />-->
+  <% current_archived_expenses.each do |expense| %>
+  <div class="col-xs-12 expense <%= "archived" if expense.archived or expense.amt_paid > 0 %>">
+      <!-- Main expense row -->
+      <div class="col-xs-2 date-field">
+        <%= expense.date.strftime("%b %d") %><br />
+        <span class="retailer-field-archived"><b><%= expense.retailer %></b></span>
+      </div>
+      <div class="col-xs-3 who-how-field">
+        <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
+        <span class="text-center">How: <%= expense.how_to_pay %></span><br />
+        <span class="text-center label" style="background-color: <%= current_user.get_card_color(expense.card) %>">Card: <%= expense.card.card_retailer %></span>
+      </div>
+      <div class="col-xs-3">
+        <div class="expense-field text-center payment-cell-archived"><%= number_to_currency expense.amt_paid %></div>
+      </div>
+      <div class="col-xs-4 payment-type-field">
+        <div class="payment-status">
+          <% if expense.amt_paid == expense.amt_charged %>
+            <span class="payment-type-full">Expense fully paid</span>&nbsp;&nbsp;&nbsp;
+            <i class="glyphicon glyphicon-ok-circle"></i><br />
+          <% else %>
+            <span class="payment-type-partial">Expense partially paid</span>&nbsp;&nbsp;&nbsp;
+            <i class="glyphicon glyphicon-exclamation-sign"></i><br />
+          <% end %>        
+        </div>
       </div>
     </div>
   <% end %>
+  <%= will_paginate current_archived_expenses.order("date DESC") %>
 </div>

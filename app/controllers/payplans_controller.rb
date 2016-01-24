@@ -35,6 +35,12 @@ class PayplansController < ApplicationController
     @payplans ||= current_user.payplans.where(:archived => true)
   end
   
+  # Return current expenses for the current user
+  helper_method :current_archived_expenses
+  def current_archived_expenses
+    @expenses ||= current_user.expenses.where("archived = ? or amt_paid > ?", true, 0).paginate( :page => params[:page], :per_page => 6 )
+  end
+  
   # Ensure certain payplan interactions are being performed by the user that created them
   def authorize_user
     if current_user != current_payplan.user
@@ -42,5 +48,5 @@ class PayplansController < ApplicationController
       render :text => "Unauthorized action", :status => :unprocessable_entity
     end
   end
-  
+
 end

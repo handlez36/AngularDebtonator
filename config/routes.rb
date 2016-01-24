@@ -10,6 +10,7 @@ MyBudget::Application.routes.draw do
   get 'payplans/', to: 'payplans#archived', as: 'archived_payments'
   get 'setup/', to: 'expenses#setup', as: 'setup'
   
+  resources :uploaders, :only => [:index]
   resources :cards
   resources :responsible_parties
   resources :setups

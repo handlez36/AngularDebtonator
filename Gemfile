@@ -54,6 +54,10 @@ gem 'modernizr-rails'
 
 gem 'will_paginate', '~> 3.0.6'
 
+gem 'simple-spreadsheet'
+
+gem 'carrierwave'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

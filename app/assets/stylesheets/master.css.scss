@@ -103,6 +103,34 @@ h2, h3 {
 
 .expense.archived {
   background-color: darksalmon;
+  padding-right: 0;
+  padding-top: 0;
+}
+
+.payment-type-field {
+  background-color: darksalmon;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.payment-type-full {
+  color: forestgreen;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.payment-type-partial {
+  color: yellow;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.glyphicon.glyphicon-ok-circle {
+  color: forestgreen;
+}
+
+.glyphicon.glyphicon-exclamation-sign {
+  color: yellow;
 }
 
 .panel-body {
@@ -120,6 +148,10 @@ h2, h3 {
 
 .retailer-field {
   font-size: 22px;
+}
+
+.retailer-field-archived {
+  font-size: 18px;
 }
 
 .card {
@@ -184,6 +216,12 @@ h2, h3 {
 .payment-cell {
   text-align: center;
   font-size: 14px;
+  color: black;
+}
+
+.payment-cell-archived {
+  text-align: center;
+  font-size: 14px;
 }
 
 .payment-cell.action {
@@ -229,6 +267,11 @@ h2, h3 {
   font-size: 10px;
 }
 
+.expense-field {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: right;
+}
 
 .chart-box {
   display: inline-block;

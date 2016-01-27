@@ -4,7 +4,10 @@ class PayplansController < ApplicationController
   
   # Controller action for archived expense/payments requests
   def archived
-    
+    unless params[:id].nil?
+      puts "ID of payplan: #{params[:id]}"
+      @payplan = Payplan.find(params[:id])
+    end
   end
   
   # Controller action for destorying a payplan
@@ -37,8 +40,13 @@ class PayplansController < ApplicationController
   
   # Return current expenses for the current user
   helper_method :current_archived_expenses
-  def current_archived_expenses
-    @expenses ||= current_user.expenses.where("archived = ? or amt_paid > ?", true, 0).paginate( :page => params[:page], :per_page => 6 )
+  def current_archived_expenses(payplan = nil)
+    puts "Payplan: #{ payplan.inspect }"
+    if payplan.nil?
+      @expenses ||= current_user.expenses.where("archived = ? or amt_paid > ?", true, 0).paginate( :page => params[:page], :per_page => 6 )
+    else
+      @expenses ||= payplan.expenses.paginate( :page => params[:page], :per_page => 6 )
+    end
   end
   
   # Ensure certain payplan interactions are being performed by the user that created them

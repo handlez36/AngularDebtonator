@@ -7,6 +7,7 @@ MyBudget::Application.routes.draw do
 
   root 'static_pages#index'
   put 'payplans/:id/lock', to: 'payplans#lock', as: 'lock_payment'
+  get 'payplans/:id', to: 'payplans#archived', as: 'show_payment'
   get 'payplans/', to: 'payplans#archived', as: 'archived_payments'
   get 'setup/', to: 'expenses#setup', as: 'setup'
   

@@ -17,7 +17,7 @@
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.date %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number"} %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
-      <% if request.original_fullpath == "/expenses" %>
+      <% if request.original_fullpath =~ /\/expenses\??(page\=\d+)?/ %>
         <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
       <% end %>
       <br class="clr" />
@@ -28,7 +28,7 @@
       <b>Total for <%= party %>:</b> <span id="total-for-party-<%= party %>-<%= plan.id %>" data-total="<%= plan.get_payee_amt party %>"><%= number_to_currency plan.get_payee_amt party %></span>
     </div>
     <div class="col-xs-5 payment-total">
-      <b>Total for plan:</b> <span class="total-for-plan-<%= plan.id %>" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
+      <b>Total for plan!!:</b> <span class="total-for-plan-<%= plan.id %>" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
     </div>
     <br />
   </div>

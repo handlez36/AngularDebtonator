@@ -52,7 +52,7 @@ gem 'chartjs-ror'
 
 gem 'modernizr-rails'
 
-gem 'will_paginate', '~> 3.0.6'
+gem 'will_paginate', '3.1.0'
 
 gem 'simple-spreadsheet'
 

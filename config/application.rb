@@ -9,6 +9,7 @@ Bundler.require(:default, Rails.env)
 
 module MyBudget
   class Application < Rails::Application
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -23,5 +24,6 @@ module MyBudget
     
     #config.assets.paths << "#{Rails.root}/app/spreadsheets/"
     config.assets.paths << "#{Rails.root}/app/assets/spreadsheets"
+    
   end
 end

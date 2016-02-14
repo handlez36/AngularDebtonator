@@ -59,7 +59,11 @@ class ExpensesController < ApplicationController
   helper_method :current_expenses
   def current_expenses
     #@expenses ||= current_user.expenses
-    @expenses ||= current_user.expenses.paginate( :page => params[:page], :per_page => 6 )
+    #@expenses ||= current_user.expenses.paginate( :page => params[:page], :per_page => 6 )
+    @expenses ||= current_user.expenses.
+      where( :archived => false).
+      order('date DESC').
+      paginate( :page => params[:page], :per_page => 6 )
   end
   
   # Return the current expense for this specific request

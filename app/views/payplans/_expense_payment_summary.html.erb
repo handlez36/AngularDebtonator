@@ -10,16 +10,14 @@
   <table width="450px" class="table table-condensed">
     <thead>
       <tr>
-        <th class="summary-header">Total owed by card</th>
-        <th class="summary-header">Total owed by party<br />(before pending payments)</th>
-        <th class="summary-header">Total owed by party<br />(after pending payments)</th>
+        <th class="summary-header">Total owed by card<br/>Before payments vs After payments</th>
+        <th class="summary-header">Total owed by party<br/>Before payments vs After payments</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 110, :width => 110, :class => "chart-box" } %></td>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box" } %></td>
-        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_card, { :height => 110, :width => 110, :class => "chart-box" } %><%= doughnut_chart current_user.get_expense_total_by_card(false), { :height => 110, :width => 110, :class => "chart-box" } %></td>
+        <td class="summary-content"><%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box" } %><%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box" } %></td>
       </tr>
     </tbody>
   </table>

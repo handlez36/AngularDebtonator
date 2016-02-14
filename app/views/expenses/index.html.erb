@@ -13,8 +13,10 @@
     <br />
     <h3>Expenses for <%=current_user.email%> <span class="badge"><%= current_expenses.where(:archived => false).count %></span></h3>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
-      <%= render current_expenses.where(:archived => false).order("DATE(date) DESC") %>
-      <%= will_paginate current_expenses.where(:archived => false).order("date DESC") %>
+      <%#= render current_expenses.where(:archived => false).order("DATE(date) DESC") %>
+      <%= render current_expenses %>
+      <%#= will_paginate current_expenses.where(:archived => false).order("date DESC") %>
+      <%= will_paginate current_expenses %>
     </div>
   </div>
   <%= render :partial => '/payplans/payplan' %>

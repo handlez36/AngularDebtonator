@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103135259) do
+ActiveRecord::Schema.define(version: 20160214151338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20160103135259) do
   create_table "expenses", force: true do |t|
     t.date     "date"
     t.string   "retailer"
-    t.float    "amt_charged"
-    t.float    "amt_paid"
+    t.decimal  "amt_charged",          precision: 10, scale: 2
+    t.decimal  "amt_paid",             precision: 10, scale: 2
     t.boolean  "split"
     t.string   "how_to_pay"
     t.integer  "payment_status"
@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 20160103135259) do
     t.integer  "user_id"
     t.integer  "card_id"
     t.integer  "responsible_party_id"
-    t.float    "amt_pending"
-    t.boolean  "archived",             default: false
+    t.decimal  "amt_pending",          precision: 10, scale: 2
+    t.boolean  "archived",                                      default: false
   end
 
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree
@@ -47,12 +47,12 @@ ActiveRecord::Schema.define(version: 20160103135259) do
     t.datetime "updated_at"
     t.integer  "expense_id"
     t.integer  "payplan_id"
-    t.float    "amt_paid"
+    t.decimal  "amt_paid",             precision: 10, scale: 2
     t.date     "date"
     t.integer  "card_id"
     t.integer  "user_id"
     t.integer  "responsible_party_id"
-    t.boolean  "archived",             default: false
+    t.boolean  "archived",                                      default: false
   end
 
   create_table "payplans", force: true do |t|

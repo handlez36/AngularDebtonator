@@ -20,8 +20,8 @@
           <%= doughnut_chart current_user.get_expense_total_by_card, { :height => 110, :width => 110, :class => "chart-box" } %><%= doughnut_chart current_user.get_expense_total_by_card(false), { :height => 110, :width => 110, :class => "chart-box" } %>
         </td>
         <td class="summary-content">
-          <%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box" } %>
-          <%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box" } %></td>
+          <%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box", :scaleSteps => 2 } %>
+          <%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box", :scaleSteps => 2 } %></td>
       </tr>
     </tbody>
   </table>

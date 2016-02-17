@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   # Return total amt remaining to pay on all expenses
   # If a party's name is passed in, get the total for only that party
   def get_total_expense_amt(name = nil)
-    self.expenses.where(:archived => false).inject(0) do |sum, expense|
+    amt = self.expenses.where(:archived => false).inject(BigDecimal.new(0)) do |sum, expense|
       name.nil? ? sum += expense.amt_remaining_to_pay : ((expense.responsible_party.name == name) ? sum += expense.amt_remaining_to_pay : sum)
     end
   end
@@ -63,18 +63,18 @@ class User < ActiveRecord::Base
       if data.select { |hash| hash[:label] == expense.card.card_retailer  }.count == 0
         data_hash = Hash.new
         data_hash[:label] = expense.card.card_retailer
-        data_hash[:value] = (exclude_pending) ? expense.amt_remaining_to_pay.round(2) : expense.amt_remaining.round(2)
+        data_hash[:value] = (exclude_pending) ? expense.amt_remaining_to_pay : expense.amt_remaining
         data_hash[:highlight] = highlights[data.count % 4]
         data_hash[:color] = colors[data.count]
         data << data_hash
       else
         data.select { |hash| hash[:label] == expense.card.card_retailer }.first[:value] += 
-          exclude_pending ? (expense.amt_remaining_to_pay).round(2) : (expense.amt_remaining).round(2)
+          exclude_pending ? (expense.amt_remaining_to_pay) : (expense.amt_remaining)
       end
     end
     
     data.each do |hash|
-      hash[:value] = hash[:value].round(2)
+      hash[:value] = hash[:value]
     end
     return data
   end
@@ -119,22 +119,27 @@ class User < ActiveRecord::Base
     
     self.expenses.where(:archived => false).each do |expense|
       if data.has_key? expense.responsible_party.name
-        data[expense.responsible_party.name] += expense.amt_remaining
+        puts "Adding amt remaining: #{ "%.2f" % expense.amt_remaining }"
+        data[expense.responsible_party.name] += expense.amt_remaining.round(2)
       else
-        data[expense.responsible_party.name] = expense.amt_remaining
+        puts "Setting amt remaining: #{ "%.2f" % expense.amt_remaining }"
+        data[expense.responsible_party.name] = expense.amt_remaining.round(2)
       end
     end
     
     if include_pending
       self.payments.where(:archived => false).each do |payment|
         if data.has_key? payment.responsible_party.name
-          data[payment.responsible_party.name] += payment.amt_paid
+          puts "Adding amt paid: #{ "%.2f" % payment.amt_paid }"
+          data[payment.responsible_party.name] += payment.amt_paid.round(2)
         else
-          data[payment.responsible_party.name] = payment.amt_paid
+          puts "Setting amt paid: #{ "%.2f" % payment.amt_paid }"
+          data[payment.responsible_party.name] = payment.amt_paid.round(2)
         end
       end
     end
     
+    puts "Data: #{data}"
     data
     
   end

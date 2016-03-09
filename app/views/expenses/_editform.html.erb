@@ -5,7 +5,7 @@
   </div>
   <div class="col-xs-3">
     <label for="amt-field-charged">* Amt Charged:</label>
-    <input id="amt-field-charged" name='expense[amt_charged]' type='number' min="0.00", max="<%= expense.amt_remaining_to_pay %>" step="0.01" class="form-control" value=<%= number_with_precision(expense.amt_remaining_to_pay, precision: 2) %> />
+    <input id="amt-field-charged" name='expense[amt_charged]' type='number' min="0.00", max="<%= expense.amt_charged %>" step="0.01" class="form-control" value=<%= number_with_precision(expense.amt_charged, precision: 2) %> />
     <%= e.input :how_to_pay %>
   </div>
   <div class="col-xs-3">              

@@ -26,6 +26,7 @@ class ExpensesController < ApplicationController
   
   # Controller action for processing expense updates
   def update
+    puts "Expense params on update: #{expense_params.inspect}"
     if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f) && expense_params[:amt_charged].to_f >= 0.00
       flash[:alert] = "Please delete pending payment first"
       redirect_to expenses_path and return

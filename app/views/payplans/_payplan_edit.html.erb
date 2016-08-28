@@ -16,7 +16,7 @@
       <br />
       <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.date %></div>
       <div class="col-xs-3 payment-<%=payment.id%>"><%= link_to number_to_currency(payment.amt_paid), "#", :id => "payment-#{payment.id}", :class => "amt_field", :data => { :payment => "#{payment.amt_paid}", :url => "#{payment_path(payment)}", :name => "payment[amt_paid]", :pk => payment.id, :type => "number", :step => "0.01"} %></div>
-      <div class="col-xs-3 payment-<%=payment.id%>"><%= payment.expense.retailer %></div>
+      <div class="col-xs-4 payment-<%=payment.id%>"><%= payment.expense.retailer %> (<%= payment.how_to_pay || payment.expense.how_to_pay %>)</div>
       <% if request.original_fullpath =~ /\/expenses\??(page\=\d+)?/ %>
         <div class="col-xs-2"><i class="glyphicon glyphicon-trash" data-id="<%= payment.id %>" data-payment="<%=payment.amt_paid%>"></i></div>
       <% end %>

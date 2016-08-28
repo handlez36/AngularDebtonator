@@ -83,7 +83,7 @@ class PaymentsController < ApplicationController
   
   # Capture parameters passed in for payment creates
   def payment_params
-    params.require('payment').permit(:amt_paid, :date, :card_id, :responsible_party_id)
+    params.require('payment').permit(:amt_paid, :date, :card_id, :responsible_party_id, :how_to_pay)
   end
   
   # Capture parameters passed in for payment edits (these capture jQuery/ajax requests)

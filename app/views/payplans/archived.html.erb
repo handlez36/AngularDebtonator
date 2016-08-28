@@ -74,12 +74,12 @@
   <div class="col-xs-12 expense <%= "archived" if expense.archived or expense.amt_paid > 0 %>">
       <!-- Main expense row -->
       <div class="col-xs-2 date-field">
-        <%= expense.date.strftime("%b %d") %><br />
-        <span class="retailer-field-archived"><b><%= expense.retailer %></b></span>
+        <%= expense.expense.date.strftime("%b %d") %><br />
+        <span class="retailer-field-archived"><b><%= expense.expense.retailer %></b></span>
       </div>
       <div class="col-xs-3 who-how-field">
         <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
-        <span class="text-center">How: <%= expense.how_to_pay %></span><br />
+        <span class="text-center">How: <%= expense.expense.how_to_pay %></span><br />
         <span class="text-center label" style="background-color: <%= current_user.get_card_color(expense.card) %>">Card: <%= expense.card.card_retailer %></span>
       </div>
       <div class="col-xs-3">
@@ -87,7 +87,8 @@
       </div>
       <div class="col-xs-4 payment-type-field">
         <div class="payment-status">
-          <% if expense.amt_paid == expense.amt_charged %>
+          <%# if expense.amt_paid == expense.amt_charged %>
+          <% if expense.amt_paid == expense.expense.amt_charged %>
             <span class="payment-type-full">Expense fully paid</span>&nbsp;&nbsp;&nbsp;
             <i class="glyphicon glyphicon-ok-circle"></i><br />
           <% else %>

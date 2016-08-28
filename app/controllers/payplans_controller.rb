@@ -43,9 +43,11 @@ class PayplansController < ApplicationController
   def current_archived_expenses(payplan = nil)
     puts "Payplan: #{ payplan.inspect }"
     if payplan.nil?
-      @expenses ||= current_user.expenses.where("archived = ? or amt_paid > ?", true, 0).paginate( :page => params[:page], :per_page => 6 )
+      #@expenses ||= current_user.expenses.where("archived = ? or amt_paid > ?", true, 0).paginate( :page => params[:page], :per_page => 6 )
+      @expenses ||= current_user.payments.paginate( :page => params[:page], :per_page => 6 )
     else
       @expenses ||= payplan.expenses.paginate( :page => params[:page], :per_page => 6 )
+      @payments ||= payplan.payments.paginate( :page => params[:page], :per_page => 6 )
     end
   end
   

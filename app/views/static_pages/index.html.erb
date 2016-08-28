@@ -35,7 +35,34 @@
   <% end %>
 </div>
 
+
+<div>
+  <input name="inputtest" class="special-class" />
+</div>
+
+<style>
+  .only-show-month .ui-datepicker-calendar {
+    display: none;
+  }  
+</style>
+
 <script>
+  $('.special-class').datepicker({
+    changeMonth: true,
+    changeYear: true,
+    showButtonPanel: true,
+    dateFormat: 'mm yy',
+    onClose: function(dateText, inst) { 
+      $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+    },
+    onFocus: function(dateText, inst) {
+      debugger  
+    },
+    beforeShow: function(input, inst) {
+      $('#ui-datepicker-div').addClass("only-show-month");
+    }
+  })
+  
   
   var generateBarColor = function(percentage) {
     if(percentage > 0 && percentage <= 25) {

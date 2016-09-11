@@ -23,6 +23,26 @@
           <%= doughnut_chart current_user.get_expense_total_by_party, { :height => 110, :width => 110, :class => "chart-box", :scaleSteps => 2 } %>
           <%= doughnut_chart current_user.get_expense_total_by_party(false), { :height => 110, :width => 110, :class => "chart-box", :scaleSteps => 2 } %></td>
       </tr>
+      <tr>
+        <td>
+          <%= expense_summary("card") %>
+        </td>
+        <td>
+          <%= expense_summary("party") %>
+        </td>
+      </tr>
     </tbody>
+  </table>
+  <table>
+<!--
+    <tr>
+      <td>
+        <%#= expense_summary("card") %>
+      </td>
+      <td>
+        <%#= expense_summary("party") %>
+      </td>
+    </tr>
+-->
   </table>
 </div>

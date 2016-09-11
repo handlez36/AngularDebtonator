@@ -411,3 +411,12 @@ hr.shadowed {
   width: 10px;
   height: 10px;
 }
+
+.expense-summary-table {
+  margin: 0 auto;
+}
+
+.expense-summary-table th,td {
+  padding-left: 10px;
+  padding-right: 10px;
+}

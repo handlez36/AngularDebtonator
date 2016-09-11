@@ -79,7 +79,7 @@
       </div>
       <div class="col-xs-3 who-how-field">
         <span class="text-center">Who: <%= expense.responsible_party.name %></span><br />
-        <span class="text-center">How: <%= expense.expense.how_to_pay %></span><br />
+        <span class="text-center">How: <%= expense.how_to_pay %></span><br />
         <span class="text-center label" style="background-color: <%= current_user.get_card_color(expense.card) %>">Card: <%= expense.card.card_retailer %></span>
       </div>
       <div class="col-xs-3">

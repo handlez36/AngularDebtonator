@@ -14,7 +14,7 @@ class PayplansTest < ActiveSupport::TestCase
     @expense3.amt_pending = 550.00
     @expense3.save
     
-    @payplan = @payment1.payplan
+    @payplan = @payment2.payplan
     @payplan2 = @payment3.payplan
 
   end

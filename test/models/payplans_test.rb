@@ -29,7 +29,7 @@ class PayplansTest < ActiveSupport::TestCase
     @payplan.reload
     @payplan2.reload
     
-    assert_equal false, @payplan.archived
+    assert_equal true, @payplan.archived
     assert_equal true, @payment1.archived
     assert_equal true, @payment2.archived
     

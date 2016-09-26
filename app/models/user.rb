@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
   end
   
   def get_card_color(card)
-    colors = ["skyblue", "crimson", "orange", "violet", "green", "yellow"]
+    colors = ["skyblue", "crimson", "orange", "violet", "green", "blue"]
     
     mycards = self.cards.order('id ASC').to_a
     return colors[ mycards.find_index(card) % 6 ]

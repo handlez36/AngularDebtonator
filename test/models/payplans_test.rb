@@ -14,7 +14,7 @@ class PayplansTest < ActiveSupport::TestCase
     @expense3.amt_pending = 550.00
     @expense3.save
     
-    @payplan = @payment2.payplan
+    @payplan = @payment1.payplan
     @payplan2 = @payment3.payplan
 
   end
@@ -29,7 +29,7 @@ class PayplansTest < ActiveSupport::TestCase
     @payplan.reload
     @payplan2.reload
     
-    assert_equal true, @payplan.archived
+    assert_equal false, @payplan.archived
     assert_equal true, @payment1.archived
     assert_equal true, @payment2.archived
     

@@ -17,7 +17,7 @@ module PayplansHelper
       current_party = expense[:label]
       remaining_expense = expenses_after_payment.select do |e|
         puts "Expenses after payment for #{e[:label]}"
-        e[:label] == current_party
+#        e[:label] == current_party
       end.first[:value] || 0
       summary_str += "<td>#{current_party}</td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
       summary_str += "</tr>"

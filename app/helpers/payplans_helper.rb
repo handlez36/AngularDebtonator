@@ -12,13 +12,13 @@ module PayplansHelper
     
     puts "Expenses Before: #{expenses_before_payment.inspect}"
     puts "Expenses After: #{expenses_after_payment.inspect}"
-    expenses_before_payment.each do |expense|
-      summary_str += "<tr>"
-      current_party = expense[:label]
-      remaining_expense = expenses_after_payment.select { |e| e[:label] == current_party }.first[:value] || 0
-      summary_str += "<td>#{current_party}</td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
-      summary_str += "</tr>"
-    end
+#    expenses_before_payment.each do |expense|
+#      summary_str += "<tr>"
+#      current_party = expense[:label]
+#      remaining_expense = expenses_after_payment.select { |e| e[:label] == current_party }.first[:value] || 0
+#      summary_str += "<td>#{current_party}</td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
+#      summary_str += "</tr>"
+#    end
     
     summary_str += "</table>"
     summary_str.html_safe

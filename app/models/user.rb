@@ -119,10 +119,10 @@ class User < ActiveRecord::Base
     
     self.expenses.where(:archived => false).each do |expense|
       if data.has_key? expense.responsible_party.name
-        puts "Adding amt remaining: #{ "%.2f" % expense.amt_remaining }"
+#        puts "Adding amt remaining: #{ "%.2f" % expense.amt_remaining }"
         data[expense.responsible_party.name] += expense.amt_remaining.round(2)
       else
-        puts "Setting amt remaining: #{ "%.2f" % expense.amt_remaining }"
+#        puts "Setting amt remaining: #{ "%.2f" % expense.amt_remaining }"
         data[expense.responsible_party.name] = expense.amt_remaining.round(2)
       end
     end
@@ -130,16 +130,16 @@ class User < ActiveRecord::Base
     if include_pending
       self.payments.where(:archived => false).each do |payment|
         if data.has_key? payment.responsible_party.name
-          puts "Adding amt paid: #{ "%.2f" % payment.amt_paid }"
+#          puts "Adding amt paid: #{ "%.2f" % payment.amt_paid }"
           data[payment.responsible_party.name] += payment.amt_paid.round(2)
         else
-          puts "Setting amt paid: #{ "%.2f" % payment.amt_paid }"
+#          puts "Setting amt paid: #{ "%.2f" % payment.amt_paid }"
           data[payment.responsible_party.name] = payment.amt_paid.round(2)
         end
       end
     end
     
-    puts "Data: #{data}"
+#    puts "Data: #{data}"
     data
     
   end

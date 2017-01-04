@@ -10,8 +10,8 @@ module PayplansHelper
       expenses_after_payment = current_user.get_expense_total_by_card(false)
     end
     
-#    puts "Expenses Before: #{expenses_before_payment.inspect}"
-#    puts "Expenses After: #{expenses_after_payment.inspect}"
+    puts "Expenses Before: #{expenses_before_payment.inspect}"
+    puts "Expenses After: #{expenses_after_payment.inspect}"
     expenses_before_payment.each do |expense|
       summary_str += "<tr>"
       current_party = expense[:label]

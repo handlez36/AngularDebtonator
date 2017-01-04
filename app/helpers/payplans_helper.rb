@@ -15,10 +15,14 @@ module PayplansHelper
     expenses_before_payment.each do |expense|
       summary_str += "<tr>"
       current_party = expense[:label]
+      puts "Current part: #{current_party}"
       remaining_expense = expenses_after_payment.select do |e|
 #        puts "Expenses after payment for #{e[:label]}"
 #        e[:label] == current_party
-      end.first[:value] || 0
+      end
+      
+      puts "Remaining expense: #{remaining_expense}"
+      remaining_expense = remaining_expense.first[:value] || 0
       summary_str += "<td>#{current_party}</td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
       summary_str += "</tr>"
     end

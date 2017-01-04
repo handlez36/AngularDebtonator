@@ -17,8 +17,7 @@ module PayplansHelper
       current_party = expense[:label]
       puts "Current part: #{current_party}"
       remaining_expense = expenses_after_payment.select do |e|
-#        puts "Expenses after payment for #{e[:label]}"
-#        e[:label] == current_party
+        e[:label] == current_party
       end
       
       puts "Remaining expense: #{remaining_expense}"

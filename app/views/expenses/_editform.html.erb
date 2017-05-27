@@ -1,4 +1,4 @@
-<%= simple_form_for expense do |e| %>
+<%= simple_form_for expense, remote: true do |e| %>
   <div class="col-xs-3" data-section="<%= expense.id %>">
     <%= e.input :date, :as => :string, :input_html => { :id => "expense_date_#{expense.id}", :class => "edit-date" } %>
     <%= e.input :retailer %>

@@ -27,16 +27,22 @@ class ExpensesController < ApplicationController
   # Controller action for processing expense updates
   def update
     puts "Expense params on update: #{expense_params.inspect}"
-    if !current_expense.valid_expense_change?(expense_params[:amt_charged].to_f) && expense_params[:amt_charged].to_f >= 0.00
+    @expense = current_expense
+    if !@expense.valid_expense_change?(expense_params[:amt_charged].to_f) && expense_params[:amt_charged].to_f >= 0.00
       flash[:alert] = "Please delete pending payment first"
       redirect_to expenses_path and return
     end
     
-    current_expense.update_attributes(expense_params.merge(:user => current_user))
+    @expense.update_attributes(expense_params.merge(:user => current_user))
     
-    flash[:alert] = "Validation errors with expense update" unless current_expense.valid?
+    flash[:alert] = "Validation errors with expense update" unless @expense.valid?
     
-    redirect_to expenses_path
+    respond_to do |format|
+      format.html
+      format.js
+    end
+    
+#    redirect_to expenses_path
   end
   
   # Controller action for destroying an expense, and any connected payments

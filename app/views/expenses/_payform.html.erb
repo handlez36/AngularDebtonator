@@ -1,4 +1,4 @@
-<%= simple_form_for expense, as: 'payment', :url => expense_payments_path(expense), :method => "post" do |e| %>
+<%= simple_form_for expense, as: 'payment', :url => expense_payments_path(expense), :method => "post", remote: true do |e| %>
   <div class="col-xs-3">
     <%#= e.input :date, :as => :string %>
     <label for="paydate-field">* Date</label>

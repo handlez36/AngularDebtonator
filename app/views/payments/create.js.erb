@@ -1,0 +1,6 @@
+<% if @new_payment.errors.any? %>
+  alert('Failed to create payment:\n- <%=j @new_payment.errors.full_messages.join("\n- ") %>');
+<% else %>
+  $('#pay<%= @new_payment.expense.id %>').modal('hide')
+  window.location.reload()
+<% end %>

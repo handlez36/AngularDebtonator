@@ -1,0 +1,7 @@
+<% if @expense.errors.any? %>
+  alert('Failed to update expense:\n- <%=j @expense.errors.full_messages.join("\n- ") %>');
+<% else %>
+  $('#edit<%= @expense.id %>').modal('hide')
+  $('#expense-row-<%= @expense.id %>').replaceWith("<%=j render partial: 'expense', locals: { expense: @expense } %>")
+  window.location.reload()
+<% end %>

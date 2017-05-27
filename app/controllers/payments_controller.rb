@@ -11,13 +11,25 @@ class PaymentsController < ApplicationController
     
     payment_plan = Payment.get_proper_plan(params[:date], params[:card_id], current_user)
 
-    new_payment = current_expense.payments.create( params.merge(:payplan_id => payment_plan.id, :user => current_user))
+    @new_payment = current_expense.payments.create( params.merge(:payplan_id => payment_plan.id, :user => current_user))
     
-    if new_payment.valid?
-      current_expense.update_amt_pending(new_payment.amt_paid)
-      redirect_to expenses_path
-    else
-      return render :text => "Entry invalid", :status => :unprocessable_entity
+    respond_to do |format|
+      format.html do
+        if @new_payment.valid?
+          current_expense.update_amt_pending(@new_payment.amt_paid)
+          redirect_to expenses_path
+        else
+          return render :text => "Entry invalid", :status => :unprocessable_entity
+        end
+      end
+      format.js do
+        if @new_payment.valid?
+          current_expense.update_amt_pending(@new_payment.amt_paid)
+#          redirect_to expenses_path
+        else
+#          return render :text => "Entry invalid", :status => :unprocessable_entity
+        end
+      end
     end
   end
   

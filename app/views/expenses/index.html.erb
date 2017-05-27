@@ -13,7 +13,12 @@
     <br />
     <h3>Expenses for <%=current_user.email%> <span class="badge"><%= current_expenses.where(:archived => false).count %></span></h3>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
-      <%= render current_expenses %>
+      <%#= render current_expenses %>
+      <% current_expenses.each do |expense| %>
+        <div id="expense-row-<%= expense.id %>" class="panel panel-default">
+          <%= render partial: 'expense', locals: { expense: expense } %>
+        </div>
+      <% end %>
       <%= will_paginate current_expenses %>
     </div>
   </div>

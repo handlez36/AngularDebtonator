@@ -68,7 +68,7 @@ class ExpensesController < ApplicationController
     @expenses ||= current_user.expenses.
       where( :archived => false).
       order('date DESC, id DESC').
-      paginate( :page => params[:page], :per_page => 6 )
+      paginate( :page => params[:page], :per_page => 9 )
   end
   
   # Return the current expense for this specific request

@@ -12,6 +12,12 @@
     <br class="clr" />
     <br />
     <h3>Expenses for <%=current_user.email%> <span class="badge"><%= current_expenses.where(:archived => false).count %></span></h3>
+    <div id="expense_filters">
+      <% if params["rp_filter"] %>
+        Showing expenses for <%= params["rp_filter"] %>&nbsp; &nbsp;
+        <%= link_to "| All Expenses", expenses_path %>
+      <% end %>
+    </div>
     <div class="panel-group" id="accordion" role="tablist" style="padding: 0;">
       <%#= render current_expenses %>
       <% current_expenses.each do |expense| %>

@@ -22,7 +22,7 @@ module PayplansHelper
       
       puts "Remaining expense: #{remaining_expense}"
       remaining_expense = remaining_expense.first[:value] || 0
-      summary_str += "<td>#{current_party}</td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
+      summary_str += "<td><a href='/expenses?rp_filter=#{current_party}'>#{current_party}</a></td><td>#{number_to_currency(expense[:value])}</td><td>#{number_to_currency(remaining_expense)}</td>"
       summary_str += "</tr>"
     end
     

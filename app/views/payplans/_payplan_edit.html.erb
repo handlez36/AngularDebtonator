@@ -31,6 +31,16 @@
       <b>Total for plan!!:</b> <span class="total-for-plan-<%= plan.id %>" data-total="<%=plan.get_plan_total%>"><%= number_to_currency plan.get_plan_total %></span>
     </div>
     <br />
+    <br />
+    <div class="col-xs-5 col-xs-offset-1 payment-total">
+      Breakdown per payment method:<br />
+      <% payments = plan.get_payments_for_payee(party) %>
+      <% payments.group_by { |p| p.how_to_pay }.each do |h,p| %>
+        <%= h %>:  <%= number_to_currency(p.reduce(0) { |sum,exp| sum += exp.amt_paid }) %>
+        <br />
+      <% end%>
+    </div>
+    <br class="clr" />
   </div>
 <% end %>
 </div>

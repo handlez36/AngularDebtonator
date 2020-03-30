@@ -67,6 +67,9 @@ gem 'simple-spreadsheet'
 gem 'carrierwave', '~> 2.0'
 
 gem 'pry'
+
+gem 'webpacker', '~> 4.x'
+
 gem "letter_opener", :group => :development
 gem 'listen', :group => :development
 

@@ -11,6 +11,7 @@
 
 <div class="booyah-box col-xs-8 col-xs-offset-2">
   <% if user_signed_in? %>
+  <%= link_to "Go to Angular site", v2_path, :class => "btn btn-warning" %>
   <%= link_to "Go to credit card ledger", expenses_path, :class => "btn btn-warning" %>
     <br />
     <br />

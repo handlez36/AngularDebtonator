@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@angular/common": "^9.1.0",
+    "@angular/compiler": "^9.1.0",
+    "@angular/core": "^9.1.0",
+    "@angular/platform-browser": "^9.1.0",
+    "@angular/platform-browser-dynamic": "^9.1.0",
+    "@rails/webpacker": "4.2.2",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "html-loader": "^1.0.0",
+    "regenerator-runtime": "^0.13.5",
+    "rxjs": "^6.5.4",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "zone.js": "^0.10.3"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.10.3"
+  }
+}

@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   resources :expenses, as: 'update_expense', :only => [:update]
   resources :payplans, :only => [:destroy]
 
+  # 2002 Angular routes
+  get 'v2', to: 'v2/dashboards#index', as: 'v2'
+
   # 2020 Api routes
   get '/api/expenses', to: 'api/v1/expenses#index'
 end

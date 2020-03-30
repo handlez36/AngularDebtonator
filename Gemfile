@@ -70,6 +70,8 @@ gem 'pry'
 
 gem 'webpacker', '~> 4.x'
 
+gem 'yaml_db'
+
 gem "letter_opener", :group => :development
 gem 'listen', :group => :development
 

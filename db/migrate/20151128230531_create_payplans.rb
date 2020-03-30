@@ -1,4 +1,4 @@
-class CreatePayplans < ActiveRecord::Migration
+class CreatePayplans < ActiveRecord::Migration[5.2]
   def change
     create_table :payplans do |t|
 

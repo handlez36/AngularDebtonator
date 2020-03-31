@@ -12,9 +12,9 @@ class Api::V1::ExpensesController < ApplicationController
       ResponsibleParty.all.map(&:id)
     end
     
-    @expenses ||= current_user.expenses.
-      where( :archived => false ).
-      where( :responsible_party_id => rp_filter ).
-      order('date DESC, id DESC')
+    @expenses ||= current_user.expenses
+      .where( :archived => false )
+      .where( :responsible_party_id => rp_filter )
+      .order('date DESC, id DESC')
   end
 end

@@ -16,11 +16,14 @@ export class ExpenseService {
 
     const response: object = await axios.get(url);
 
-    if (response && response["status"] === 200) {
-      const { data: { expenses = [] } = {}, error = null } = response;
+    if (response && response["data"] && response["status"] === 200) {
+      let expenses = [];
+      if (response["data"] && response["data"]["expenses"]) {
+        expenses = response["data"]["expenses"];
+      }
 
       this.expenses = expenses;
-      return { data: expenses, error };
+      return { data: expenses, error: null };
     } else {
       return { data: null, error: "Error retrieving expense data" };
     }

@@ -1,35 +1,72 @@
-import { Component, OnInit } from "@angular/core";
-import templateString from "./expenses.component.html";
+import { Component, OnInit } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import * as moment from 'moment';
 
-import { ExpenseService } from "../services/expense.service";
+import { TabularView } from './Common/tabular-view.component';
+import { ExpenseService } from '../services/expense.service';
+import { Utils } from '../services/utils.service';
+import templateString from './expenses.component.html';
+import './expenses.component.scss';
+
+enum GridType {
+	TABLE = 1,
+}
 
 @Component({
-  selector: "app-expenses",
-  template: templateString
+	selector: 'app-expenses',
+	template: templateString,
 })
 export class ExpensesComponent implements OnInit {
-  expenseService: ExpenseService;
-  expenses: object[] = [];
-  apiError: string = null;
+	GridTypeEnum = GridType;
+	expenseService: ExpenseService;
+	expenses: object[] = [];
+	apiError: string = null;
+	gridType: GridType = GridType.TABLE;
 
-  constructor(expenseService: ExpenseService) {
-    this.expenseService = expenseService;
-  }
+	public FILTERABLE_FIELDS: string[] = [
+		'retailer',
+		'amt_charged',
+		'amt_paid',
+		'how_to_pay',
+		'card_id',
+		'responsible_party_id',
+		'amt_pending',
+	];
 
-  ngOnInit() {
-    console.log("ExpensesComponent.ts -- Initializing expenses component.");
-    this.retrieveExpenses();
-  }
+	public COLUMNS: object = {
+		date: { label: 'Date', format: this.utils.dateTransform },
+		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform },
+		amt_charged: { label: 'Charged', format: this.utils.currencyTransform },
+		payment_status: { label: 'Payment Status' },
+		amt_remaining: { label: 'Remaining', format: this.utils.currencyTransform },
+		how_to_pay: { label: 'How To Pay', format: this.utils.truncatedStrTransform },
+		card_id: { label: 'Card', format: this.utils.truncatedStrTransform },
+		responsible_party_id: { label: 'Responsible Party', format: this.utils.truncatedStrTransform },
+	};
 
-  async retrieveExpenses() {
-    console.log(" -- retrieveExpenses...");
-    if (!this.expenseService) {
-      this.apiError = "Sorry, the expenses Api cannot be called at the moment";
-      return;
-    }
+	constructor(expenseService: ExpenseService, private utils: Utils) {
+		this.expenseService = expenseService;
+	}
 
-    const { data, error } = await this.expenseService.getAllExpenses();
-    this.expenses = data;
-    this.apiError = error;
-  }
+	ngOnInit() {
+		console.log('ExpensesComponent.ts -- Initializing expenses component.');
+		this.retrieveExpenses();
+	}
+
+	async retrieveExpenses() {
+		console.log(' -- retrieveExpenses...');
+		if (!this.expenseService) {
+			this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
+			return;
+		}
+
+		const { data, error } = await this.expenseService.getAllExpenses();
+		this.expenses = data.map(item => ({
+			...item,
+			amt_remaining:
+				parseFloat(item['amt_charged']) -
+				(parseFloat(item['amt_paid']) + parseFloat(item['amt_pending'])),
+		}));
+		this.apiError = error;
+	}
 }

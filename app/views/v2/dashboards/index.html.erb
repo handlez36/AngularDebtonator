@@ -1,3 +1,5 @@
-<app-dashboard data-user=<%= current_user.to_json %> myuser=<%= current_user.email %>></app-dashboard>
+<app-dashboard data-user=<%= current_user.to_json %>></app-dashboard>
 
+<%= stylesheet_pack_tag 'global' %>
+<%= stylesheet_pack_tag 'covalent.styles' %>
 <%= javascript_pack_tag 'dashboard' %>

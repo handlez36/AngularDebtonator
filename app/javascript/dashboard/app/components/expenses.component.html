@@ -1,6 +1,8 @@
-<div class="expenses">
-  <div *ngFor="let expense of expenses">
-    {{ expense.retailer }}
-    <hr />
-  </div>
+<div class="expenses-component">
+	<app-tabular-view
+		*ngIf="gridType === GridTypeEnum.TABLE"
+		[data]="expenses"
+		[columnLabels]="COLUMNS"
+		[filterable]="FILTERABLE_FIELDS"
+	></app-tabular-view>
 </div>

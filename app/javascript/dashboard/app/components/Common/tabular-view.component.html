@@ -1,0 +1,79 @@
+<div class="tabular-view-component">
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Card Expenses</mat-card-title>
+			<mat-card-subtitle
+				>{{ unPaginatedData && unPaginatedData.length }} expenses totaling
+				{{ getTotalUnpaginatedExpenses() | currency }}</mat-card-subtitle
+			>
+			<div layout="row" layout-align="start center" class="filter-bar pad-left-sm pad-right-sm">
+				<span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+					<span *ngIf="selectedRows.length && selectable" class="mat-body-1"
+						>{{ selectedRows.length }} item(s) selected</span
+					>
+				</span>
+				<td-search-box
+					#searchBox
+					backIcon="arrow_back"
+					class="push-right-sm"
+					placeholder="Filter"
+					(searchDebounce)="filter($event)"
+					flex
+				>
+				</td-search-box>
+			</div>
+		</mat-card-header>
+
+		<mat-card-content>
+			<td-data-table
+				[data]="formattedData"
+				[columns]="columns"
+				[clickable]="true"
+				[selectable]="true"
+				[multiple]="true"
+				[sortable]="true"
+				[sortBy]="sortBy"
+				[sortOrder]="sortOrder"
+				(sortChange)="sort($event)"
+				[style.height.%]="100"
+			>
+				<ng-template
+					tdDataTableTemplate="payment_status"
+					let-value="value"
+					let-row="row"
+					let-column="column"
+				>
+					<div
+						class="paid-details"
+						[style.width.px]="100"
+						style="display: flex; flex-direction: column"
+					>
+						<div>
+							<span class="paid-label">PAID:</span>
+							<span class="paid-value">{{ row['amt_paid'] | currency }}</span>
+						</div>
+						<div>
+							<span class="pending-label">PENDING:</span>
+							<span class="pending-value">{{ row['amt_pending'] | currency }}</span>
+						</div>
+					</div>
+				</ng-template>
+			</td-data-table>
+			<hr [style.marginTop.px]="0" [style.marginBottom.px]="0" />
+			<td-paging-bar
+				#pagingBar
+				[pageSize]="pageSize"
+				[total]="unPaginatedData && unPaginatedData.length"
+				(change)="page($event)"
+			>
+				<span hide-xs>Rows per page:</span>
+				<mat-select [style.width.px]="50" [(ngModel)]="pageSize">
+					<mat-option *ngFor="let size of [10, 20, 50, 100, 500]" [value]="size">
+						{{ size }}
+					</mat-option>
+				</mat-select>
+				{{ pagingBar.range }} <span hide-xs>of {{ unPaginatedData.length }}</span>
+			</td-paging-bar>
+		</mat-card-content>
+	</mat-card>
+</div>

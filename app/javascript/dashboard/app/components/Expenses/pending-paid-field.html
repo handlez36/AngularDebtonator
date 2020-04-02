@@ -1,0 +1,10 @@
+<div class="pending-paid-field flex-col" [style.width.px]="100">
+	<div class="flex-row-space-bt">
+		<span class="paid-label">PAID:</span>
+		<span class="paid-value">{{ paid | currency }}</span>
+	</div>
+	<div class="flex-row-space-bt">
+		<span class="pending-label">PENDING:</span>
+		<span class="pending-value">{{ pending | currency }}</span>
+	</div>
+</div>

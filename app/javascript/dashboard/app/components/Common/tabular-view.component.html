@@ -1,7 +1,18 @@
 <div class="tabular-view-component">
 	<mat-card>
+		<ng-template
+			class="loader"
+			tdLoading="expense-loader"
+			tdLoadingColor="warn"
+			[tdLoadingType]="linear"
+			[tdLoadingUntil]="!isLoading"
+		>
+		</ng-template>
 		<mat-card-header>
-			<mat-card-title>Card Expenses</mat-card-title>
+			<mat-card-title>
+				Card Expenses
+				<mat-icon class="add-button" (click)="add()">library_add</mat-icon>
+			</mat-card-title>
 			<mat-card-subtitle
 				>{{ unPaginatedData && unPaginatedData.length }} expenses totaling
 				{{ getTotalUnpaginatedExpenses() | currency }}</mat-card-subtitle
@@ -23,7 +34,6 @@
 				</td-search-box>
 			</div>
 		</mat-card-header>
-
 		<mat-card-content>
 			<td-data-table
 				[data]="formattedData"
@@ -37,25 +47,37 @@
 				(sortChange)="sort($event)"
 				[style.height.%]="100"
 			>
-				<ng-template
-					tdDataTableTemplate="payment_status"
-					let-value="value"
-					let-row="row"
-					let-column="column"
-				>
-					<div
-						class="paid-details"
-						[style.width.px]="100"
-						style="display: flex; flex-direction: column"
-					>
-						<div>
-							<span class="paid-label">PAID:</span>
-							<span class="paid-value">{{ row['amt_paid'] | currency }}</span>
-						</div>
-						<div>
-							<span class="pending-label">PENDING:</span>
-							<span class="pending-value">{{ row['amt_pending'] | currency }}</span>
-						</div>
+				<ng-template tdDataTableTemplate="date" let-value="value">
+					<app-date-field [date]="value"></app-date-field>
+				</ng-template>
+				<ng-template tdDataTableTemplate="retailer" let-value="value">
+					<div class="retailer">{{ value }}</div>
+				</ng-template>
+				<ng-template tdDataTableTemplate="amt_charged" let-value="value">
+					<div class="amt_charged flex-row">
+						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
+						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
+					</div>
+				</ng-template>
+				<ng-template tdDataTableTemplate="amt_remaining" let-value="value">
+					<div class="amt_remaining flex-row">
+						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
+						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
+					</div>
+				</ng-template>
+				<ng-template tdDataTableTemplate="pending_paid" let-row="row">
+					<app-pending-paid
+						[pending]="row['amt_pending']"
+						[paid]="row['amt_paid']"
+					></app-pending-paid>
+				</ng-template>
+				<ng-template tdDataTableTemplate="card_payee" let-row="row">
+					<app-card-payee [card]="row['card_id']" [payee]="row['responsible_party_id']">
+					</app-card-payee>
+				</ng-template>
+				<ng-template tdDataTableTemplate="how_to_pay" let-value="value">
+					<div class="how-to-pay">
+						{{ value }}
 					</div>
 				</ng-template>
 			</td-data-table>

@@ -34,14 +34,15 @@ export class ExpensesComponent implements OnInit {
 	];
 
 	public COLUMNS: object = {
-		date: { label: 'Date', format: this.utils.dateTransform },
-		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform },
-		amt_charged: { label: 'Charged', format: this.utils.currencyTransform },
-		payment_status: { label: 'Payment Status' },
-		amt_remaining: { label: 'Remaining', format: this.utils.currencyTransform },
-		how_to_pay: { label: 'How To Pay', format: this.utils.truncatedStrTransform },
-		card_id: { label: 'Card', format: this.utils.truncatedStrTransform },
-		responsible_party_id: { label: 'Responsible Party', format: this.utils.truncatedStrTransform },
+		card_payee: { label: '', width: 'xs' },
+		date: { label: 'Date', width: 'md' },
+		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform, width: 'md' },
+		amt_charged: { label: 'Charged', format: this.utils.currencyTransform, width: 'sm' },
+		pending_paid: { label: 'Payment Status', width: 'md' },
+		amt_remaining: { label: 'Remaining', format: this.utils.currencyTransform, width: 'sm' },
+		how_to_pay: { label: 'How To Pay', format: this.utils.truncatedStrTransform, width: 'lg' },
+		// card_id: { label: 'Card', format: this.utils.truncatedStrTransform },
+		// responsible_party_id: { label: 'Responsible Party', format: this.utils.truncatedStrTransform },
 	};
 
 	constructor(expenseService: ExpenseService, private utils: Utils) {

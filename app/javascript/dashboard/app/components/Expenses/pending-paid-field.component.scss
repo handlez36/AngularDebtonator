@@ -1,0 +1,18 @@
+.pending-paid-field {
+	// width: 124px;
+	.paid-label,
+	.pending-label,
+	.paid-value,
+	.pending-value {
+		font-size: 10px;
+		font-weight: 700;
+	}
+	.paid-label,
+	.paid-value {
+		color: green;
+	}
+	.pending-label,
+	.pending-value {
+		color: orange;
+	}
+}

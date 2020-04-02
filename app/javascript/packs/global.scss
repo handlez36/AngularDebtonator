@@ -4,3 +4,62 @@ app-dashboard {
 	display: flex;
 	flex-direction: column;
 }
+
+/** Mixins **/
+@mixin FlexRow {
+	display: flex;
+	flex-direction: row;
+}
+@mixin FlexRowCenter {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+@mixin FlexRowSpaceBt {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+@mixin FlexCol {
+	display: flex;
+	flex-direction: column;
+}
+@mixin FlexColCenter {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+@mixin FlexColSpaceBt {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+@mixin FlexCenter {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+/** Mixin classes */
+.flex-row {
+	@include FlexRow();
+}
+.flex-row-center {
+	@include FlexRowCenter();
+}
+.flex-row-space-bt {
+	@include FlexRowSpaceBt();
+}
+.flex-col {
+	@include FlexCol();
+}
+.flex-col-center {
+	@include FlexColCenter();
+}
+.flex-col-space-bt {
+	@include FlexColSpaceBt();
+}
+.flex-center {
+	@include FlexCenter();
+}

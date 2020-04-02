@@ -74,6 +74,8 @@ gem 'yaml_db'
 
 gem 'foreman'
 
+gem 'active_model_serializers'
+
 gem "letter_opener", :group => :development
 gem 'listen', :group => :development
 

@@ -1,6 +1,6 @@
 class Api::V1::ExpensesController < ApplicationController
   def index
-    render :json => { status: 200, expenses: current_expenses}
+    render json: current_expenses
   end
 
   # Return current expenses for the current user

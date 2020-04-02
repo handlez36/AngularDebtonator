@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Add Expense</h1>
+<div mat-dialog-content>
+	<td-dynamic-forms class="expense-form" [elements]="elements">
+		<ng-template let-element ngFor [ngForOf]="elements">
+			<ng-template let-control="control" [tdDynamicFormsError]="element.name">
+				<span *ngIf="control.touched || !control.pristine">
+					<span *ngIf="control.hasError('min')">Min value: {{ element.min }}</span>
+					<span *ngIf="control.hasError('max')">Max value: {{ element.max }}</span>
+				</span>
+			</ng-template>
+		</ng-template>
+	</td-dynamic-forms>
+</div>
+<div mat-dialog-actions>
+	<button mat-button (click)="onAdd()">Add</button>
+	<button mat-button (click)="onCancel()">Cancel</button>
+</div>

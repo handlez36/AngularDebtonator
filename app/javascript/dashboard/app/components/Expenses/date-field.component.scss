@@ -1,0 +1,24 @@
+.date-field {
+	.top {
+		.month {
+			font-size: 16px;
+			font-weight: 800;
+			color: lightskyblue;
+			text-transform: uppercase;
+		}
+		.day {
+			font-size: 14px;
+			font-weight: 600;
+			margin-left: 5px;
+			color: lightskyblue;
+		}
+	}
+	.bottom {
+		.year {
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 3px;
+			color: lightslategray;
+		}
+	}
+}

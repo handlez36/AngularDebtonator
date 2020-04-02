@@ -1,6 +1,10 @@
 app-tabular-view {
 	.tabular-view-component {
 		height: 650px;
+		td-loading {
+			position: absolute;
+			left: 45%;
+		}
 		.mat-card {
 			height: 650px;
 		}
@@ -13,29 +17,44 @@ app-tabular-view {
 			.mat-form-field-appearance-legacy .mat-form-field-wrapper {
 				padding-bottom: 0.5vh;
 			}
+			.add-button {
+				cursor: pointer;
+			}
 		}
 		.mat-card .mat-card-content {
 			height: 488px;
-		}
-		.mat-card .mat-card-content .paid-details {
-			width: 124px;
-			& > div {
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
+			.retailer {
+				font-size: 15px;
+				font-weight: 600;
+				text-overflow: ellipsis;
+				color: lightslategray;
 			}
-			.paid-label,
-			.pending-label,
-			.paid-value,
-			.pending-value {
-				font-size: 10px;
-				font-weight: 500;
+			.amt_charged,
+			.amt_remaining {
+				.dollars {
+					font-size: 24px;
+					font-weight: 600;
+					line-height: 24px;
+					align-self: flex-start;
+					color: slategray;
+				}
+				.cents {
+					font-size: 12px;
+					align-self: flex-start;
+					margin-left: 2px;
+					color: lightslategray;
+				}
 			}
-			.paid-label {
-				color: green;
+			.amt_remaining {
+				.dollars {
+					color: skyblue;
+				}
+				.cents {
+					color: lightskyblue;
+				}
 			}
-			.pending-label {
-				color: orange;
+			.how-to-pay {
+				font-size: 11px;
 			}
 		}
 	}

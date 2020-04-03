@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { UserService } from './user.service';
 import axios from 'axios';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 @Injectable({
 	providedIn: 'root',
@@ -7,7 +10,7 @@ import axios from 'axios';
 export class ExpenseService {
 	private expenses: object[] = [];
 
-	constructor() {
+	constructor(private apollo: Apollo, private userService: UserService) {
 		console.log('ExpenseService.ts -- Expense Service being initiated');
 	}
 
@@ -24,5 +27,32 @@ export class ExpenseService {
 		} else {
 			return { data: null, error: 'Error retrieving expense data' };
 		}
+	}
+
+	getExpenses(filters: object = null) {
+		const id = this.userService.getUserId();
+		const query = {
+			query: gql`
+          {
+            expenses(id: ${id}) {
+              id,
+              date,
+              retailer,
+              amtCharged,
+              amtPending,
+              amtPaid,
+              responsibleParty {
+                name
+              }
+              card {
+                name
+              }
+              howToPay
+            }
+          }
+        `,
+		};
+
+		return this.apollo.watchQuery(query).valueChanges;
 	}
 }

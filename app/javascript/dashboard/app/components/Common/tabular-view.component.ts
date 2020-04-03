@@ -42,8 +42,8 @@ export class TabularView implements OnInit {
 	public formattedData: any[] = null;
 	public unPaginatedData: object[] = [];
 	public columns: ITdDataTableColumn[] = [];
-	public sortBy: string = null;
-	public sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Ascending;
+	public sortBy: string = 'date';
+	public sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 	public filterTerm: string = '';
 	public selectedRows: number = 0;
 	public fromRow: any = 1;
@@ -130,9 +130,9 @@ export class TabularView implements OnInit {
 	getTotalUnpaginatedExpenses() {
 		return this.unPaginatedData.reduce((total, item) => {
 			total +=
-				parseFloat(item['amt_charged']) -
-				parseFloat(item['amt_paid']) +
-				parseFloat(item['amt_pending']);
+				parseFloat(item['amtCharged']) -
+				parseFloat(item['amtPaid']) +
+				parseFloat(item['amtPending']);
 			return total;
 		}, 0.0);
 	}
@@ -185,9 +185,9 @@ export class TabularView implements OnInit {
 			newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
 		}
 		this.unPaginatedData = newData.map(item => ({
-			amt_charged: item.amt_charged,
-			amt_pending: item.amt_pending,
-			amt_paid: item.amt_paid,
+			amtCharged: item.amtCharged,
+			amtPending: item.amtPending,
+			amtPaid: item.amtPaid,
 		}));
 
 		newData = this._dataTableService.pageData(

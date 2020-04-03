@@ -53,13 +53,13 @@
 				<ng-template tdDataTableTemplate="retailer" let-value="value">
 					<div class="retailer">{{ value }}</div>
 				</ng-template>
-				<ng-template tdDataTableTemplate="amt_charged" let-value="value">
+				<ng-template tdDataTableTemplate="amtCharged" let-value="value">
 					<div class="amt_charged flex-row">
 						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
 						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
 					</div>
 				</ng-template>
-				<ng-template tdDataTableTemplate="amt_remaining" let-value="value">
+				<ng-template tdDataTableTemplate="amtRemaining" let-value="value">
 					<div class="amt_remaining flex-row">
 						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
 						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
@@ -67,15 +67,15 @@
 				</ng-template>
 				<ng-template tdDataTableTemplate="pending_paid" let-row="row">
 					<app-pending-paid
-						[pending]="row['amt_pending']"
-						[paid]="row['amt_paid']"
+						[pending]="row['amtPending']"
+						[paid]="row['amtPaid']"
 					></app-pending-paid>
 				</ng-template>
 				<ng-template tdDataTableTemplate="card_payee" let-row="row">
 					<app-card-payee [card]="row['card_id']" [payee]="row['responsible_party_id']">
 					</app-card-payee>
 				</ng-template>
-				<ng-template tdDataTableTemplate="how_to_pay" let-value="value">
+				<ng-template tdDataTableTemplate="howToPay" let-value="value">
 					<div class="how-to-pay">
 						{{ value }}
 					</div>

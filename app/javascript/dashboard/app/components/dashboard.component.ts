@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { UserService } from './../services/user.service';
 import templateString from './dashboard.component.html';
 import './../../styles/components/dashboard.component.scss';
 
@@ -10,10 +11,11 @@ import './../../styles/components/dashboard.component.scss';
 export class DashboardComponent implements OnInit {
 	user: object = {};
 
-	constructor() {}
+	constructor(private userService: UserService) {}
 
 	ngOnInit() {
 		this.user = this.getCurrentUser();
+		this.userService.setUser(this.user);
 
 		console.log('DashboardComponent.js -- Initializing dashboard component!!!');
 		console.log(' -- Logged in as ', this.user['email']);

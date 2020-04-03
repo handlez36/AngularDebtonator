@@ -7,6 +7,7 @@ import { ExpenseService } from '../services/expense.service';
 import { Utils } from '../services/utils.service';
 import templateString from './expenses.component.html';
 import './expenses.component.scss';
+import { GraphQLError } from 'graphql/error';
 
 enum GridType {
 	TABLE = 1,
@@ -20,29 +21,26 @@ export class ExpensesComponent implements OnInit {
 	GridTypeEnum = GridType;
 	expenseService: ExpenseService;
 	expenses: object[] = [];
-	apiError: string = null;
+	// apiError: string = null;
+	apiError: any;
 	gridType: GridType = GridType.TABLE;
 
 	public FILTERABLE_FIELDS: string[] = [
 		'retailer',
-		'amt_charged',
-		'amt_paid',
-		'how_to_pay',
-		'card_id',
-		'responsible_party_id',
-		'amt_pending',
+		'amtCharged',
+		'amtPaid',
+		'howToPay',
+		'amtPending',
 	];
 
 	public COLUMNS: object = {
 		card_payee: { label: '', width: 'xs' },
 		date: { label: 'Date', width: 'md' },
 		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform, width: 'md' },
-		amt_charged: { label: 'Charged', format: this.utils.currencyTransform, width: 'sm' },
+		amtCharged: { label: 'Charged', format: this.utils.currencyTransform, width: 'sm' },
 		pending_paid: { label: 'Payment Status', width: 'md' },
-		amt_remaining: { label: 'Remaining', format: this.utils.currencyTransform, width: 'sm' },
-		how_to_pay: { label: 'How To Pay', format: this.utils.truncatedStrTransform, width: 'lg' },
-		// card_id: { label: 'Card', format: this.utils.truncatedStrTransform },
-		// responsible_party_id: { label: 'Responsible Party', format: this.utils.truncatedStrTransform },
+		amtRemaining: { label: 'Remaining', format: this.utils.currencyTransform, width: 'sm' },
+		howToPay: { label: 'How To Pay', format: this.utils.truncatedStrTransform, width: 'lg' },
 	};
 
 	constructor(expenseService: ExpenseService, private utils: Utils) {
@@ -51,13 +49,14 @@ export class ExpensesComponent implements OnInit {
 
 	ngOnInit() {
 		console.log('ExpensesComponent.ts -- Initializing expenses component.');
-		this.retrieveExpenses();
+		// this.retrieveExpenses();
+		this.retrieveExpensesGraph();
 	}
 
 	async retrieveExpenses() {
 		console.log(' -- retrieveExpenses...');
 		if (!this.expenseService) {
-			this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
+			// this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
 			return;
 		}
 
@@ -65,9 +64,29 @@ export class ExpensesComponent implements OnInit {
 		this.expenses = data.map(item => ({
 			...item,
 			amt_remaining:
-				parseFloat(item['amt_charged']) -
-				(parseFloat(item['amt_paid']) + parseFloat(item['amt_pending'])),
+				parseFloat(item['amtCharged']) -
+				(parseFloat(item['amtPaid']) + parseFloat(item['amtPending'])),
 		}));
 		this.apiError = error;
+	}
+
+	retrieveExpensesGraph() {
+		console.log(' -- retrieveExpenses...');
+		if (!this.expenseService) {
+			// this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
+			return;
+		}
+
+		this.expenseService.getExpenses().subscribe(result => {
+			console.log('Result: ', result);
+			const expenses = result.data['expenses'];
+			this.expenses = expenses.map(item => ({
+				...item,
+				amtRemaining:
+					parseFloat(item['amtCharged']) -
+					(parseFloat(item['amtPaid']) + parseFloat(item['amtPending'])),
+			}));
+			this.apiError = result.errors;
+		});
 	}
 }

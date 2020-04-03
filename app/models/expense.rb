@@ -10,6 +10,9 @@ class Expense < ActiveRecord::Base
   validates :retailer, :amt_charged, :date, :card, :presence => true
   validates :retailer, :length => { :maximum => 50}
   validates :amt_charged, :numericality => {:greater_than_or_equal_to => 0}
+
+  scope :current, -> { where(:archived => false)}
+  scope :archived, -> { where(:archived => true)}
   
   # Set defaults for newly added expenses, if not provided explicitly
   def set_defaults

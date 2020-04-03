@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CurrencyPipe } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 import { DashboardComponent } from './components/dashboard.component';
 import { ExpensesComponent } from './components/expenses.component';
@@ -11,6 +13,8 @@ import { CardPayeeField } from './components/Expenses/card-payee-field.component
 import { DateField } from './components/Expenses/date-field.component';
 import { ExpenseForm } from './components/Forms/expense-form.component';
 import { ExpenseService } from './services/expense.service';
+import { UserService } from './services/user.service';
+import { Utils } from './services/utils.service';
 
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -33,6 +37,30 @@ import {
 } from '@covalent/dynamic-forms';
 import { CovalentLoadingModule, TdLoadingComponent } from '@covalent/core/loading';
 import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
+export function getFactoryParams(httpLink) {
+	const metaTagEl = document.querySelector("head meta[name='csrf-token']");
+	let token = '';
+	if (metaTagEl) {
+		token = metaTagEl.getAttribute('content');
+	}
+
+	const httpOptions = {
+		headers: new HttpHeaders({
+			'X-CSRF-Token': token,
+		}),
+	};
+	const link = httpLink.create({
+		uri: 'http://localhost:5000/graphql',
+		...httpOptions,
+	});
+	const cache = new InMemoryCache();
+
+	return { cache, link };
+}
 
 @NgModule({
 	declarations: [
@@ -46,6 +74,7 @@ import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 	],
 	imports: [
 		BrowserModule,
+		HttpClientModule,
 		CovalentLayoutModule,
 		CovalentDynamicFormsModule,
 		CovalentDataTableModule,
@@ -62,6 +91,8 @@ import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 		MatDatepickerModule,
 		MatMomentDateModule,
 		CovalentLoadingModule,
+		ApolloModule,
+		HttpLinkModule,
 	],
 	entryComponents: [
 		ExpenseForm,
@@ -71,7 +102,17 @@ import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 		TdDynamicTextareaComponent,
 		TdLoadingComponent,
 	],
-	providers: [ExpenseService, CurrencyPipe],
+	providers: [
+		ExpenseService,
+		UserService,
+		Utils,
+		CurrencyPipe,
+		{
+			provide: APOLLO_OPTIONS,
+			useFactory: (httpLink: HttpLink) => getFactoryParams(httpLink),
+			deps: [HttpLink],
+		},
+	],
 	bootstrap: [DashboardComponent],
 })
 export class AppModule {}

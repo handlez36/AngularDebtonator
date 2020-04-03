@@ -137,12 +137,30 @@ export class TabularView implements OnInit {
 		}, 0.0);
 	}
 
+	extractUniqueValues(data, param) {
+		const set = new Set(data.map(item => item['param']['id']));
+		const arr: object = Array.from(set).map(val => {
+			return { ...data.find(d => d[param]['id'] === val)[param] };
+		});
+	}
+
+	getCards(data) {
+		return ['AmEx'];
+	}
+
+	getPayees(data) {
+		return ['Joint', 'Suntrust'];
+	}
+
 	add(row = null) {
 		console.log('TabularView#add');
 		this.mode = this.TABLE_MODE.ADD;
+
+		const cards = this.formattedData ? this.getCards(this.formattedData) : [];
+		const payees = this.formattedData ? this.getPayees(this.formattedData) : [];
 		const dialogRef = this.dialog.open(ExpenseForm, {
-			width: '250px',
-			data: {},
+			width: '400px',
+			data: { cards, payees },
 		});
 	}
 

@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { CovalentLayoutModule } from '@covalent/core/layout';
@@ -57,6 +58,7 @@ import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 		MatCardModule,
 		MatSelectModule,
 		MatDialogModule,
+		MatButtonModule,
 		MatDatepickerModule,
 		MatMomentDateModule,
 		CovalentLoadingModule,

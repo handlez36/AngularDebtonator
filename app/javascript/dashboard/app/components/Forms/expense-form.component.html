@@ -6,12 +6,15 @@
 				<span *ngIf="control.touched || !control.pristine">
 					<span *ngIf="control.hasError('min')">Min value: {{ element.min }}</span>
 					<span *ngIf="control.hasError('max')">Max value: {{ element.max }}</span>
+					<span *ngIf="control.hasError('currencyFormat')">Invalid format</span>
 				</span>
 			</ng-template>
 		</ng-template>
 	</td-dynamic-forms>
 </div>
 <div mat-dialog-actions>
-	<button mat-button (click)="onAdd()">Add</button>
-	<button mat-button (click)="onCancel()">Cancel</button>
+	<button mat-flat-button color="primary" [disabled]="isFormInvalid()" (click)="onAdd()">
+		Add
+	</button>
+	<button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
 </div>

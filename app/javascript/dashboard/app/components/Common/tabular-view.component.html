@@ -12,17 +12,19 @@
 			<mat-card-title>
 				Card Expenses
 				<mat-icon class="add-button" (click)="add()">library_add</mat-icon>
+				<mat-icon class="add-button" color="warn" (click)="addTest()">library_add</mat-icon>
 			</mat-card-title>
 			<mat-card-subtitle
 				>{{ unPaginatedData && unPaginatedData.length }} expenses totaling
-				{{ getTotalUnpaginatedExpenses() | currency }}</mat-card-subtitle
-			>
+				{{ getTotalUnpaginatedExpenses() | currency }}
+				<td-message
+					label="Error"
+					sublabel="Something went wrong"
+					color="warn"
+					icon="error"
+				></td-message>
+			</mat-card-subtitle>
 			<div layout="row" layout-align="start center" class="filter-bar pad-left-sm pad-right-sm">
-				<span *ngIf="!searchBox.searchVisible" class="push-left-sm">
-					<span *ngIf="selectedRows.length && selectable" class="mat-body-1"
-						>{{ selectedRows.length }} item(s) selected</span
-					>
-				</span>
 				<td-search-box
 					#searchBox
 					backIcon="arrow_back"
@@ -42,7 +44,7 @@
 				[selectable]="true"
 				[multiple]="true"
 				[sortable]="true"
-				[sortBy]="sortBy"
+				[sortBy]="formattedData ? sortBy : ''"
 				[sortOrder]="sortOrder"
 				(sortChange)="sort($event)"
 				[style.height.%]="100"

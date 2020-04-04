@@ -1,15 +1,22 @@
-import { OnInit, Component, ViewChild, Input, Inject, Type } from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import {
 	ITdDynamicElementConfig,
 	TdDynamicElement,
 	TdDynamicType,
 	TdDynamicFormsComponent,
-	ITdDynamicElementValidator,
 } from '@covalent/dynamic-forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AbstractControl, FormControl } from '@angular/forms';
+import * as moment from 'moment';
 
+import { ExpenseService } from './../../services/expense.service';
+import { UserService } from './../../services/user.service';
 import templateStr from './expense-form.component.html';
+
+enum MODES {
+	ADD,
+	EDIT,
+}
 
 @Component({
 	selector: 'app-expense-form',
@@ -18,6 +25,7 @@ import templateStr from './expense-form.component.html';
 export class ExpenseForm {
 	@ViewChild(TdDynamicFormsComponent, { static: true }) form: TdDynamicFormsComponent;
 
+	private mode: MODES = this.data.mode === 'EDIT' ? MODES.EDIT : MODES.ADD;
 	control: FormControl;
 	elements: ITdDynamicElementConfig[] = [
 		{
@@ -26,20 +34,23 @@ export class ExpenseForm {
 			type: TdDynamicElement.Datepicker,
 			required: true,
 			min: new Date(2018, 1, 1).setHours(0, 0, 0, 0),
+			default: moment(this.data['date']),
 		},
 		{
 			name: 'retailer',
 			label: 'Retailer',
 			type: TdDynamicElement.Input,
 			required: true,
+			default: this.data['retailer'],
 		},
 		{
-			name: 'amt_charged',
+			name: 'amtCharged',
 			label: 'Amt Charged',
 			type: TdDynamicType.Number,
 			min: 0.0,
 			max: 99999.0,
 			required: true,
+			default: parseFloat(this.data['amtCharged']),
 			validators: [
 				{
 					validator: (control: AbstractControl) => {
@@ -57,52 +68,68 @@ export class ExpenseForm {
 			],
 		},
 		{
-			name: 'responsible_party',
+			name: 'responsibleParty',
 			label: 'Payee',
 			type: TdDynamicElement.Select,
-			selections: this.data.payees,
-			default: this.data.payees[0],
+			selections: this.optionSelections(this.data.payees),
+			default:
+				this.optionSelections(this.data.payees)[0] &&
+				this.optionSelections(this.data.payees)[0]['value'],
 			required: true,
 		},
 		{
 			name: 'card',
 			label: 'Card',
 			type: TdDynamicElement.Select,
-			selections: this.data.cards,
-			default: this.data.cards[0],
+			selections: this.optionSelections(this.data.cards),
+			default:
+				this.optionSelections(this.data.cards)[0] &&
+				this.optionSelections(this.data.cards)[0]['value'],
 			required: true,
 		},
 		{
-			name: 'how_to_pay',
+			name: 'howToPay',
 			label: 'How To Pay',
 			type: TdDynamicElement.Textarea,
 			required: false,
+			default: this.data['howToPay'],
 		},
 	];
 
 	constructor(
 		public dialogRef: MatDialogRef<ExpenseForm>,
 		@Inject(MAT_DIALOG_DATA) public data: any,
+		private expenseService: ExpenseService,
+		private userService: UserService,
 	) {}
+
+	optionSelections(data) {
+		const options: any[] = [];
+
+		data.forEach(p => options.push({ label: p['name'], value: p['id'] }));
+
+		return options;
+	}
 
 	isFormInvalid() {
 		return this.form && !this.form.valid;
 	}
 
 	onAdd() {
+		const userId = this.userService.getUserId();
 		if (!this.isFormInvalid()) {
 			const {
-				value: { date, retailer, amt_charged, responsible_party, card, how_to_pay } = {},
+				value: { date, retailer, amtCharged, responsibleParty, card, howToPay } = {},
 			} = this.form;
 			const response = {
 				date,
 				retailer,
-				amt_charged,
-				responsible_party,
+				amtCharged,
+				responsibleParty,
 				card,
-				how_to_pay,
+				howToPay,
 			};
-			console.log('Prepped response: ', response);
+			this.expenseService.createExpense(userId, response);
 		}
 	}
 

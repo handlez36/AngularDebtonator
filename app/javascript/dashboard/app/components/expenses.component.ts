@@ -4,6 +4,7 @@ import * as moment from 'moment';
 
 import { TabularView } from './Common/tabular-view.component';
 import { ExpenseService } from '../services/expense.service';
+import { UserService } from '../services/user.service';
 import { Utils } from '../services/utils.service';
 import templateString from './expenses.component.html';
 import './expenses.component.scss';
@@ -43,42 +44,28 @@ export class ExpensesComponent implements OnInit {
 		howToPay: { label: 'How To Pay', format: this.utils.truncatedStrTransform, width: 'lg' },
 	};
 
-	constructor(expenseService: ExpenseService, private utils: Utils) {
+	constructor(
+		expenseService: ExpenseService,
+		private utils: Utils,
+		private userService: UserService,
+	) {
 		this.expenseService = expenseService;
 	}
 
 	ngOnInit() {
 		console.log('ExpensesComponent.ts -- Initializing expenses component.');
-		// this.retrieveExpenses();
-		this.retrieveExpensesGraph();
+		this.retrieveExpenses();
 	}
 
-	async retrieveExpenses() {
+	retrieveExpenses() {
 		console.log(' -- retrieveExpenses...');
 		if (!this.expenseService) {
 			// this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
 			return;
 		}
 
-		const { data, error } = await this.expenseService.getAllExpenses();
-		this.expenses = data.map(item => ({
-			...item,
-			amt_remaining:
-				parseFloat(item['amtCharged']) -
-				(parseFloat(item['amtPaid']) + parseFloat(item['amtPending'])),
-		}));
-		this.apiError = error;
-	}
-
-	retrieveExpensesGraph() {
-		console.log(' -- retrieveExpenses...');
-		if (!this.expenseService) {
-			// this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
-			return;
-		}
-
-		this.expenseService.getExpenses().subscribe(result => {
-			console.log('Result: ', result);
+		const userId = this.userService.getUserId();
+		this.expenseService.getExpenses(userId).subscribe(result => {
 			const expenses = result.data['expenses'];
 			this.expenses = expenses.map(item => ({
 				...item,

@@ -28,6 +28,7 @@ import { CovalentLayoutModule } from '@covalent/core/layout';
 import { CovalentDataTableModule } from '@covalent/core/data-table';
 import { CovalentPagingModule } from '@covalent/core/paging';
 import { CovalentSearchModule } from '@covalent/core/search';
+import { CovalentMessageModule } from '@covalent/core/message';
 import {
 	CovalentDynamicFormsModule,
 	TdDynamicDatepickerComponent,
@@ -81,6 +82,7 @@ export function getFactoryParams(httpLink) {
 		CovalentBaseEchartsModule,
 		CovalentSearchModule,
 		CovalentPagingModule,
+		CovalentMessageModule,
 		BrowserAnimationsModule,
 		FormsModule,
 		MatIconModule,

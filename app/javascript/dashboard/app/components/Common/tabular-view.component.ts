@@ -138,29 +138,44 @@ export class TabularView implements OnInit {
 	}
 
 	extractUniqueValues(data, param) {
-		const set = new Set(data.map(item => item['param']['id']));
+		const set = new Set(data.map(item => item[param]['id']));
 		const arr: object = Array.from(set).map(val => {
 			return { ...data.find(d => d[param]['id'] === val)[param] };
 		});
-	}
-
-	getCards(data) {
-		return ['AmEx'];
-	}
-
-	getPayees(data) {
-		return ['Joint', 'Suntrust'];
+		return arr;
 	}
 
 	add(row = null) {
 		console.log('TabularView#add');
 		this.mode = this.TABLE_MODE.ADD;
 
-		const cards = this.formattedData ? this.getCards(this.formattedData) : [];
-		const payees = this.formattedData ? this.getPayees(this.formattedData) : [];
+		const payees = this.formattedData
+			? this.extractUniqueValues(this.formattedData, 'responsibleParty')
+			: [];
+		const cards = this.formattedData ? this.extractUniqueValues(this.formattedData, 'card') : [];
 		const dialogRef = this.dialog.open(ExpenseForm, {
 			width: '400px',
 			data: { cards, payees },
+		});
+	}
+
+	addTest() {
+		this.mode = this.TABLE_MODE.ADD;
+		const payees = this.formattedData
+			? this.extractUniqueValues(this.formattedData, 'responsibleParty')
+			: [];
+		const cards = this.formattedData ? this.extractUniqueValues(this.formattedData, 'card') : [];
+		const dialogRef = this.dialog.open(ExpenseForm, {
+			width: '400px',
+			data: {
+				mode: 'EDIT',
+				date: '2020-04-01',
+				retailer: 'Walmart',
+				howToPay: 'TEST',
+				amtCharged: '10.00',
+				cards,
+				payees,
+			},
 		});
 	}
 

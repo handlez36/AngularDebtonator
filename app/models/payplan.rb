@@ -3,6 +3,9 @@ class Payplan < ActiveRecord::Base
   belongs_to :user
   has_many :payments, :dependent => :destroy
   has_many :expenses, through: :payments
+
+  scope :current, -> { where(:archived => false)}
+  scope :archived, -> { where(:archived => true)}
   
   # Return the total amount to be paid for all payments attached to this payment plan
   def get_plan_total

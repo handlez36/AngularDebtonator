@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_05_183419) do
+ActiveRecord::Schema.define(version: 2020_04_05_211926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 2020_04_05_183419) do
     t.integer "expense_id"
     t.integer "payplan_id"
     t.decimal "amt_paid", precision: 10, scale: 2
-    t.date "date"
+    t.datetime "date"
     t.integer "card_id"
     t.integer "user_id"
     t.integer "responsible_party_id"
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 2020_04_05_183419) do
   create_table "payplans", id: :serial, force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date "date"
+    t.datetime "date"
     t.integer "card_id"
     t.text "comments"
     t.integer "user_id"

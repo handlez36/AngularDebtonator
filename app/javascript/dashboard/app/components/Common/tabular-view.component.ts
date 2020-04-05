@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import {
 	ITdDataTableColumn,
 	TdDataTableSortingOrder,
@@ -36,6 +36,7 @@ export class TabularView implements OnInit {
 	@Input() error: string;
 	@Input() filterable: string[];
 	@Input() columnLabels: string[];
+	@Output() expensesUpdated: EventEmitter<any> = new EventEmitter();
 
 	public TABLE_MODE = TABLE_MODE;
 	public isLoading: boolean = true;
@@ -79,7 +80,8 @@ export class TabularView implements OnInit {
 
 	setDataAttributes() {
 		// Only populate the data variable if it has not yet been populated
-		if (!this.formattedData && this.data && this.data.length > 0) {
+		// if (!this.formattedData && this.data && this.data.length > 0) {
+		if (this.data && this.data.length > 0) {
 			this.formattedData = this.data;
 			this.columns = this.formatColumns(this.data);
 			this.refreshTable();
@@ -268,5 +270,6 @@ export class TabularView implements OnInit {
 		);
 
 		this.formattedData = newData;
+		this.selectedRows = [];
 	}
 }

@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { UserService } from './user.service';
 import * as moment from 'moment';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+
+import * as Queries from './expense-queries';
 
 @Injectable({
 	providedIn: 'root',
@@ -16,31 +18,7 @@ export class ExpenseService {
 	}
 
 	getExpenses(id, filters: object = null) {
-		const query = {
-			query: gql`
-          {
-            expenses(id: ${id}) {
-              id,
-              date,
-              retailer,
-              amtCharged,
-              amtPending,
-              amtPaid,
-              responsibleParty {
-                id
-                name
-              }
-              card {
-                id
-                name
-              }
-              howToPay
-            }
-          }
-        `,
-		};
-
-		return this.apollo.watchQuery(query).valueChanges;
+		return this.apollo.watchQuery(Queries.retrieveExpenses(id)).valueChanges;
 	}
 
 	createExpense(id, params: object) {
@@ -50,7 +28,7 @@ export class ExpenseService {
 		const query = gql`
 			mutation createExpense(
 				$userId: ID!
-				$date: ISO8601Date!
+				$date: ISO8601DateTime!
 				$retailer: String!
 				$amtCharged: String!
 				$responsibleParty: String!
@@ -71,20 +49,24 @@ export class ExpenseService {
 			}
 		`;
 
-		const formattedDate = moment(params['date']).format('YYYY-MM-DD');
-		return this.apollo
-			.mutate({
-				mutation: query,
-				variables: {
-					userId: id,
-					...params,
-					date: formattedDate,
+		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ss');
+		return this.apollo.mutate({
+			mutation: Queries.createExpense()['query'],
+			variables: {
+				userId: id,
+				...params,
+				date: formattedDate,
+			},
+			refetchQueries: [
+				{
+					query: Queries.retrieveExpenses(id)['query'],
+					variables: { id },
 				},
-			})
-			.subscribe();
+			],
+		});
 	}
 
-	updateExpense(id, params: object, type: string) {
+	updateExpense(id, expenseId, params: object) {
 		console.log('ExpenseService.ts#updateExpense -- params: ', params);
 		console.log('ExpenseService.ts#updateExpense -- id: ', id);
 
@@ -92,9 +74,9 @@ export class ExpenseService {
 			mutation updateExpense(
 				$userId: ID!
 				$expenseId: ID!
-				$date: ISO8601Date!
+				$date: ISO8601DateTime!
 				$retailer: String!
-				$amtCharged: Float!
+				$amtCharged: String!
 				$responsibleParty: String!
 				$card: String!
 				$howToPay: String
@@ -114,17 +96,23 @@ export class ExpenseService {
 			}
 		`;
 
-		const formattedDate = moment(params['date']).format('YYYY-MM-DD');
-		return this.apollo
-			.mutate({
-				mutation: query,
-				variables: {
-					userId: id,
-					...params,
-					date: formattedDate,
+		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ss');
+		return this.apollo.mutate({
+			mutation: Queries.updateExpenses()['query'],
+			variables: {
+				userId: id,
+				expenseId,
+				...params,
+				amtCharged: `${params['amtCharged']}`,
+				date: formattedDate,
+			},
+			refetchQueries: [
+				{
+					query: Queries.retrieveExpenses(id)['query'],
+					variables: { id },
 				},
-			})
-			.subscribe();
+			],
+		});
 	}
 
 	deleteExpenses(id, expenseId: any[]) {
@@ -140,11 +128,17 @@ export class ExpenseService {
 
 		return this.apollo
 			.mutate({
-				mutation: query,
+				mutation: Queries.deleteExpenses()['query'],
 				variables: {
 					userId: id,
 					expenseId,
 				},
+				refetchQueries: [
+					{
+						query: Queries.retrieveExpenses(id)['query'],
+						variables: { id },
+					},
+				],
 			})
 			.subscribe();
 	}

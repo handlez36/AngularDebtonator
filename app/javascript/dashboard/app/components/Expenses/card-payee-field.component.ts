@@ -6,11 +6,7 @@ import './card-payee-field.component.scss';
 	selector: 'app-card-payee',
 	template: templateStr,
 })
-export class CardPayeeField implements OnInit {
+export class CardPayeeField {
 	@Input() card: string;
 	@Input() payee: string;
-
-	ngOnInit() {
-		console.log('Card: ', this.card);
-	}
 }

@@ -57,10 +57,15 @@ export class ExpensesComponent implements OnInit {
 		this.retrieveExpenses();
 	}
 
+	onRefresh() {
+		setTimeout(() => this.retrieveExpenses(), 500);
+	}
+
 	retrieveExpenses() {
-		console.log(' -- retrieveExpenses...');
+		console.log('ExpensesComponent#retrieveExpenses');
 		if (!this.expenseService) {
-			// this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
+			this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
+			console.log('ERROR');
 			return;
 		}
 
@@ -75,5 +80,6 @@ export class ExpensesComponent implements OnInit {
 			}));
 			this.apiError = result.errors;
 		});
+		console.log('Expenses updated and now are ', this.expenses);
 	}
 }

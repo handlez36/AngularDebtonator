@@ -3,7 +3,7 @@ module Mutations
     # arguments passed to the `resolve` method
     argument :userId, ID, required: true
     argument :mode, String, required: false
-    argument :date, GraphQL::Types::ISO8601Date, required: true
+    argument :date, GraphQL::Types::ISO8601DateTime, required: true
     argument :retailer, String, required: true
     argument :amtCharged, String, required: true
     argument :responsibleParty, String, required: true
@@ -34,7 +34,7 @@ module Mutations
     argument :userId, ID, required: true
     argument :expenseId, ID, required: true
     argument :mode, String, required: false
-    argument :date, GraphQL::Types::ISO8601Date, required: true
+    argument :date, GraphQL::Types::ISO8601DateTime, required: true
     argument :retailer, String, required: true
     argument :amtCharged, String, required: true
     argument :responsibleParty, String, required: true
@@ -73,7 +73,7 @@ module Mutations
       puts "delete_expense.rb#resolve -- p: #{params}"
 
       if params[:expenseId]
-        Expense.where(id: params[:expenseId]).delete_all!
+        Expense.where(id: params[:expenseId]).delete_all
       end
 
       { success: true }

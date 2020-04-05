@@ -1,4 +1,4 @@
-import { Component, ViewChild, Inject } from '@angular/core';
+import { Component, ViewChild, Inject, Output, EventEmitter } from '@angular/core';
 import {
 	ITdDynamicElementConfig,
 	TdDynamicElement,
@@ -120,7 +120,7 @@ export class ExpenseForm {
 		return this.form && !this.form.valid;
 	}
 
-	onAdd() {
+	onManage(action, row = null) {
 		const userId = this.userService.getUserId();
 		if (!this.isFormInvalid()) {
 			const {
@@ -134,7 +134,17 @@ export class ExpenseForm {
 				card,
 				howToPay,
 			};
-			this.expenseService.createExpense(userId, response);
+			if (action === 'ADD') {
+				this.expenseService.createExpense(userId, response).subscribe({
+					next: x => this.dialogRef.close(),
+					error: err => console.error('Error creating expense: ' + err),
+				});
+			} else {
+				this.expenseService.updateExpense(userId, this.data['id'], response).subscribe({
+					next: x => this.dialogRef.close(),
+					error: err => console.error('Error updating expense: ' + err),
+				});
+			}
 		}
 	}
 

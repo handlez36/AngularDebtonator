@@ -1,7 +1,7 @@
 module Types
   class ExpenseType < Types::BaseObject
     field :id, ID, null: false
-    field :date, GraphQL::Types::ISO8601Date, null: false
+    field :date, GraphQL::Types::ISO8601DateTime, null: false
     field :retailer, String, null: false
     field :amt_charged, String, null: false
     field :amt_paid, String, null: false

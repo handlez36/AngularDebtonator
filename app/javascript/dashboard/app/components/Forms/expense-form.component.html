@@ -13,8 +13,23 @@
 	</td-dynamic-forms>
 </div>
 <div mat-dialog-actions>
-	<button mat-flat-button color="primary" [disabled]="isFormInvalid()" (click)="onAdd()">
+	<button
+		*ngIf="mode === TABLE_MODE.ADD"
+		mat-flat-button
+		color="primary"
+		[disabled]="isFormInvalid()"
+		(click)="onAdd()"
+	>
 		Add
+	</button>
+	<button
+		*ngIf="mode === TABLE_MODE.EDIT"
+		mat-flat-button
+		color="primary"
+		[disabled]="isFormInvalid()"
+		(click)="onEdit()"
+	>
+		Edit
 	</button>
 	<button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
 </div>

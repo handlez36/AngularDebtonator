@@ -1,0 +1,42 @@
+app-expense-summary {
+	border: 1px solid gray;
+	background-color: white;
+	transition: height 0.5s ease;
+	td-sidesheet-header {
+		height: 45px;
+	}
+	.td-sidesheet-content-wrapper {
+		height: 80px;
+		td-sidesheet-content {
+			padding-top: 4px;
+		}
+	}
+	.summary-section {
+		display: flex;
+		flex-direction: row;
+		.expense-payee-summary {
+			margin-left: 10em;
+		}
+		.expense-card-checkboxes,
+		.expense-payee-checkboxes {
+			display: flex;
+			flex-direction: row;
+		}
+		.expense-card,
+		.expense-payee {
+			display: flex;
+			flex-direction: column;
+			padding-left: 4px;
+			padding-right: 4px;
+			&:not(:first-child) {
+				margin-left: 1em;
+			}
+			.total-amt {
+				margin-left: 1.7em;
+			}
+		}
+		.mat-checkbox {
+			height: 24px;
+		}
+	}
+}

@@ -11,12 +11,8 @@ import * as moment from 'moment';
 
 import { ExpenseService } from './../../services/expense.service';
 import { UserService } from './../../services/user.service';
+import { TABLE_MODE } from '../../utils/constants';
 import templateStr from './expense-form.component.html';
-
-enum MODES {
-	ADD,
-	EDIT,
-}
 
 @Component({
 	selector: 'app-expense-form',
@@ -25,7 +21,8 @@ enum MODES {
 export class ExpenseForm {
 	@ViewChild(TdDynamicFormsComponent, { static: true }) form: TdDynamicFormsComponent;
 
-	private mode: MODES = this.data.mode === 'EDIT' ? MODES.EDIT : MODES.ADD;
+	public TABLE_MODE = TABLE_MODE;
+	public mode: TABLE_MODE;
 	control: FormControl;
 	elements: ITdDynamicElementConfig[] = [
 		{
@@ -101,14 +98,22 @@ export class ExpenseForm {
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private expenseService: ExpenseService,
 		private userService: UserService,
-	) {}
+	) {
+		this.mode = this.data.mode;
+		console.log('Retailer: ', this.data['retailer']);
+		console.log('Retailer: ', this.data);
+	}
 
 	optionSelections(data) {
 		const options: any[] = [];
 
 		data.forEach(p => options.push({ label: p['name'], value: p['id'] }));
 
-		return options;
+		return options.sort((a, b) => {
+			if (a['label'] < b['label']) return -1;
+			if (b['label'] < a['label']) return 1;
+			return 0;
+		});
 	}
 
 	isFormInvalid() {

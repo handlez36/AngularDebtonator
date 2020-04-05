@@ -1,0 +1,40 @@
+<td-sidesheet class="expense-summary">
+	<td-sidesheet-header>
+		<td-sidesheet-title>Filter Options</td-sidesheet-title>
+		<button mat-icon-button td-sidesheet-header-action>
+			<mat-icon matTooltipPosition="before" matTooltip="Close" (click)="sidesheet.toggle()"
+				>close</mat-icon
+			>
+		</button>
+	</td-sidesheet-header>
+	<td-sidesheet-content>
+		<div class="summary-section">
+			<div class="expense-card-summary">
+				<h5>Cards</h5>
+				<div class="expense-card-checkboxes">
+					<div *ngFor="let card of cards" class="expense-card">
+						<mat-checkbox (change)="setSelected($event, card, 'card')">{{
+							card.name
+						}}</mat-checkbox>
+						<span class="total-amt">{{ getTotal(card, 'card') | currency }}</span>
+					</div>
+				</div>
+			</div>
+			<div class="expense-payee-summary">
+				<h5>Payees</h5>
+				<div class="expense-payee-checkboxes">
+					<div *ngFor="let payee of payees" class="expense-payee">
+						<mat-checkbox (change)="setSelected($event, payee, 'payee')">{{
+							payee.name
+						}}</mat-checkbox>
+						<span class="total-amt">{{ getTotal(payee, 'responsibleParty') | currency }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</td-sidesheet-content>
+	<!-- <td-sidesheet-actions>
+    <button mat-raised-button class="text-upper" color="accent">action</button>
+    <button mat-button class="text-upper">cancel</button>
+  </td-sidesheet-actions> -->
+</td-sidesheet>

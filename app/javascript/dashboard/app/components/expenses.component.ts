@@ -37,7 +37,7 @@ export class ExpensesComponent implements OnInit {
 	public COLUMNS: object = {
 		card_payee: { label: '', width: 'xs' },
 		date: { label: 'Date', width: 'md' },
-		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform, width: 'md' },
+		retailer: { label: 'Retailer', format: this.utils.truncatedStrTransform, width: 'lg' },
 		amtCharged: { label: 'Charged', format: this.utils.currencyTransform, width: 'sm' },
 		pending_paid: { label: 'Payment Status', width: 'md' },
 		amtRemaining: { label: 'Remaining', format: this.utils.currencyTransform, width: 'sm' },

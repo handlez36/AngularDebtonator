@@ -1,4 +1,11 @@
-<div class="tabular-view-component">
+<div [class]="'tabular-view-component' + (showFilters ? ' with-filter' : '')">
+	<app-expense-summary
+		*ngIf="showFilters"
+		[cards]="cards"
+		[payees]="payees"
+		[data]="data"
+		(filterUpdate)="onFilterUpdate($event)"
+	></app-expense-summary>
 	<mat-card>
 		<ng-template
 			class="loader"
@@ -11,18 +18,33 @@
 		<mat-card-header>
 			<mat-card-title>
 				Card Expenses
-				<mat-icon class="add-button" (click)="add()">library_add</mat-icon>
-				<mat-icon class="add-button" color="warn" (click)="addTest()">library_add</mat-icon>
+				<mat-icon class="add-button" (click)="onManage(TABLE_MODE.ADD)">library_add</mat-icon>
 			</mat-card-title>
 			<mat-card-subtitle
 				>{{ unPaginatedData && unPaginatedData.length }} expenses totaling
 				{{ getTotalUnpaginatedExpenses() | currency }}
+				<div class="filter-options" (click)="toggleFilters()">
+					{{ showFilters ? 'Close summary' : 'Show summary' }}
+				</div>
 				<td-message
-					label="Error"
-					sublabel="Something went wrong"
+					*ngIf="selectedRows.length > 0"
+					[label]="'Selected ' + selectedRows.length + ' expenses'"
+					[sublabel]="getSelectedAmount() | currency"
 					color="warn"
 					icon="error"
-				></td-message>
+				>
+					<button
+						*ngIf="selectedRows.length === 1"
+						td-message-actions
+						mat-button
+						color="primary"
+						(click)="onManage(TABLE_MODE.EDIT, selectedRows[0])"
+					>
+						Edit
+					</button>
+					<button td-message-actions mat-button>Pay</button>
+					<button td-message-actions mat-button color="warn" (click)="onConfirm()">Delete</button>
+				</td-message>
 			</mat-card-subtitle>
 			<div layout="row" layout-align="start center" class="filter-bar pad-left-sm pad-right-sm">
 				<td-search-box
@@ -46,7 +68,8 @@
 				[sortable]="true"
 				[sortBy]="formattedData ? sortBy : ''"
 				[sortOrder]="sortOrder"
-				(sortChange)="sort($event)"
+				(sortChange)="onSort($event)"
+				[(ngModel)]="selectedRows"
 				[style.height.%]="100"
 			>
 				<ng-template tdDataTableTemplate="date" let-value="value">
@@ -74,7 +97,10 @@
 					></app-pending-paid>
 				</ng-template>
 				<ng-template tdDataTableTemplate="card_payee" let-row="row">
-					<app-card-payee [card]="row['card_id']" [payee]="row['responsible_party_id']">
+					<app-card-payee
+						[card]="row['card'] && row['card']['name']"
+						[payee]="row['responsibleParty'] && row['responsibleParty']['name']"
+					>
 					</app-card-payee>
 				</ng-template>
 				<ng-template tdDataTableTemplate="howToPay" let-value="value">

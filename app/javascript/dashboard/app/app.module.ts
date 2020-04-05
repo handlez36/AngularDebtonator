@@ -8,6 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { DashboardComponent } from './components/dashboard.component';
 import { ExpensesComponent } from './components/expenses.component';
 import { TabularView } from './components/Common/tabular-view.component';
+import { ExpenseSummary } from './components/Expenses/expense-summary.component';
 import { PendingPaidField } from './components/Expenses/pending-paid-field.component';
 import { CardPayeeField } from './components/Expenses/card-payee-field.component';
 import { DateField } from './components/Expenses/date-field.component';
@@ -23,12 +24,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 import { CovalentDataTableModule } from '@covalent/core/data-table';
 import { CovalentPagingModule } from '@covalent/core/paging';
 import { CovalentSearchModule } from '@covalent/core/search';
 import { CovalentMessageModule } from '@covalent/core/message';
+import { CovalentDialogsModule, TdConfirmDialogComponent } from '@covalent/core/dialogs';
 import {
 	CovalentDynamicFormsModule,
 	TdDynamicDatepickerComponent,
@@ -36,6 +40,7 @@ import {
 	TdDynamicSelectComponent,
 	TdDynamicTextareaComponent,
 } from '@covalent/dynamic-forms';
+import { CovalentSidesheetModule } from '@covalent/core/sidesheet';
 import { CovalentLoadingModule, TdLoadingComponent } from '@covalent/core/loading';
 import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
@@ -72,6 +77,7 @@ export function getFactoryParams(httpLink) {
 		CardPayeeField,
 		DateField,
 		ExpenseForm,
+		ExpenseSummary,
 	],
 	imports: [
 		BrowserModule,
@@ -83,6 +89,8 @@ export function getFactoryParams(httpLink) {
 		CovalentSearchModule,
 		CovalentPagingModule,
 		CovalentMessageModule,
+		CovalentDialogsModule,
+		CovalentSidesheetModule,
 		BrowserAnimationsModule,
 		FormsModule,
 		MatIconModule,
@@ -90,8 +98,10 @@ export function getFactoryParams(httpLink) {
 		MatSelectModule,
 		MatDialogModule,
 		MatButtonModule,
+		MatCheckboxModule,
 		MatDatepickerModule,
 		MatMomentDateModule,
+		MatToolbarModule,
 		CovalentLoadingModule,
 		ApolloModule,
 		HttpLinkModule,
@@ -103,6 +113,7 @@ export function getFactoryParams(httpLink) {
 		TdDynamicSelectComponent,
 		TdDynamicTextareaComponent,
 		TdLoadingComponent,
+		TdConfirmDialogComponent,
 	],
 	providers: [
 		ExpenseService,

@@ -10,5 +10,7 @@ export class CardPayeeField implements OnInit {
 	@Input() card: string;
 	@Input() payee: string;
 
-	ngOnInit() {}
+	ngOnInit() {
+		console.log('Card: ', this.card);
+	}
 }

@@ -4,21 +4,21 @@ import {
 	TdDataTableSortingOrder,
 	TdDataTableService,
 	ITdDataTableSortChangeEvent,
+	ITdDataTableSelectEvent,
 } from '@covalent/core/data-table';
+import { TdDialogService } from '@covalent/core/dialogs';
 import { TdLoadingService, LoadingType, LoadingMode } from '@covalent/core/loading';
 import { IPageChangeEvent, TdPagingBarComponent } from '@covalent/core/paging';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CurrencyPipe } from '@angular/common';
 
 import { ExpenseForm } from '../Forms/expense-form.component';
+import { ExpenseService } from '../../services/expense.service';
+import { UserService } from '../../services/user.service';
+import { TABLE_MODE } from '../../utils/constants';
 import templateStr from './tabular-view.component.html';
 import './tabular-view.component.scss';
 
-enum MODE_ENUM {
-	VIEW,
-	ADD,
-	EDIT,
-}
 const COLUMN_WIDTHS: object = {
 	xs: 80,
 	sm: 100,
@@ -37,7 +37,7 @@ export class TabularView implements OnInit {
 	@Input() filterable: string[];
 	@Input() columnLabels: string[];
 
-	public TABLE_MODE = MODE_ENUM;
+	public TABLE_MODE = TABLE_MODE;
 	public isLoading: boolean = true;
 	public formattedData: any[] = null;
 	public unPaginatedData: object[] = [];
@@ -45,18 +45,26 @@ export class TabularView implements OnInit {
 	public sortBy: string = 'date';
 	public sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 	public filterTerm: string = '';
-	public selectedRows: number = 0;
+	public selectedRows: any[] = [];
 	public fromRow: any = 1;
 	public currentPage: any = 1;
 	public pageSize: any = 10;
 	public range: string = '';
-	public mode: MODE_ENUM = this.TABLE_MODE.VIEW;
+	public mode: TABLE_MODE = this.TABLE_MODE.VIEW;
+	public cards: string[] = [];
+	public payees: string[] = [];
+	public cardFilter: string[] = [];
+	public payeeFilter: string[] = [];
+	public showFilters: boolean = false;
 
 	constructor(
 		private currencyPipe: CurrencyPipe,
 		private _dataTableService: TdDataTableService,
 		public dialog: MatDialog,
 		private _loadingService: TdLoadingService,
+		private _dialogService: TdDialogService,
+		private expenseService: ExpenseService,
+		private userService: UserService,
 	) {}
 
 	ngOnInit() {
@@ -75,6 +83,10 @@ export class TabularView implements OnInit {
 			this.formattedData = this.data;
 			this.columns = this.formatColumns(this.data);
 			this.refreshTable();
+			this.payees = this.formattedData
+				? this.extractUniqueValues(this.formattedData, 'responsibleParty')
+				: [];
+			this.cards = this.formattedData ? this.extractUniqueValues(this.formattedData, 'card') : [];
 			this.isLoading = false;
 		} else if (!this.data && !this.error) {
 			this.isLoading = true;
@@ -93,7 +105,7 @@ export class TabularView implements OnInit {
 		}));
 	}
 
-	sort(sortEvent: ITdDataTableSortChangeEvent): void {
+	onSort(sortEvent: ITdDataTableSortChangeEvent): void {
 		console.log('TabularView#sort');
 		this.sortBy = sortEvent.name;
 		this.sortOrder = sortEvent.order;
@@ -115,6 +127,10 @@ export class TabularView implements OnInit {
 		this.refreshTable();
 	}
 
+	toggleFilters() {
+		this.showFilters = !this.showFilters;
+	}
+
 	splitDollarsAndCents(value, which) {
 		let result = 0;
 
@@ -127,6 +143,13 @@ export class TabularView implements OnInit {
 		}
 	}
 
+	getSelectedAmount() {
+		return this.selectedRows.reduce((total, row) => {
+			total += parseFloat(row.amtCharged);
+			return total;
+		}, 0.0);
+	}
+
 	getTotalUnpaginatedExpenses() {
 		return this.unPaginatedData.reduce((total, item) => {
 			total +=
@@ -137,26 +160,49 @@ export class TabularView implements OnInit {
 		}, 0.0);
 	}
 
-	extractUniqueValues(data, param) {
+	extractUniqueValues(data, param): any[] {
 		const set = new Set(data.map(item => item[param]['id']));
-		const arr: object = Array.from(set).map(val => {
+		const arr: object[] = Array.from(set).map(val => {
 			return { ...data.find(d => d[param]['id'] === val)[param] };
 		});
 		return arr;
 	}
 
-	add(row = null) {
-		console.log('TabularView#add');
-		this.mode = this.TABLE_MODE.ADD;
+	onFilterUpdate(event) {
+		this.cardFilter = event.cardFilter;
+		this.payeeFilter = event.payeeFilter;
+		this.refreshTable();
+	}
 
-		const payees = this.formattedData
-			? this.extractUniqueValues(this.formattedData, 'responsibleParty')
-			: [];
-		const cards = this.formattedData ? this.extractUniqueValues(this.formattedData, 'card') : [];
+	onManage(mode, row = null) {
+		console.log('TabularView#add');
+		this.mode = mode;
+
+		let data = { cards: this.cards, payees: this.payees, ...row, mode };
 		const dialogRef = this.dialog.open(ExpenseForm, {
 			width: '400px',
-			data: { cards, payees },
+			data,
 		});
+	}
+
+	onConfirm() {
+		const id = this.userService.getUserId();
+		this._dialogService
+			.openConfirm({
+				message: 'Are you sure?',
+				title: 'Confirm',
+				cancelButton: 'Nope',
+				acceptButton: 'Yep',
+			})
+			.afterClosed()
+			.subscribe((accept: boolean) => {
+				if (accept) {
+					const expenseIds = this.selectedRows.map(row => row.id);
+					this.expenseService.deleteExpenses(id, expenseIds);
+				} else {
+					this._dialogService.closeAll();
+				}
+			});
 	}
 
 	addTest() {
@@ -183,6 +229,16 @@ export class TabularView implements OnInit {
 		console.log('TabularView#refreshTable');
 
 		let newData: any[] = this.data;
+		if (this.cardFilter.length > 0) {
+			newData = newData.filter(data => this.cardFilter.includes(data.card.name));
+		}
+		if (this.payeeFilter.length > 0) {
+			newData = newData.filter(
+				data =>
+					this.payeeFilter.length > 0 && this.payeeFilter.includes(data.responsibleParty.name),
+			);
+		}
+
 		newData = this._dataTableService.filterData(newData, this.filterTerm, true);
 		if (this.sortBy === 'date') {
 			newData.sort((a: any, b: any) => {

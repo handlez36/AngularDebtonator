@@ -52,7 +52,7 @@ export class ExpenseService {
 				$userId: ID!
 				$date: ISO8601Date!
 				$retailer: String!
-				$amtCharged: Float!
+				$amtCharged: String!
 				$responsibleParty: String!
 				$card: String!
 				$howToPay: String
@@ -122,6 +122,28 @@ export class ExpenseService {
 					userId: id,
 					...params,
 					date: formattedDate,
+				},
+			})
+			.subscribe();
+	}
+
+	deleteExpenses(id, expenseId: any[]) {
+		console.log('ExpenseService.ts#deleteExpense');
+
+		const query = gql`
+			mutation deleteExpense($userId: ID!, $expenseId: [ID!]!) {
+				deleteExpense(userId: $userId, expenseId: $expenseId) {
+					success
+				}
+			}
+		`;
+
+		return this.apollo
+			.mutate({
+				mutation: query,
+				variables: {
+					userId: id,
+					expenseId,
 				},
 			})
 			.subscribe();

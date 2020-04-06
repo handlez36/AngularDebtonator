@@ -7,15 +7,21 @@ import { HttpHeaders } from '@angular/common/http';
 
 import { DashboardComponent } from './components/dashboard.component';
 import { ExpensesComponent } from './components/expenses.component';
+import { PayPlanSection } from './components/PayPlans/pay-plan-section';
+import { PayPlan } from './components/PayPlans/pay-plan.component';
 import { TabularView } from './components/Common/tabular-view.component';
 import { ExpenseSummary } from './components/Expenses/expense-summary.component';
 import { PendingPaidField } from './components/Expenses/pending-paid-field.component';
 import { CardPayeeField } from './components/Expenses/card-payee-field.component';
 import { DateField } from './components/Expenses/date-field.component';
+import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
+import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
 import { ExpenseForm } from './components/Forms/expense-form.component';
 import { ExpenseService } from './services/expense.service';
+import { PlanService } from './services/plans.service';
 import { UserService } from './services/user.service';
 import { Utils } from './services/utils.service';
+import { Currency } from './services/currency';
 
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -27,8 +33,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 import { CovalentDataTableModule } from '@covalent/core/data-table';
+import { CovalentTabSelectModule } from '@covalent/core/tab-select';
 import { CovalentPagingModule } from '@covalent/core/paging';
 import { CovalentSearchModule } from '@covalent/core/search';
 import { CovalentMessageModule } from '@covalent/core/message';
@@ -78,6 +86,10 @@ export function getFactoryParams(httpLink) {
 		DateField,
 		ExpenseForm,
 		ExpenseSummary,
+		PayPlanSection,
+		PayPlan,
+		PayPlanPayeeSummary,
+		PayPlanPayeeDetail,
 	],
 	imports: [
 		BrowserModule,
@@ -91,6 +103,7 @@ export function getFactoryParams(httpLink) {
 		CovalentMessageModule,
 		CovalentDialogsModule,
 		CovalentSidesheetModule,
+		CovalentTabSelectModule,
 		BrowserAnimationsModule,
 		FormsModule,
 		MatIconModule,
@@ -102,6 +115,7 @@ export function getFactoryParams(httpLink) {
 		MatDatepickerModule,
 		MatMomentDateModule,
 		MatToolbarModule,
+		MatSidenavModule,
 		CovalentLoadingModule,
 		ApolloModule,
 		HttpLinkModule,
@@ -118,7 +132,9 @@ export function getFactoryParams(httpLink) {
 	providers: [
 		ExpenseService,
 		UserService,
+		PlanService,
 		Utils,
+		Currency,
 		CurrencyPipe,
 		{
 			provide: APOLLO_OPTIONS,

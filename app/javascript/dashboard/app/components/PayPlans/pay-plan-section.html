@@ -1,3 +1,52 @@
-<div class="pay-plan-section">
-	<div *ngIf="plans.length < 1" class="no-plans"></div>
-</div>
+<mat-sidenav-container>
+	<mat-sidenav #details position="end" [opened]="sideNavOpen" mode="side">
+		<app-pay-plan-payee-detail
+			*ngIf="!!selectedPayee"
+			[planData]="breakdown[selectedPlan]"
+			[payee]="selectedPayee"
+		></app-pay-plan-payee-detail>
+	</mat-sidenav>
+	<section>
+		<mat-card class="pay-plan-section">
+			<ng-template
+				class="loader"
+				tdLoading="pay-plan-loader"
+				tdLoadingColor="warn"
+				tdLoadingType="linear"
+				[tdLoadingUntil]="!isLoading"
+			></ng-template>
+			<mat-card-header>
+				<mat-card-title>
+					Payment Plans
+				</mat-card-title>
+				<mat-card-subtitle>
+					{{ plans.length + (plans.length > 1 ? ' plans' : ' plan')}}
+					<button mat-button (click)="details.toggle()">Toggle</button>
+				</mat-card-subtitle>
+				<div layout="row" layout-align="start center" class="filter-bar pad-left-sm pad-right-sm">
+					<td-tab-select
+						[stretchTabs]="true"
+						[(value)]="selectedPlan"
+						(valueChange)="onPlanSelect(selectedPlan)"
+					>
+						<td-tab-option *ngFor="let plan of plans" [value]="plan.id"
+							>{{ getPlanLabel(plan) }}</td-tab-option
+						>
+					</td-tab-select>
+				</div>
+			</mat-card-header>
+			<mat-card-content>
+				<div *ngIf="breakdown && selectedPlan !== '' && selectedPlan !== null">
+					<app-plan-payee-summary
+						*ngFor="let payeeDetail of breakdown[selectedPlan]"
+						[details]="payeeDetail"
+						(detailRequested)="handleSideNavToggle($event)"
+					></app-plan-payee-summary>
+				</div>
+				<div [style.height.px]="200">
+					Filter content
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</section>
+</mat-sidenav-container>

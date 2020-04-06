@@ -1,5 +1,10 @@
 .dashboard-component {
 	.main-content {
 		padding: 2vh 1vw;
+		display: flex;
+		flex-direction: row;
+		app-pay-plan-section {
+			margin-left: 5em;
+		}
 	}
 }

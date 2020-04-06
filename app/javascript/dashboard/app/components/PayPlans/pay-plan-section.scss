@@ -1,2 +1,28 @@
-.pay-plan-section {
+app-pay-plan-section {
+	width: 550px;
+	.pay-plan-section {
+		// width: 400px;
+		width: 100%;
+		&.mat-card {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.mat-card-header {
+			padding-left: 16px;
+			padding-right: 16px;
+			flex-direction: column;
+			.mat-card-header-text {
+				margin-left: 0;
+			}
+		}
+		.mat-card-content {
+			padding: 8px 16px 8px 16px;
+			.pay-plan-payee-summary {
+				margin-top: 8px;
+			}
+		}
+	}
+	mat-sidenav {
+		width: 200px;
+	}
 }

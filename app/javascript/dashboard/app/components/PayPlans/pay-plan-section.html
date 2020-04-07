@@ -1,9 +1,11 @@
 <mat-sidenav-container>
-	<mat-sidenav #details position="end" [opened]="sideNavOpen" mode="side">
+	<!-- <mat-sidenav #details position="end" [opened]="sideNavOpen" mode="side"> -->
+	<mat-sidenav #details position="end" [opened]="sideNavOpen != ''" mode="side">
 		<app-pay-plan-payee-detail
-			*ngIf="!!selectedPayee"
+			*ngIf="sideNavOpen"
 			[planData]="breakdown[selectedPlan]"
-			[payee]="selectedPayee"
+			[payee]="sideNavOpen"
+			[noteFilter]="noteFilter"
 		></app-pay-plan-payee-detail>
 	</mat-sidenav>
 	<section>
@@ -39,12 +41,18 @@
 				<div *ngIf="breakdown && selectedPlan !== '' && selectedPlan !== null">
 					<app-plan-payee-summary
 						*ngFor="let payeeDetail of breakdown[selectedPlan]"
+						[class]="sideNavOpen && sideNavOpen === payeeDetail.payee ? 'selected' : ''"
 						[details]="payeeDetail"
 						(detailRequested)="handleSideNavToggle($event)"
 					></app-plan-payee-summary>
 				</div>
-				<div [style.height.px]="200">
-					Filter content
+				<div class="filter-section">
+					<app-pay-plan-notes-filter
+						*ngIf="sideNavOpen"
+						[planData]="breakdown[selectedPlan]"
+						[payee]="sideNavOpen"
+						(noteFilterSelected)="setNoteFilter($event)"
+					></app-pay-plan-notes-filter>
 				</div>
 			</mat-card-content>
 		</mat-card>

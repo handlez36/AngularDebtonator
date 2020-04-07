@@ -1,5 +1,5 @@
 app-pay-plan-section {
-	width: 550px;
+	width: 600px;
 	.pay-plan-section {
 		// width: 400px;
 		width: 100%;
@@ -23,6 +23,11 @@ app-pay-plan-section {
 		}
 	}
 	mat-sidenav {
-		width: 200px;
+		width: 250px;
+	}
+	.filter-section {
+		// min-height: 200px;
+		height: 200px;
+		overflow-y: scroll;
 	}
 }

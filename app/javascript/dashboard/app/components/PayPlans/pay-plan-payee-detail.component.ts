@@ -1,23 +1,26 @@
 import { OnInit, Input, Component } from '@angular/core';
-import * as moment from 'moment';
 
 import { Currency } from './../../services/currency';
 import './pay-plan-payee-detail.component.scss';
 
 @Component({
 	selector: 'app-pay-plan-payee-detail',
-	// template: templateStr,
 	template: `
 		<div class="pay-plan-payee-detail">
-			<div *ngFor="let payment of payments" class="payment">
-				<div class="retailer_and_date">
-					<span class="retailer">{{
-						payment.expense.retailer + ' (' + payment.howToPay + ')'
-					}}</span>
-					<span class="date">{{ payment.expense.date | date: 'MMM dd, yyyy' }}</span>
-					<div class="amt">{{ payment.amtPaid | currency }}</div>
+			<div *ngFor="let payment of filteredPayments" class="payment-wrapper">
+				<div class="payment">
+					<div class="primary_and_subtext">
+						<span class="retailer">{{ payment.expense.retailer }}</span>
+						<span class="how">{{ payment.howToPay }}</span>
+					</div>
+					<div class="amt">
+						{{ payment.amtPaid | currency }}
+					</div>
 				</div>
-				<hr />
+				<div class="date-row">
+					<div class="date">{{ payment.expense.date | date: 'MMM dd, yyyy' }}</div>
+					<mat-icon class="delete">delete</mat-icon>
+				</div>
 			</div>
 		</div>
 	`,
@@ -25,8 +28,10 @@ import './pay-plan-payee-detail.component.scss';
 export class PayPlanPayeeDetail implements OnInit {
 	@Input() planData: any[];
 	@Input() payee: string;
+	@Input() noteFilter: string = '';
 
 	public payments: any[] = [];
+	public filteredPayments: any[] = [];
 	private currency = null;
 
 	constructor() {
@@ -34,9 +39,33 @@ export class PayPlanPayeeDetail implements OnInit {
 	}
 
 	ngOnInit() {
-		const matches = this.planData.filter(data => data.payee === this.payee);
+		this.parseData(this.planData);
+	}
+
+	ngOnChanges() {
+		this.parseData(this.planData);
+		this.applyFilters(this.noteFilter);
+	}
+
+	parseData(data) {
+		const matches = data.filter(data => data.payee === this.payee);
 		if (matches && matches[0]) {
-			this.payments = matches[0]['payments'];
+			this.payments = matches[0]['payments'].sort((a, b) => {
+				if (a.howToPay < b.howToPay) return -1;
+				if (b.howToPay < a.howToPay) return 1;
+				return 0;
+			});
+			this.filteredPayments = this.payments;
+		}
+	}
+
+	applyFilters(noteFilter) {
+		console.log('Applying filter ', noteFilter);
+		if (noteFilter.length > 0) {
+			const filter = this.noteFilter.split(';');
+			this.filteredPayments = this.payments.filter(p => filter.includes(p.howToPay));
+		} else {
+			this.filteredPayments = this.payments;
 		}
 	}
 }

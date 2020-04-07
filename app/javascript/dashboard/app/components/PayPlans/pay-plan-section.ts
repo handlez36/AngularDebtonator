@@ -17,8 +17,9 @@ export class PayPlanSection implements OnInit {
 	public planIds: string[] = [];
 	public isLoading: boolean = true;
 	public selectedPlan: string = null;
-	public sideNavOpen: boolean = false;
+	public sideNavOpen: string = '';
 	public selectedPayee: string = null;
+	public noteFilter: any = [];
 	private currency = null;
 
 	constructor(private userService: UserService, private plansService: PlanService) {
@@ -37,7 +38,6 @@ export class PayPlanSection implements OnInit {
 	retrievePlans() {
 		const userId = this.userService.getUserId();
 		this.plansService.getExpenses(userId).subscribe(result => {
-			console.log('Result: ', result);
 			this.plans = result.data['payPlans'];
 			this.plans.forEach(plan => {
 				if (!this.breakdown) {
@@ -45,7 +45,6 @@ export class PayPlanSection implements OnInit {
 				}
 				this.planIds.push(plan['id']);
 				this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
-				console.log('Breakdown after ', plan);
 			});
 			this.selectedPlan = this.plans.length > 0 ? this.plans[0].id : '';
 			this.isLoading = false;
@@ -83,12 +82,17 @@ export class PayPlanSection implements OnInit {
 	}
 
 	onPlanSelect(plan) {
-		this.sideNavOpen = false;
+		this.sideNavOpen = '';
 		this.selectedPayee = null;
 	}
 
 	handleSideNavToggle(info) {
-		this.sideNavOpen = info.expanded;
+		this.sideNavOpen = this.sideNavOpen === info.payee ? '' : info.payee;
+		this.noteFilter = '';
 		this.selectedPayee = info.expanded ? info.payee : null;
+	}
+
+	setNoteFilter(event) {
+		this.noteFilter = event.noteFilters.join(';');
 	}
 }

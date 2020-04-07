@@ -16,6 +16,7 @@ import { CardPayeeField } from './components/Expenses/card-payee-field.component
 import { DateField } from './components/Expenses/date-field.component';
 import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
 import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
+import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
 import { ExpenseForm } from './components/Forms/expense-form.component';
 import { ExpenseService } from './services/expense.service';
 import { PlanService } from './services/plans.service';
@@ -90,6 +91,7 @@ export function getFactoryParams(httpLink) {
 		PayPlan,
 		PayPlanPayeeSummary,
 		PayPlanPayeeDetail,
+		PayPlanNotesFilter,
 	],
 	imports: [
 		BrowserModule,

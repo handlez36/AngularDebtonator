@@ -1,0 +1,43 @@
+app-pay-plan-notes-filter .pay-plan-notes-filter {
+	padding-top: 8px;
+	.filter-label {
+		text-align: center;
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.note-category {
+		font-size: 12px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 90%;
+		margin-left: 5%;
+		margin-top: 10px;
+		border-bottom: 1px solid lightslategray;
+		.category {
+			flex: 0 1 60%;
+			width: 60%;
+			.mat-checkbox-layout {
+				white-space: normal;
+			}
+			.mat-checkbox-label {
+				font-size: 12px;
+				font-weight: 500;
+				line-height: 13px;
+				font-style: italic;
+				color: slategray;
+				display: block;
+				word-wrap: break-word;
+			}
+		}
+		.categoryAmt {
+			flex: 0 1 40%;
+			width: 40%;
+			text-align: right;
+			align-self: center;
+			font-size: 11px;
+			font-weight: 900;
+			color: steelblue;
+		}
+	}
+}

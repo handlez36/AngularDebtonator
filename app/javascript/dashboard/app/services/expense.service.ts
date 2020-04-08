@@ -23,37 +23,11 @@ export class ExpenseService {
 
 	createExpense(id, params: object) {
 		console.log('ExpenseService.ts#createExpense -- params: ', params);
-		console.log('ExpenseService.ts#createExpense -- id: ', id);
-
-		const query = gql`
-			mutation createExpense(
-				$userId: ID!
-				$date: ISO8601DateTime!
-				$retailer: String!
-				$amtCharged: String!
-				$responsibleParty: String!
-				$card: String!
-				$howToPay: String
-			) {
-				createExpense(
-					userId: $userId
-					date: $date
-					retailer: $retailer
-					amtCharged: $amtCharged
-					responsibleParty: $responsibleParty
-					card: $card
-					howToPay: $howToPay
-				) {
-					id
-				}
-			}
-		`;
-
 		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ss');
+
 		return this.apollo.mutate({
 			mutation: Queries.createExpense()['query'],
 			variables: {
-				userId: id,
 				...params,
 				date: formattedDate,
 			},
@@ -96,7 +70,7 @@ export class ExpenseService {
 			}
 		`;
 
-		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ss');
+		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 		return this.apollo.mutate({
 			mutation: Queries.updateExpenses()['query'],
 			variables: {

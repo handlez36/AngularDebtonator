@@ -10,7 +10,8 @@ module Types
     end
     
     def expenses(id:, archived:)
-      all_expenses = User.find(1).expenses
+      user = context[:current_user]
+      all_expenses = user.expenses.includes(:card).includes(:responsible_party)
       archived ? all_expenses.archived : all_expenses.current
     end
 
@@ -21,7 +22,8 @@ module Types
     end
     
     def pay_plans(id:, archived:)
-      all_plans = User.find(1).payplans
+      user = context[:current_user]
+      all_plans = user.find(1).payplans
       archived ? all_plans.archived : all_plans.current
     end
   end

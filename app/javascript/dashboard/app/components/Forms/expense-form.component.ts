@@ -13,6 +13,7 @@ import { ExpenseService } from './../../services/expense.service';
 import { UserService } from './../../services/user.service';
 import { TABLE_MODE } from '../../utils/constants';
 import templateStr from './expense-form.component.html';
+import './expense-form.component.scss';
 
 @Component({
 	selector: 'app-expense-form',
@@ -23,6 +24,7 @@ export class ExpenseForm {
 
 	public TABLE_MODE = TABLE_MODE;
 	public mode: TABLE_MODE;
+	public errors: String[] = [];
 	control: FormControl;
 	elements: ITdDynamicElementConfig[] = [
 		{
@@ -94,21 +96,18 @@ export class ExpenseForm {
 	];
 
 	constructor(
-		public dialogRef: MatDialogRef<ExpenseForm>,
 		@Inject(MAT_DIALOG_DATA) public data: any,
+		public dialogRef: MatDialogRef<ExpenseForm>,
 		private expenseService: ExpenseService,
 		private userService: UserService,
 	) {
 		this.mode = this.data.mode;
-		console.log('Retailer: ', this.data['retailer']);
-		console.log('Retailer: ', this.data);
 	}
 
 	optionSelections(data) {
 		const options: any[] = [];
 
 		data.forEach(p => options.push({ label: p['name'], value: p['id'] }));
-
 		return options.sort((a, b) => {
 			if (a['label'] < b['label']) return -1;
 			if (b['label'] < a['label']) return 1;
@@ -123,29 +122,35 @@ export class ExpenseForm {
 	onManage(action, row = null) {
 		const userId = this.userService.getUserId();
 		if (!this.isFormInvalid()) {
-			const {
-				value: { date, retailer, amtCharged, responsibleParty, card, howToPay } = {},
-			} = this.form;
-			const response = {
-				date,
-				retailer,
-				amtCharged,
-				responsibleParty,
-				card,
-				howToPay,
-			};
-			if (action === 'ADD') {
-				this.expenseService.createExpense(userId, response).subscribe({
-					next: x => this.dialogRef.close(),
-					error: err => console.error('Error creating expense: ' + err),
+			if (action === TABLE_MODE.ADD) {
+				this.expenseService.createExpense(userId, this.form.value).subscribe({
+					next: ({ data: { createExpense: expense } }) => this.handleResponse(expense),
+					error: err => (this.errors = ['Error creating expense: ' + err]),
 				});
 			} else {
-				this.expenseService.updateExpense(userId, this.data['id'], response).subscribe({
-					next: x => this.dialogRef.close(),
-					error: err => console.error('Error updating expense: ' + err),
+				this.expenseService.updateExpense(userId, this.data['id'], this.form.value).subscribe({
+					next: ({ data: { updateExpense: expense } }) => this.handleResponse(expense),
+					error: err => (this.errors = ['Error updating expense: ' + err]),
 				});
 			}
 		}
+	}
+
+	handleResponse(expense) {
+		console.log('Expense: ', expense);
+		if (expense.id) {
+			this.dialogRef.close();
+		} else if (expense.errors) {
+			this.errors = this.formatErrors(expense.errors);
+		}
+	}
+
+	formatErrors(errors) {
+		return errors.map(error => {
+			const { path = [], message } = error;
+			const source = path && path[0] === 'attributes' ? `${path[1] ? path[1] : ''} field ` : '';
+			return `${source}${message}`;
+		});
 	}
 
 	onCancel() {

@@ -66,6 +66,7 @@ export function getFactoryParams(httpLink) {
 	const httpOptions = {
 		headers: new HttpHeaders({
 			'X-CSRF-Token': token,
+			// withCredentials: 'true',
 		}),
 	};
 	const link = httpLink.create({

@@ -30,7 +30,6 @@ export const createExpense = () => {
 	return {
 		query: gql`
 			mutation createExpense(
-				$userId: ID!
 				$date: ISO8601DateTime!
 				$retailer: String!
 				$amtCharged: String!
@@ -39,7 +38,6 @@ export const createExpense = () => {
 				$howToPay: String
 			) {
 				createExpense(
-					userId: $userId
 					date: $date
 					retailer: $retailer
 					amtCharged: $amtCharged
@@ -48,6 +46,10 @@ export const createExpense = () => {
 					howToPay: $howToPay
 				) {
 					id
+					errors {
+						path
+						message
+					}
 				}
 			}
 		`,
@@ -58,7 +60,6 @@ export const updateExpenses = () => {
 	return {
 		query: gql`
 			mutation updateExpense(
-				$userId: ID!
 				$expenseId: ID!
 				$date: ISO8601DateTime!
 				$retailer: String!
@@ -68,7 +69,6 @@ export const updateExpenses = () => {
 				$howToPay: String
 			) {
 				updateExpense(
-					userId: $userId
 					expenseId: $expenseId
 					date: $date
 					retailer: $retailer
@@ -78,6 +78,10 @@ export const updateExpenses = () => {
 					howToPay: $howToPay
 				) {
 					id
+					errors {
+						path
+						message
+					}
 				}
 			}
 		`,
@@ -90,6 +94,10 @@ export const deleteExpenses = () => {
 			mutation deleteExpense($userId: ID!, $expenseId: [ID!]!) {
 				deleteExpense(userId: $userId, expenseId: $expenseId) {
 					success
+					errors {
+						path
+						message
+					}
 				}
 			}
 		`,

@@ -24,12 +24,30 @@ export class Utils {
 		return value.length >= lengthToTruncate ? value.slice(0, lengthToTruncate - 4) : value;
 	};
 
-	dateTransform = date => {
+	dateTransform = (date, format = DATE_FORMATS.NUMS_ONLY) => {
 		try {
-			const formattedate = moment(date).format('MM/DD/YYYY');
+			const formattedate = moment(date).format(format);
 			return formattedate;
 		} catch (e) {
-			return moment().format('MM/DD/YYYY');
+			return moment().format(format);
 		}
 	};
 }
+
+export class ApiUtils {
+	constructor() {}
+
+	formatErrors(errors) {
+		return errors.map(error => {
+			const { path = [], message } = error;
+			const source = path && path[0] === 'attributes' ? `${path[1] ? path[1] : ''} field ` : '';
+			return `${source}${message}`;
+		});
+	}
+}
+
+export const DATE_FORMATS = {
+	GRAPHQL: 'YYYY-MM-DDThh:mm:ssZ',
+	SHORT_MO: 'MMM Do, YYYY',
+	NUMS_ONLY: 'MM/DD/YYYY',
+};

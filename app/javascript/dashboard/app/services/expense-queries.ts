@@ -1,28 +1,28 @@
 import gql from 'graphql-tag';
 
-export const retrieveExpenses = id => {
+export const retrieveExpenses = () => {
 	return {
 		query: gql`
-        {
-          expenses(id: ${id}) {
-            id,
-            date,
-            retailer,
-            amtCharged,
-            amtPending,
-            amtPaid,
-            responsibleParty {
-              id
-              name
-            }
-            card {
-              id
-              name
-            }
-            howToPay
-          }
-        }
-      `,
+			{
+				expenses {
+					id
+					date
+					retailer
+					amtCharged
+					amtPending
+					amtPaid
+					responsibleParty {
+						id
+						name
+					}
+					card {
+						id
+						name
+					}
+					howToPay
+				}
+			}
+		`,
 	};
 };
 

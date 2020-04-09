@@ -17,13 +17,13 @@ export class ExpenseService {
 		console.log('ExpenseService.ts -- Expense Service being initiated');
 	}
 
-	getExpenses(id, filters: object = null) {
-		return this.apollo.watchQuery(Queries.retrieveExpenses(id)).valueChanges;
+	getExpenses(filters: object = null) {
+		return this.apollo.watchQuery(Queries.retrieveExpenses()).valueChanges;
 	}
 
 	createExpense(id, params: object) {
 		console.log('ExpenseService.ts#createExpense -- params: ', params);
-		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ss');
+		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
 			mutation: Queries.createExpense()['query'],
@@ -33,7 +33,7 @@ export class ExpenseService {
 			},
 			refetchQueries: [
 				{
-					query: Queries.retrieveExpenses(id)['query'],
+					query: Queries.retrieveExpenses()['query'],
 					variables: { id },
 				},
 			],
@@ -43,32 +43,6 @@ export class ExpenseService {
 	updateExpense(id, expenseId, params: object) {
 		console.log('ExpenseService.ts#updateExpense -- params: ', params);
 		console.log('ExpenseService.ts#updateExpense -- id: ', id);
-
-		const query = gql`
-			mutation updateExpense(
-				$userId: ID!
-				$expenseId: ID!
-				$date: ISO8601DateTime!
-				$retailer: String!
-				$amtCharged: String!
-				$responsibleParty: String!
-				$card: String!
-				$howToPay: String
-			) {
-				updateExpense(
-					userId: $userId
-					expenseId: $expenseId
-					date: $date
-					retailer: $retailer
-					amtCharged: $amtCharged
-					responsibleParty: $responsibleParty
-					card: $card
-					howToPay: $howToPay
-				) {
-					id
-				}
-			}
-		`;
 
 		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 		return this.apollo.mutate({
@@ -82,7 +56,7 @@ export class ExpenseService {
 			},
 			refetchQueries: [
 				{
-					query: Queries.retrieveExpenses(id)['query'],
+					query: Queries.retrieveExpenses()['query'],
 					variables: { id },
 				},
 			],
@@ -92,24 +66,15 @@ export class ExpenseService {
 	deleteExpenses(id, expenseId: any[]) {
 		console.log('ExpenseService.ts#deleteExpense');
 
-		const query = gql`
-			mutation deleteExpense($userId: ID!, $expenseId: [ID!]!) {
-				deleteExpense(userId: $userId, expenseId: $expenseId) {
-					success
-				}
-			}
-		`;
-
 		return this.apollo
 			.mutate({
 				mutation: Queries.deleteExpenses()['query'],
 				variables: {
-					userId: id,
 					expenseId,
 				},
 				refetchQueries: [
 					{
-						query: Queries.retrieveExpenses(id)['query'],
+						query: Queries.retrieveExpenses()['query'],
 						variables: { id },
 					},
 				],

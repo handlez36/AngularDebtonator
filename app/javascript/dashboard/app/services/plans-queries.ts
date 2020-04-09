@@ -1,10 +1,10 @@
 import gql from 'graphql-tag';
 
-export const retrievePlans = id => {
+export const retrievePlans = () => {
 	return {
 		query: gql`
 			{
-				payPlans(id: 1) {
+				payPlans {
 					id
 					date
 					comments

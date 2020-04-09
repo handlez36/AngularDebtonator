@@ -1,7 +1,7 @@
 module Mutations
   module ManageExpense
     def handleModelErrors(errors)
-      new_expense.errors.map do |attribute, message|
+      errors.map do |attribute, message|
         path = ['attributes', attribute.to_s.camelize(:lower)]
         { message: message, path: path}
       end

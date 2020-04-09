@@ -36,8 +36,8 @@ export class PayPlanSection implements OnInit {
 	}
 
 	retrievePlans() {
-		const userId = this.userService.getUserId();
-		this.plansService.getExpenses(userId).subscribe(result => {
+		// const userId = this.userService.getUserId();
+		this.plansService.getPlans().subscribe(result => {
 			this.plans = result.data['payPlans'];
 			this.plans.forEach(plan => {
 				if (!this.breakdown) {

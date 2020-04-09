@@ -13,7 +13,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CurrencyPipe } from '@angular/common';
 
 import { ExpenseForm } from '../Forms/expense-form.component';
+import { PaymentForm } from '../Forms/payment-form.component';
 import { ExpenseService } from '../../services/expense.service';
+import { PaymentService } from '../../services/payment.service';
 import { UserService } from '../../services/user.service';
 import { TABLE_MODE } from '../../utils/constants';
 import templateStr from './tabular-view.component.html';
@@ -65,6 +67,7 @@ export class TabularView implements OnInit {
 		private _loadingService: TdLoadingService,
 		private _dialogService: TdDialogService,
 		private expenseService: ExpenseService,
+		private paymentService: PaymentService,
 		private userService: UserService,
 	) {}
 
@@ -147,7 +150,7 @@ export class TabularView implements OnInit {
 
 	getSelectedAmount() {
 		return this.selectedRows.reduce((total, row) => {
-			total += parseFloat(row.amtCharged);
+			total += parseFloat(row.amtRemaining);
 			return total;
 		}, 0.0);
 	}
@@ -174,6 +177,14 @@ export class TabularView implements OnInit {
 		this.cardFilter = event.cardFilter;
 		this.payeeFilter = event.payeeFilter;
 		this.refreshTable();
+	}
+
+	onPay() {
+		let data = { cards: this.cards, payees: this.payees, expenses: this.selectedRows };
+		const dialogRef = this.dialog.open(PaymentForm, {
+			width: '400px',
+			data,
+		});
 	}
 
 	onManage(mode, row = null) {

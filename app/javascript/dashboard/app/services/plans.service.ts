@@ -14,7 +14,7 @@ export class PlanService {
 		console.log('PlanService.ts -- Plan Service being initiated');
 	}
 
-	getExpenses(id, filters: object = null) {
-		return this.apollo.watchQuery(Queries.retrievePlans(id)).valueChanges;
+	getPlans(filters: object = null) {
+		return this.apollo.watchQuery(Queries.retrievePlans()).valueChanges;
 	}
 }

@@ -18,10 +18,12 @@ import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summar
 import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
 import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
 import { ExpenseForm } from './components/Forms/expense-form.component';
+import { PaymentForm } from './components/Forms/payment-form.component';
 import { ExpenseService } from './services/expense.service';
+import { PaymentService } from './services/payment.service';
 import { PlanService } from './services/plans.service';
 import { UserService } from './services/user.service';
-import { Utils } from './services/utils.service';
+import { Utils, ApiUtils } from './services/utils.service';
 import { Currency } from './services/currency';
 
 import { FormsModule } from '@angular/forms';
@@ -29,12 +31,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatInputModule } from '@angular/material/input';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 import { CovalentDataTableModule } from '@covalent/core/data-table';
 import { CovalentTabSelectModule } from '@covalent/core/tab-select';
@@ -87,6 +91,7 @@ export function getFactoryParams(httpLink) {
 		CardPayeeField,
 		DateField,
 		ExpenseForm,
+		PaymentForm,
 		ExpenseSummary,
 		PayPlanSection,
 		PayPlan,
@@ -119,12 +124,14 @@ export function getFactoryParams(httpLink) {
 		MatMomentDateModule,
 		MatToolbarModule,
 		MatSidenavModule,
+		MatInputModule,
 		CovalentLoadingModule,
 		ApolloModule,
 		HttpLinkModule,
 	],
 	entryComponents: [
 		ExpenseForm,
+		PaymentForm,
 		TdDynamicDatepickerComponent,
 		TdDynamicInputComponent,
 		TdDynamicSelectComponent,
@@ -134,9 +141,11 @@ export function getFactoryParams(httpLink) {
 	],
 	providers: [
 		ExpenseService,
+		PaymentService,
 		UserService,
 		PlanService,
 		Utils,
+		ApiUtils,
 		Currency,
 		CurrencyPipe,
 		{

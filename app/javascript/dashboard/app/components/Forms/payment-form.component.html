@@ -1,0 +1,47 @@
+<div class="payment-form-container">
+	<h1 mat-dialog-title>Make Payment{{ formElements.length > 1 || 's' }}</h1>
+	<div class="global-date-section">
+		<mat-checkbox
+			class="category"
+			[checked]="allDatePickerOpen"
+			indeterminate="true"
+			(change)="useGlobaleDate()"
+			>Set all date</mat-checkbox
+		>
+		<mat-form-field>
+			<mat-label>Choose a date</mat-label>
+			<input matInput [matDatepicker]="picker" (dateInput)="setGlobalDate($event)" />
+			<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+			<mat-datepicker #picker></mat-datepicker>
+		</mat-form-field>
+	</div>
+	<div mat-dialog-content>
+		<div class="payment-form-wrapper" *ngFor="let key of formElementKeys">
+			<h5>{{ expenseLabel(key) }}</h5>
+			<td-dynamic-forms
+				[id]="key"
+				[class]="'payment-form payment-form-' + key"
+				[elements]="formElements[key]"
+			>
+				<ng-template let-element ngFor [ngForOf]="elements">
+					<ng-template let-control="control" [tdDynamicFormsError]="element.name">
+						<span *ngIf="control.touched || !control.pristine">
+							<span *ngIf="control.hasError('min')">Min value: {{ element.min }}</span>
+							<span *ngIf="control.hasError('max')">Max value: {{ element.max }}</span>
+							<span *ngIf="control.hasError('currencyFormat')">Invalid format</span>
+						</span>
+					</ng-template>
+				</ng-template>
+			</td-dynamic-forms>
+		</div>
+	</div>
+	<div mat-dialog-actions>
+		<button mat-flat-button color="primary" [disabled]="isFormInvalid()" (click)="onPay()">
+			Pay
+		</button>
+		<button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
+	</div>
+	<div class="error-section">
+		<div *ngFor="let error of errors">{{ error }}</div>
+	</div>
+</div>

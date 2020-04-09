@@ -69,8 +69,7 @@ export class ExpensesComponent implements OnInit {
 			return;
 		}
 
-		const userId = this.userService.getUserId();
-		this.expenseService.getExpenses(userId).subscribe(result => {
+		this.expenseService.getExpenses().subscribe(result => {
 			const expenses = result.data['expenses'];
 			this.expenses = expenses.map(item => ({
 				...item,

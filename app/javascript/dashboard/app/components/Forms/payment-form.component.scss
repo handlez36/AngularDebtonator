@@ -1,0 +1,20 @@
+.payment-form-container {
+	.global-date-section {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.payment-form-wrapper {
+		padding-left: 8px;
+		padding-right: 8px;
+		margin-top: 16px;
+		border-left: 3px solid lightskyblue;
+		.payment-form .td-dynamic-element-wrapper.hidden {
+			display: none;
+		}
+	}
+	.mat-dialog-actions {
+		margin-bottom: 0;
+	}
+}

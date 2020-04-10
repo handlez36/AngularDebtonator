@@ -129,7 +129,10 @@ export class PaymentForm {
 	}
 
 	onPay() {
-		const values = this.forms.map(form => form.value);
+		const values = this.forms
+			.map(form => form.value)
+			.map(vals => ({ ...vals, amtPaid: `${vals['amtPaid']}` }));
+
 		this.paymentService.createPayments(values).subscribe({
 			next: ({ data: { createPayment: response } }) => this.handleResponse(response),
 			error: err => (this.errors = ['Error creating payment: ' + err]),

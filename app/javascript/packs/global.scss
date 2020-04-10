@@ -4,6 +4,9 @@ app-dashboard {
 	display: flex;
 	flex-direction: column;
 }
+.validation-msg {
+	font-size: 12px;
+}
 
 /** Mixins **/
 @mixin FlexRow {

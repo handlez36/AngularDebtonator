@@ -1,20 +1,8 @@
-import {
-	ITdDynamicElementConfig,
-	TdDynamicElement,
-	TdDynamicType,
-	TdDynamicFormsComponent,
-} from '@covalent/dynamic-forms';
+import { TdDynamicElement, TdDynamicType } from '@covalent/dynamic-forms';
 import { AbstractControl } from '@angular/forms';
 
-export const AmountField = (name, label, defaultVal) => ({
-	name,
-	label,
-	default: parseFloat(defaultVal),
-	type: TdDynamicType.Number,
-	min: 0.0,
-	max: 99999.0,
-	required: true,
-	validators: [
+export const AmountField = (name, label, defaultVal, additionalValidations) => {
+	let validators = [
 		{
 			validator: (control: AbstractControl) => {
 				try {
@@ -28,17 +16,32 @@ export const AmountField = (name, label, defaultVal) => ({
 				}
 			},
 		},
-	],
-});
+	];
 
-export const DateField = (name, label, defaultVal) => ({
+	if (additionalValidations) {
+		validators = validators.concat(additionalValidations);
+	}
+
+	return {
+		name,
+		label,
+		default: parseFloat(defaultVal),
+		type: TdDynamicType.Number,
+		min: 0.0,
+		max: 99999.0,
+		required: true,
+		validators,
+	};
+};
+
+export const DateField = (name, label, defaultVal, additionalValidations = null) => ({
 	name,
 	label,
-	// default: moment(this.data['date']),
 	default: defaultVal,
 	type: TdDynamicElement.Datepicker,
 	required: true,
 	min: new Date(2018, 1, 1).setHours(0, 0, 0, 0),
+	validators: additionalValidations || null,
 });
 
 export const InputField = (name, label, defaultVal = '') => ({
@@ -47,7 +50,6 @@ export const InputField = (name, label, defaultVal = '') => ({
 	type: TdDynamicElement.Input,
 	required: true,
 	default: defaultVal,
-	// default: this.data['retailer'],
 });
 
 export const HiddenInputField = (name, label, defaultVal) => ({
@@ -58,10 +60,10 @@ export const HiddenInputField = (name, label, defaultVal) => ({
 	required: false,
 });
 
-export const SelectField = (name, label, selections) => ({
+export const SelectField = (name, label, selections, selected) => ({
 	name,
 	label,
-	default: optionSelections(selections)[0] && optionSelections(selections)[0]['value'],
+	default: getDefaultSelectionIndex(selected, optionSelections(selections), !selected),
 	type: TdDynamicElement.Select,
 	selections: optionSelections(selections),
 	required: true,
@@ -70,7 +72,6 @@ export const SelectField = (name, label, selections) => ({
 export const TextAreaField = (name, label, defaultVal = null) => ({
 	name,
 	label,
-	// default: this.data['howToPay'],
 	default: defaultVal || '',
 	type: TdDynamicElement.Textarea,
 	required: false,
@@ -85,4 +86,11 @@ const optionSelections = data => {
 		if (b['label'] < a['label']) return 1;
 		return 0;
 	});
+};
+
+const getDefaultSelectionIndex = (selected, list, selectFirst = false) => {
+	if (selectFirst) return list[0].value;
+
+	const index = list.findIndex(p => p.label === selected.label);
+	return index > 0 ? list[index].value : list[0].value;
 };

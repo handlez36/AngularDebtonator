@@ -4,7 +4,8 @@ import * as moment from 'moment';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
-import * as Queries from './expense-queries';
+import * as ExpenseQueries from './expense-queries';
+import * as PayplanQueries from './plans-queries';
 
 @Injectable({
 	providedIn: 'root',
@@ -18,7 +19,7 @@ export class ExpenseService {
 	}
 
 	getExpenses(filters: object = null) {
-		return this.apollo.watchQuery(Queries.retrieveExpenses()).valueChanges;
+		return this.apollo.watchQuery(ExpenseQueries.retrieveExpenses()).valueChanges;
 	}
 
 	createExpense(id, params: object) {
@@ -26,14 +27,14 @@ export class ExpenseService {
 		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
-			mutation: Queries.createExpense()['query'],
+			mutation: ExpenseQueries.createExpense()['query'],
 			variables: {
 				...params,
 				date: formattedDate,
 			},
 			refetchQueries: [
 				{
-					query: Queries.retrieveExpenses()['query'],
+					query: ExpenseQueries.retrieveExpenses()['query'],
 					variables: { id },
 				},
 			],
@@ -42,11 +43,10 @@ export class ExpenseService {
 
 	updateExpense(id, expenseId, params: object) {
 		console.log('ExpenseService.ts#updateExpense -- params: ', params);
-		console.log('ExpenseService.ts#updateExpense -- id: ', id);
 
 		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 		return this.apollo.mutate({
-			mutation: Queries.updateExpenses()['query'],
+			mutation: ExpenseQueries.updateExpenses()['query'],
 			variables: {
 				userId: id,
 				expenseId,
@@ -56,27 +56,25 @@ export class ExpenseService {
 			},
 			refetchQueries: [
 				{
-					query: Queries.retrieveExpenses()['query'],
+					query: ExpenseQueries.retrieveExpenses()['query'],
 					variables: { id },
 				},
 			],
 		});
 	}
 
-	deleteExpenses(id, expenseId: any[]) {
+	deleteExpenses(expenseId: any[]) {
 		console.log('ExpenseService.ts#deleteExpense');
 
 		return this.apollo
 			.mutate({
-				mutation: Queries.deleteExpenses()['query'],
+				mutation: ExpenseQueries.deleteExpenses()['query'],
 				variables: {
 					expenseId,
 				},
 				refetchQueries: [
-					{
-						query: Queries.retrieveExpenses()['query'],
-						variables: { id },
-					},
+					{ query: ExpenseQueries.retrieveExpenses()['query'] },
+					{ query: PayplanQueries.retrievePlans()['query'] },
 				],
 			})
 			.subscribe();

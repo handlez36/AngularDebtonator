@@ -90,7 +90,6 @@ module Mutations
     end
 
     class DeleteExpense < BaseMutation
-      argument :userId, ID, required: true
       argument :expenseId, [ID], required: true
 
       # return type from the mutation
@@ -98,6 +97,7 @@ module Mutations
       field :errors, [Types::ModelErrorType], null: true
 
       def resolve(params)
+        puts "manage_expense#resolve"
         expenses = context[:current_user].expenses.where(id: params[:expenseId])
         success_status = 'success'
         errors = nil
@@ -105,16 +105,21 @@ module Mutations
         # Business validation checks...
         #   - Do all these expense exist (requested < found)?
         if expenses.count != params[:expenseId].count
+          puts "You asked for more expenses than were found."
           ids_not_found = params[:expenseId] - expenses.map(&:id)
           success_status = 'partial'
           errors = [{ message: "Some retailers could not be found or don't belong to this user: #{ids_not_found}" }]
         end
 
+        puts "Planning to remove exoenses"
         # Removed any planned payments and destroy expense
         expenses.each do |expense|
           expense.remove_planned_payments
           expense.destroy
         end
+
+        puts "Success Status: #{success_status}"
+        puts "Errors: #{errors}"
         { success: success_status, errors: errors } 
       end
     end

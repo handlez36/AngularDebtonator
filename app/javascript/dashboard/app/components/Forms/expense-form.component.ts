@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AbstractControl, FormControl } from '@angular/forms';
 import * as moment from 'moment';
 
+import * as Fields from './Fields';
 import { ExpenseService } from './../../services/expense.service';
 import { UserService } from './../../services/user.service';
 import { TABLE_MODE } from '../../utils/constants';
@@ -25,75 +26,8 @@ export class ExpenseForm {
 	public TABLE_MODE = TABLE_MODE;
 	public mode: TABLE_MODE;
 	public errors: String[] = [];
+	public elements: ITdDynamicElementConfig[];
 	control: FormControl;
-	elements: ITdDynamicElementConfig[] = [
-		{
-			name: 'date',
-			label: 'Transaction Date',
-			type: TdDynamicElement.Datepicker,
-			required: true,
-			min: new Date(2018, 1, 1).setHours(0, 0, 0, 0),
-			default: moment(this.data['date']),
-		},
-		{
-			name: 'retailer',
-			label: 'Retailer',
-			type: TdDynamicElement.Input,
-			required: true,
-			default: this.data['retailer'],
-		},
-		{
-			name: 'amtCharged',
-			label: 'Amt Charged',
-			type: TdDynamicType.Number,
-			min: 0.0,
-			max: 99999.0,
-			required: true,
-			default: parseFloat(this.data['amtCharged']),
-			validators: [
-				{
-					validator: (control: AbstractControl) => {
-						try {
-							const parts = control.value.split('.');
-							if (parts && parts[1]) {
-								return parts[1].length > 2 ? { currencyFormat: true } : undefined;
-							}
-							return undefined;
-						} catch (e) {
-							return undefined;
-						}
-					},
-				},
-			],
-		},
-		{
-			name: 'responsibleParty',
-			label: 'Payee',
-			type: TdDynamicElement.Select,
-			selections: this.optionSelections(this.data.payees),
-			default:
-				this.optionSelections(this.data.payees)[0] &&
-				this.optionSelections(this.data.payees)[0]['value'],
-			required: true,
-		},
-		{
-			name: 'card',
-			label: 'Card',
-			type: TdDynamicElement.Select,
-			selections: this.optionSelections(this.data.cards),
-			default:
-				this.optionSelections(this.data.cards)[0] &&
-				this.optionSelections(this.data.cards)[0]['value'],
-			required: true,
-		},
-		{
-			name: 'howToPay',
-			label: 'How To Pay',
-			type: TdDynamicElement.Textarea,
-			required: false,
-			default: this.data['howToPay'],
-		},
-	];
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -102,17 +36,50 @@ export class ExpenseForm {
 		private userService: UserService,
 	) {
 		this.mode = this.data.mode;
+		this.elements = this.createFormElements(data, this.mode);
 	}
 
-	optionSelections(data) {
-		const options: any[] = [];
+	createFormElements(expense, mode): ITdDynamicElementConfig[] {
+		let formElements = [];
+		const amtTooLowValidation = [
+			{
+				validator: control => {
+					return mode === TABLE_MODE.EDIT &&
+						parseFloat(control.value) < parseFloat(expense.amtPending) + parseFloat(expense.amtPaid)
+						? { tooLow: true }
+						: undefined;
+				},
+			},
+		];
 
-		data.forEach(p => options.push({ label: p['name'], value: p['id'] }));
-		return options.sort((a, b) => {
-			if (a['label'] < b['label']) return -1;
-			if (b['label'] < a['label']) return 1;
-			return 0;
-		});
+		formElements = [
+			Fields.DateField(
+				'date',
+				'Transaction Date',
+				mode === TABLE_MODE.ADD ? moment() : moment(expense.date),
+			),
+			Fields.InputField('retailer', 'Retailer', mode === TABLE_MODE.ADD ? '' : expense.retailer),
+			Fields.AmountField(
+				'amtCharged',
+				'Amount Charged',
+				mode === TABLE_MODE.ADD ? '0' : expense.amtCharged,
+				amtTooLowValidation,
+			),
+			Fields.SelectField('card', 'Card', expense.cards, this.formatSelectedOption(expense['card'])),
+			Fields.SelectField(
+				'responsibleParty',
+				"Who's paying",
+				expense.payees,
+				this.formatSelectedOption(expense['responsibleParty']),
+			),
+			Fields.TextAreaField('howToPay', 'How to Pay?'),
+		];
+
+		return formElements;
+	}
+
+	formatSelectedOption(element) {
+		return element ? { label: element['name'], value: element['id'] } : null;
 	}
 
 	isFormInvalid() {

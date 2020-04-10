@@ -56,10 +56,7 @@ export class PaymentForm {
 		);
 
 		if (expenseIdFIelds) {
-			expenseIdFIelds.forEach(field => {
-				console.log('Field: ', field);
-				field.classList.add('hidden');
-			});
+			expenseIdFIelds.forEach(field => field.classList.add('hidden'));
 		}
 	}
 
@@ -71,8 +68,13 @@ export class PaymentForm {
 			formElements[expense.id] = [
 				Fields.HiddenInputField('expenseId', '', expense.id),
 				Fields.DateField('date', 'Payment Date', moment()),
-				Fields.AmountField('amtPaid', 'Pay How Much', expense.amtRemaining),
-				Fields.SelectField('responsibleParty', "Who's paying", data.payees),
+				Fields.AmountField('amtPaid', 'Pay How Much', expense.amtRemaining, null),
+				Fields.SelectField(
+					'responsibleParty',
+					"Who's paying",
+					data.payees.indexOf(expense.responsibleParty) || 0,
+					data.payees,
+				),
 				Fields.TextAreaField('howToPay', 'How to Pay?'),
 			];
 			return formElements;

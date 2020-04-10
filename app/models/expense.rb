@@ -70,7 +70,12 @@ class Expense < ActiveRecord::Base
   
   # Remove payments connected to this expense
   def remove_planned_payments
-    self.payments.each { |payment| payment.destroy }
+    # Api addition...
+    #  1. Only potentially remove payments for current expenses. Skip for archived.
+    #  2. For current expenses, only delete payments that are current, NOT archived.
+    if !expense.archived
+      self.payments.each { |payment| payment.destroy if !payment.archived }
+    end
   end
   
   # Adjust expense amounts after payment is locked

@@ -91,8 +91,8 @@ export const updateExpenses = () => {
 export const deleteExpenses = () => {
 	return {
 		query: gql`
-			mutation deleteExpense($userId: ID!, $expenseId: [ID!]!) {
-				deleteExpense(userId: $userId, expenseId: $expenseId) {
+			mutation deleteExpense($expenseId: [ID!]!) {
+				deleteExpense(expenseId: $expenseId) {
 					success
 					errors {
 						path

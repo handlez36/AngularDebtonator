@@ -4,10 +4,13 @@
 		<td-dynamic-forms class="expense-form" [elements]="elements">
 			<ng-template let-element ngFor [ngForOf]="elements">
 				<ng-template let-control="control" [tdDynamicFormsError]="element.name">
-					<span *ngIf="control.touched || !control.pristine">
+					<span class="validation-msg" *ngIf="control.touched || !control.pristine">
 						<span *ngIf="control.hasError('min')">Min value: {{ element.min }}</span>
 						<span *ngIf="control.hasError('max')">Max value: {{ element.max }}</span>
 						<span *ngIf="control.hasError('currencyFormat')">Invalid format</span>
+						<span *ngIf="control.hasError('tooLow')"
+							>Must be more than what's locked up with pending/paid amts</span
+						>
 					</span>
 				</ng-template>
 			</ng-template>

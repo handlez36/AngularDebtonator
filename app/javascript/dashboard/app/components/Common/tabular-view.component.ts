@@ -199,7 +199,6 @@ export class TabularView implements OnInit {
 	}
 
 	onConfirm() {
-		const id = this.userService.getUserId();
 		this._dialogService
 			.openConfirm({
 				message: 'Are you sure?',
@@ -211,7 +210,7 @@ export class TabularView implements OnInit {
 			.subscribe((accept: boolean) => {
 				if (accept) {
 					const expenseIds = this.selectedRows.map(row => row.id);
-					this.expenseService.deleteExpenses(id, expenseIds);
+					this.expenseService.deleteExpenses(expenseIds);
 				} else {
 					this._dialogService.closeAll();
 				}

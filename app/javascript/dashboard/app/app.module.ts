@@ -4,8 +4,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CurrencyPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 
-import { DashboardComponent } from './components/dashboard.component';
+import { App } from './components/app.component';
+import { DashboardPage } from './components/dashboard.component';
+import { SetupPage } from './components/setup-page.component';
 import { ExpensesComponent } from './components/expenses.component';
 import { PayPlanSection } from './components/PayPlans/pay-plan-section';
 import { PayPlan } from './components/PayPlans/pay-plan.component';
@@ -31,7 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -60,6 +63,7 @@ import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
+// Set CSRF-Token param on GraphQL http link
 export function getFactoryParams(httpLink) {
 	const metaTagEl = document.querySelector("head meta[name='csrf-token']");
 	let token = '';
@@ -82,9 +86,19 @@ export function getFactoryParams(httpLink) {
 	return { cache, link };
 }
 
+const appRoutes: Routes = [
+	{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+	{ path: 'v2', redirectTo: '/dashboard', pathMatch: 'full' },
+	{ path: 'dashboard', component: DashboardPage },
+	{ path: 'setup', component: SetupPage },
+	// { path: '**', component: PageNotFoundComponent }
+];
+
 @NgModule({
 	declarations: [
-		DashboardComponent,
+		App,
+		DashboardPage,
+		SetupPage,
 		ExpensesComponent,
 		TabularView,
 		PendingPaidField,
@@ -100,6 +114,7 @@ export function getFactoryParams(httpLink) {
 		PayPlanNotesFilter,
 	],
 	imports: [
+		RouterModule.forRoot(appRoutes, { enableTracing: false }),
 		BrowserModule,
 		HttpClientModule,
 		CovalentLayoutModule,
@@ -125,6 +140,7 @@ export function getFactoryParams(httpLink) {
 		MatToolbarModule,
 		MatSidenavModule,
 		MatInputModule,
+		MatListModule,
 		CovalentLoadingModule,
 		ApolloModule,
 		HttpLinkModule,
@@ -154,6 +170,6 @@ export function getFactoryParams(httpLink) {
 			deps: [HttpLink],
 		},
 	],
-	bootstrap: [DashboardComponent],
+	bootstrap: [App],
 })
 export class AppModule {}

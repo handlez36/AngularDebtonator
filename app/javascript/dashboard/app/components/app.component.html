@@ -1,4 +1,4 @@
-<!-- <td-layout class="dashboard">
+<td-layout class="dashboard">
 	<td-navigation-drawer
 		flex
 		sidenavTitle="Debtonator"
@@ -7,8 +7,12 @@
 		[email]="user['email']"
 	>
 		<mat-nav-list>
-			<a mat-list-item><mat-icon>home</mat-icon>&nbsp;Home</a>
-			<a mat-list-item><mat-icon>settings</mat-icon>&nbsp;Setup</a>
+			<a routerLink="/dashboard" routerLinkActive="active" mat-list-item tdLayoutToggle
+				><mat-icon>home</mat-icon>&nbsp;Home</a
+			>
+			<a routerLink="/setup" routerLinkActive="active" mat-list-item tdLayoutToggle
+				><mat-icon>settings</mat-icon>&nbsp;Setup</a
+			>
 			<a mat-list-item tdLayoutToggle><mat-icon>close</mat-icon>Close Drawer</a>
 		</mat-nav-list>
 		<div td-navigation-drawer-menu>
@@ -28,11 +32,10 @@
 	>
 		<button mat-icon-button td-menu-button tdLayoutToggle>
 			<mat-icon>menu</mat-icon>
-		</button> -->
-<div class="main-content">
-	<app-expenses></app-expenses>
-	<app-pay-plan-section></app-pay-plan-section>
-</div>
-<!-- <td-layout-footer color="primary"></td-layout-footer>
+		</button>
+		<div class="main-content">
+			<router-outlet></router-outlet>
+		</div>
+		<td-layout-footer color="primary"></td-layout-footer>
 	</td-layout-nav>
-</td-layout> -->
+</td-layout>

@@ -7,5 +7,9 @@ module Types
     field :create_payment, mutation: Mutations::ManagePayments::CreatePayment
     # field :update_expense, mutation: Mutations::UpdateExpense
     # field :delete_expense, mutation: Mutations::DeleteExpense
+
+    field :create_card, mutation: Mutations::ManageCards::CreateCard
+    field :update_card, mutation: Mutations::ManageCards::UpdateCard
+    field :delete_card, mutation: Mutations::ManageCards::DeleteCard
   end
 end

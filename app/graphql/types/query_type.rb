@@ -24,5 +24,21 @@ module Types
       all_plans = user.payplans.includes(:card).includes(:payments)
       archived ? all_plans.archived : all_plans.current
     end
+
+    # Cards endpoint
+    field :cards, [Types::CardType], null: false, description: "Card field"
+    
+    def cards
+      user = context[:current_user] || User.find(1)
+      user.cards
+    end
+
+    # Responsible parties endpoint
+    field :responsible_parties, [Types::ResponsiblePartyType], null: false, description: "Responsible party field"
+    
+    def responsible_parties
+      user = context[:current_user] || User.find(1)
+      user.responsible_parties
+    end
   end
 end

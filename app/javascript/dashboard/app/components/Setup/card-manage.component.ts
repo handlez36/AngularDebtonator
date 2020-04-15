@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { SETUP_SAVE_STATES, SETUP_UPDATE_MODE } from './../../utils/constants';
+import { CardService } from './../../services/card.service';
 import templateString from './card-manage.component.html';
 import './card-manage.component.scss';
 
@@ -9,23 +10,26 @@ import './card-manage.component.scss';
 	template: templateString,
 })
 export class CardManageSection implements OnInit {
+	public cards: any[] = [];
 	public showContent: boolean = false;
 	public selectedCard: any = {};
 	public mode: string = '';
 	public updatedCardName: string = '';
 	public footerStatus: string = 'IDLE';
 
-	cards = [
-		{
-			name: 'AmEx',
-			id: 1,
-		},
-		{ name: 'Suntrust', id: 2 },
-		{ name: 'BofA', id: 3 },
-	];
-	constructor() {}
+	constructor(private cardService: CardService) {}
 
-	ngOnInit() {}
+	ngOnInit() {
+		this.cardService.getCards().subscribe(
+			response => {
+				if (response.data && response.data['cards']) {
+					this.cards = response.data['cards'];
+				}
+			},
+			error => console.log('Error retrieving card data'),
+			() => console.log('Finished retrieving card data'),
+		);
+	}
 
 	onStartAdd() {
 		this.toggleShowContent();
@@ -39,7 +43,6 @@ export class CardManageSection implements OnInit {
 		} else {
 			this.showContent = true;
 			this.selectedCard = this.findCard(id);
-			console.log('Selected card: ', this.selectedCard);
 		}
 		this.mode = SETUP_UPDATE_MODE.EDIT;
 	}
@@ -55,7 +58,7 @@ export class CardManageSection implements OnInit {
 	}
 
 	onCardStatusUpdate(status) {
-		if (status !== SETUP_SAVE_STATES.CANCEL) {
+		if (status !== SETUP_SAVE_STATES.CANCEL && status !== SETUP_SAVE_STATES.IDLE) {
 			this.footerStatus = status;
 		} else {
 			this.resetView();

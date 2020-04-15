@@ -1,7 +1,8 @@
 .card-list {
 	padding: 1em 1em;
+	overflow-x: auto;
 	.user-card {
-		width: 9vw;
+		min-width: 9vw;
 		height: 5vw;
 		background-color: #637081;
 		background-image: linear-gradient(315deg, #637081 0%, #7c98b3 74%);

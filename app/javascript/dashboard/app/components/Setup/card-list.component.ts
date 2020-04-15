@@ -7,6 +7,12 @@ import './card-list.component.scss';
 	selector: 'app-card-list',
 	template: `
 		<div class="card-list flex-row">
+			<div class="user-card add-new flex-center" (click)="addCard.emit()">
+				<mat-icon *ngIf="cardStatus === 'IDLE' || mode === 'EDIT'" class="add-card-button"
+					>add</mat-icon
+				>
+				<div class="card-text">{{ displayAddCard() }}</div>
+			</div>
 			<div
 				*ngFor="let card of cards"
 				class="user-card flex-center"
@@ -24,10 +30,6 @@ import './card-list.component.scss';
 				<mat-icon *ngIf="shouldShow('ERROR', card)" class="saved-status error">error</mat-icon>
 				<div class="card-text">{{ displayCard(card) }}</div>
 			</div>
-			<div class="user-card add-new flex-center" (click)="addCard.emit()">
-				<mat-icon class="add-card-button">add</mat-icon>
-				Add new
-			</div>
 		</div>
 	`,
 })
@@ -36,6 +38,7 @@ export class CardList implements OnInit {
 	@Input() selectedCard: any;
 	@Input() updatedName: string;
 	@Input() cardStatus: string;
+	@Input() mode: string;
 	@Output() selectCard = new EventEmitter();
 	@Output() addCard = new EventEmitter();
 
@@ -50,6 +53,21 @@ export class CardList implements OnInit {
 			this.cardStatus === SETUP_SAVE_STATES.CANCEL
 		) {
 			return card['name'];
+		} else if (this.cardStatus === SETUP_SAVE_STATES.UPDATING) {
+			return this.updatedName;
+		} else {
+			return SETUP_SAVE_STATES[this.cardStatus];
+		}
+	}
+
+	displayAddCard() {
+		if (this.mode !== 'ADD') return 'Add new';
+
+		if (
+			this.cardStatus === SETUP_SAVE_STATES.IDLE ||
+			this.cardStatus === SETUP_SAVE_STATES.CANCEL
+		) {
+			return 'Add new';
 		} else if (this.cardStatus === SETUP_SAVE_STATES.UPDATING) {
 			return this.updatedName;
 		} else {

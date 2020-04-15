@@ -69,6 +69,7 @@ import { ExpenseService } from './services/expense.service';
 import { PaymentService } from './services/payment.service';
 import { PlanService } from './services/plans.service';
 import { UserService } from './services/user.service';
+import { CardService } from './services/card.service';
 import { Utils, ApiUtils } from './services/utils.service';
 import { Currency } from './services/currency';
 
@@ -172,6 +173,7 @@ const appRoutes: Routes = [
 		PaymentService,
 		UserService,
 		PlanService,
+		CardService,
 		Utils,
 		ApiUtils,
 		Currency,

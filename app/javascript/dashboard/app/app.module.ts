@@ -5,30 +5,6 @@ import { CurrencyPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
-
-import { App } from './components/app.component';
-import { DashboardPage } from './components/dashboard.component';
-import { SetupPage } from './components/setup-page.component';
-import { ExpensesComponent } from './components/expenses.component';
-import { PayPlanSection } from './components/PayPlans/pay-plan-section';
-import { PayPlan } from './components/PayPlans/pay-plan.component';
-import { TabularView } from './components/Common/tabular-view.component';
-import { ExpenseSummary } from './components/Expenses/expense-summary.component';
-import { PendingPaidField } from './components/Expenses/pending-paid-field.component';
-import { CardPayeeField } from './components/Expenses/card-payee-field.component';
-import { DateField } from './components/Expenses/date-field.component';
-import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
-import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
-import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
-import { ExpenseForm } from './components/Forms/expense-form.component';
-import { PaymentForm } from './components/Forms/payment-form.component';
-import { ExpenseService } from './services/expense.service';
-import { PaymentService } from './services/payment.service';
-import { PlanService } from './services/plans.service';
-import { UserService } from './services/user.service';
-import { Utils, ApiUtils } from './services/utils.service';
-import { Currency } from './services/currency';
-
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -62,6 +38,39 @@ import { CovalentBaseEchartsModule } from '@covalent/echarts/base';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+
+/** Pages */
+import { App } from './components/app.component';
+import { DashboardPage } from './components/dashboard.component';
+import { SetupPage } from './components/setup-page.component';
+
+/** Components */
+import { ExpensesComponent } from './components/expenses.component';
+import { PayPlanSection } from './components/PayPlans/pay-plan-section';
+import { PayPlan } from './components/PayPlans/pay-plan.component';
+import { TabularView } from './components/Common/tabular-view.component';
+import { ExpenseSummary } from './components/Expenses/expense-summary.component';
+import { PendingPaidField } from './components/Expenses/pending-paid-field.component';
+import { CardPayeeField } from './components/Expenses/card-payee-field.component';
+import { DateField } from './components/Expenses/date-field.component';
+import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
+import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
+import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
+import { CardManageSection } from './components/Setup/card-manage.component';
+import { CardList } from './components/Setup/card-list.component';
+import { CardManageContent } from './components/Setup/card-manage-content.component';
+
+/** Forms */
+import { ExpenseForm } from './components/Forms/expense-form.component';
+import { PaymentForm } from './components/Forms/payment-form.component';
+
+/** Services */
+import { ExpenseService } from './services/expense.service';
+import { PaymentService } from './services/payment.service';
+import { PlanService } from './services/plans.service';
+import { UserService } from './services/user.service';
+import { Utils, ApiUtils } from './services/utils.service';
+import { Currency } from './services/currency';
 
 // Set CSRF-Token param on GraphQL http link
 export function getFactoryParams(httpLink) {
@@ -112,6 +121,9 @@ const appRoutes: Routes = [
 		PayPlanPayeeSummary,
 		PayPlanPayeeDetail,
 		PayPlanNotesFilter,
+		CardManageSection,
+		CardList,
+		CardManageContent,
 	],
 	imports: [
 		RouterModule.forRoot(appRoutes, { enableTracing: false }),

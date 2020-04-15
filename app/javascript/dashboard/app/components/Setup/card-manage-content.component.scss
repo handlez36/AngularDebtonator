@@ -1,0 +1,32 @@
+app-card-manage-content {
+	.card-manage-content {
+		align-items: stretch;
+		.card-avatar {
+			.user-card.small {
+				width: 6vw;
+				height: 3vw;
+				background-color: #637081;
+				background-image: linear-gradient(315deg, #637081 0%, #7c98b3 74%);
+				border-radius: 4px;
+				color: white;
+			}
+		}
+		.name-input {
+			mat-form-field {
+				margin-top: 2em;
+				width: 70%;
+				height: 10vh;
+			}
+			mat-form-field input {
+				font-size: 32px;
+				text-align: center;
+				color: lightslategray;
+			}
+		}
+		.actions {
+			button:not(:first-child) {
+				margin-left: 1em;
+			}
+		}
+	}
+}

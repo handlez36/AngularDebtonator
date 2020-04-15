@@ -1,0 +1,14 @@
+<div class="card-manage-content flex-col">
+	<div *ngIf="mode === 'ADD'" class="card-avatar flex-center">
+		<div class="user-card small flex-center">{{ selectedCard['name'] }}</div>
+	</div>
+	<div class="name-input flex-center">
+		<mat-form-field class="input-field">
+			<input #newName matInput [value]="cardName" (keyup)="onNameChange(newName.value)" />
+		</mat-form-field>
+	</div>
+	<div class="actions flex-center">
+		<button mat-flat-button color="primary" (click)="onSave()">Save</button>
+		<button mat-flat-button color="warn" (click)="onCancel()">Cancel</button>
+	</div>
+</div>

@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+import { ExpenseService } from '../../services/expense.service';
+import { Currency } from '../../services/currency';
 import templateStr from './pay-plan-payee-summary.component.html';
 import './pay-plan-payee-summary.component.scss';
 
@@ -20,34 +22,35 @@ import './pay-plan-payee-summary.component.scss';
 export class PayPlanPayeeSummary {
 	@Input() details: any;
 	@Output() detailRequested = new EventEmitter();
+
 	public sideNavExpanded: boolean = false;
-
 	public selected: boolean = false;
+	public currency;
 
-	constructor() {}
+	constructor(private expenseService: ExpenseService) {
+		this.currency = new Currency();
+	}
 
 	onExpand(payee) {
-		console.log('In summary; Current state: ', this.sideNavExpanded);
-		// this.sideNavExpanded = !this.sideNavExpanded;
 		this.detailRequested.emit({
 			expanded: this.sideNavExpanded,
 			payee: this.details['payee'],
 		});
+	}
 
-		// console.log('PayPlanPayeeSummary - Currently selected --> ', this.selected);
-		// console.log('PayPlanPayeeSummary - Clicked on --> ', payee);
-		// this.selected = this.sideNavExpanded;
-		// if (!this.sideNavExpanded) {
-		// 	// If nav is currently closed, just open
-		// 	this.sideNavExpanded = true;
-		// } else {
-		// 	// If nav is current only, only close if the payee you clicked on is the same as the incoming payee
-		// 	this.sideNavExpanded = payee === this.selected ? false : true;
-		// }
+	calculatePayeeTotal() {
+		if (!this.details['payee']) return 0;
 
-		// this.detailRequested.emit({
-		// 	expanded: this.sideNavExpanded,
-		// 	payee: this.details['payee'],
-		// });
+		const expenses = this.expenseService.getCachedExpenses();
+		console.log('Expenses: ', expenses);
+		return (expenses || [])
+			.filter(expense => expense['responsibleParty']['name'] === this.details['payee'])
+			.reduce((total, expense) => this.currency.add(total, this.calculateAmtRemaining(expense)), 0);
+	}
+
+	calculateAmtRemaining(expense) {
+		console.log('In calculating amt remaining...');
+		const amtLockedUp = this.currency.add(expense['amtPaid'], expense['amtPending']);
+		return this.currency.subtract(expense['amtCharged'], amtLockedUp);
 	}
 }

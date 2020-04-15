@@ -8,14 +8,33 @@ app-expense-summary {
 	.td-sidesheet-content-wrapper {
 		height: 80px;
 		td-sidesheet-content {
-			padding-top: 4px;
+			padding-top: 8px;
+			padding-bottom: 8px;
 		}
 	}
 	.summary-section {
 		display: flex;
 		flex-direction: row;
+		.filter-label {
+			font-size: 16px;
+			font-weight: 700;
+			color: orange;
+		}
+		.expense-total-summary {
+			padding-left: 2em;
+			.mat-checkbox-inner-container {
+				display: none;
+			}
+		}
+		.expense-card-summary {
+			margin-left: 2em;
+			padding-left: 2em;
+			border-left: 1px solid lightskyblue;
+		}
 		.expense-payee-summary {
-			margin-left: 10em;
+			margin-left: 2em;
+			padding-left: 2em;
+			border-left: 1px solid lightskyblue;
 		}
 		.expense-card-checkboxes,
 		.expense-payee-checkboxes {
@@ -31,9 +50,31 @@ app-expense-summary {
 			&:not(:first-child) {
 				margin-left: 1em;
 			}
-			.total-amt {
+			.total-amt,
+			.plan-portion {
 				margin-left: 1.7em;
 			}
+		}
+		.expense-payee {
+			.plan-breakdown-section {
+				.mat-checkbox-inner-container {
+					display: none;
+				}
+				.spacer {
+					height: 20px;
+				}
+				.plan-label,
+				.checkbox-spacer {
+					font-size: 14px;
+					font-weight: 700;
+					color: steelblue;
+				}
+			}
+		}
+		.plan-portion {
+			font-size: 14px;
+			font-weight: 600;
+			color: steelblue;
 		}
 		.mat-checkbox {
 			height: 24px;

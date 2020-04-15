@@ -77,6 +77,7 @@ export class ExpensesComponent implements OnInit {
 					parseFloat(item['amtCharged']) -
 					(parseFloat(item['amtPaid']) + parseFloat(item['amtPending'])),
 			}));
+			this.expenseService.cacheExpenses(this.expenses);
 			this.apiError = result.errors;
 		});
 		console.log('Expenses updated and now are ', this.expenses);

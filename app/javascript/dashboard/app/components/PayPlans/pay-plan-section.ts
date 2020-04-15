@@ -46,6 +46,7 @@ export class PayPlanSection implements OnInit {
 				this.planIds.push(plan['id']);
 				this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 			});
+			this.plansService.cachePlans(this.plans);
 			this.selectedPlan = this.plans.length > 0 ? this.plans[0].id : '';
 			this.isLoading = false;
 		});

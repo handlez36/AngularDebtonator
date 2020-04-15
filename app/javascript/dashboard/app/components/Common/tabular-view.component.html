@@ -5,6 +5,7 @@
 		[payees]="payees"
 		[data]="data"
 		(filterUpdate)="onFilterUpdate($event)"
+		(closeFilterView)="toggleFilters()"
 	></app-expense-summary>
 	<mat-card>
 		<ng-template

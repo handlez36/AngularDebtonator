@@ -79,4 +79,12 @@ export class ExpenseService {
 			})
 			.subscribe();
 	}
+
+	cacheExpenses(expenses) {
+		this.expenses = expenses;
+	}
+
+	getCachedExpenses() {
+		return this.expenses;
+	}
 }

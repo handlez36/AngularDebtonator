@@ -1,40 +1,67 @@
-<td-sidesheet class="expense-summary">
+<td-sidesheet #sidesheet class="expense-summary">
 	<td-sidesheet-header>
 		<td-sidesheet-title>Filter Options</td-sidesheet-title>
 		<button mat-icon-button td-sidesheet-header-action>
-			<mat-icon matTooltipPosition="before" matTooltip="Close" (click)="sidesheet.toggle()"
+			<mat-icon matTooltipPosition="before" matTooltip="Close" (click)="closeFilterView.emit()"
 				>close</mat-icon
 			>
 		</button>
 	</td-sidesheet-header>
 	<td-sidesheet-content>
 		<div class="summary-section">
-			<div class="expense-card-summary">
-				<h5>Cards</h5>
-				<div class="expense-card-checkboxes">
-					<div *ngFor="let card of cards" class="expense-card">
-						<mat-checkbox (change)="setSelected($event, card, 'card')">{{
-							card.name
-						}}</mat-checkbox>
-						<span class="total-amt">{{ getTotal(card, 'card') | currency }}</span>
+			<div class="expense-total-summary">
+				<span class="filter-label">Total</span>
+				<div class="expense-total-checkboxes">
+					<mat-checkbox class="checkbox-spacer">Total</mat-checkbox>
+					<div class="total-amt">{{ overallTotal | currency }}</div>
+					<div *ngFor="let breakdown of overallBreakdown; let idx = index" class="plan-portion">
+						{{ getTotalPerPayplan(breakdown) | currency }}
 					</div>
 				</div>
 			</div>
+			<!-- CARD SUMMARY -->
+			<div class="expense-card-summary">
+				<span class="filter-label">Cards</span>
+				<div class="expense-card-checkboxes">
+					<div *ngFor="let card of cards.concat(' '); let i = index" class="expense-card">
+						<div *ngIf="i < cards.length">
+							<mat-checkbox (change)="setSelected($event, card, 'card')">{{
+								card.name
+							}}</mat-checkbox>
+							<div class="total-amt">{{ getTotal(card, 'card') | currency }}</div>
+							<div *ngIf="cardBreakdown">
+								<div *ngFor="let breakdown of cardBreakdown; let idx = index" class="plan-portion">
+									{{ getCardBreakdown(card, breakdown, idx) | currency }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PAYEE SUMMARY -->
 			<div class="expense-payee-summary">
-				<h5>Payees</h5>
+				<span class="filter-label">Payees</span>
 				<div class="expense-payee-checkboxes">
-					<div *ngFor="let payee of payees" class="expense-payee">
-						<mat-checkbox (change)="setSelected($event, payee, 'payee')">{{
-							payee.name
-						}}</mat-checkbox>
-						<span class="total-amt">{{ getTotal(payee, 'responsibleParty') | currency }}</span>
+					<div *ngFor="let payee of payees.concat(' '); let i = index" class="expense-payee">
+						<div *ngIf="i < payees.length">
+							<mat-checkbox (change)="setSelected($event, payee, 'payee')">{{
+								payee.name
+							}}</mat-checkbox>
+							<div class="total-amt">{{ getTotal(payee, 'responsibleParty') | currency }}</div>
+							<div *ngFor="let breakdown of payeeBreakdown; let idx = index" class="plan-portion">
+								{{ getPayeeBreakdown(payee, breakdown, idx) | currency }}
+							</div>
+						</div>
+						<div class="plan-breakdown-section" *ngIf="i === payees.length">
+							<mat-checkbox class="checkbox-spacer">After...</mat-checkbox>
+							<div class="total-amt spacer"></div>
+							<div *ngFor="let plan of activePlans" class="plan-label">
+								{{ getPayplanLabel(plan) }}
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</td-sidesheet-content>
-	<!-- <td-sidesheet-actions>
-    <button mat-raised-button class="text-upper" color="accent">action</button>
-    <button mat-button class="text-upper">cancel</button>
-  </td-sidesheet-actions> -->
 </td-sidesheet>

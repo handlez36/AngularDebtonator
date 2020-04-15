@@ -17,6 +17,8 @@ import { PaymentForm } from '../Forms/payment-form.component';
 import { ExpenseService } from '../../services/expense.service';
 import { PaymentService } from '../../services/payment.service';
 import { UserService } from '../../services/user.service';
+import { Utils } from '../../services/utils.service';
+import { Currency } from '../../services/currency';
 import { TABLE_MODE } from '../../utils/constants';
 import templateStr from './tabular-view.component.html';
 import './tabular-view.component.scss';
@@ -59,6 +61,7 @@ export class TabularView implements OnInit {
 	public cardFilter: string[] = [];
 	public payeeFilter: string[] = [];
 	public showFilters: boolean = false;
+	public currency;
 
 	constructor(
 		private currencyPipe: CurrencyPipe,
@@ -67,9 +70,10 @@ export class TabularView implements OnInit {
 		private _loadingService: TdLoadingService,
 		private _dialogService: TdDialogService,
 		private expenseService: ExpenseService,
-		private paymentService: PaymentService,
-		private userService: UserService,
-	) {}
+		private utils: Utils,
+	) {
+		this.currency = new Currency();
+	}
 
 	ngOnInit() {
 		console.log('TabularViewComponent.ts#ngOnInit()');
@@ -85,6 +89,7 @@ export class TabularView implements OnInit {
 		// Only populate the data variable if it has not yet been populated
 		// if (!this.formattedData && this.data && this.data.length > 0) {
 		if (this.data && this.data.length > 0) {
+			console.log('Num of expenses: ', this.data.length);
 			this.formattedData = this.data;
 			this.columns = this.formatColumns(this.data);
 			this.refreshTable();
@@ -134,6 +139,11 @@ export class TabularView implements OnInit {
 
 	toggleFilters() {
 		this.showFilters = !this.showFilters;
+		if (!this.showFilters) {
+			this.cardFilter = [];
+			this.payeeFilter = [];
+			this.refreshTable();
+		}
 	}
 
 	splitDollarsAndCents(value, which) {
@@ -156,13 +166,10 @@ export class TabularView implements OnInit {
 	}
 
 	getTotalUnpaginatedExpenses() {
-		return this.unPaginatedData.reduce((total, item) => {
-			total +=
-				parseFloat(item['amtCharged']) -
-				parseFloat(item['amtPaid']) +
-				parseFloat(item['amtPending']);
-			return total;
-		}, 0.0);
+		return this.unPaginatedData.reduce(
+			(total, item) => this.currency.add(total, this.utils.calculateAmtRemaining(item)),
+			0,
+		);
 	}
 
 	extractUniqueValues(data, param): any[] {

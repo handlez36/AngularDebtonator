@@ -56,9 +56,9 @@ import { DateField } from './components/Expenses/date-field.component';
 import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
 import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
 import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
-import { CardManageSection } from './components/Setup/card-manage.component';
-import { CardList } from './components/Setup/card-list.component';
-import { CardManageContent } from './components/Setup/card-manage-content.component';
+import { SetupManagementCard } from './components/Setup/setup-management-card.component';
+import { SetupManageFooter } from './components/Setup/setup-manage-footer.component';
+import { SetupManageContent } from './components/Setup/setup-manage-content.component';
 
 /** Forms */
 import { ExpenseForm } from './components/Forms/expense-form.component';
@@ -122,9 +122,9 @@ const appRoutes: Routes = [
 		PayPlanPayeeSummary,
 		PayPlanPayeeDetail,
 		PayPlanNotesFilter,
-		CardManageSection,
-		CardList,
-		CardManageContent,
+		SetupManagementCard,
+		SetupManageContent,
+		SetupManageFooter,
 	],
 	imports: [
 		RouterModule.forRoot(appRoutes, { enableTracing: false }),

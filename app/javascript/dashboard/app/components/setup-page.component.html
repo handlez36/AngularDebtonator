@@ -1,4 +1,11 @@
 <div class="setup-page">
-	<h4>Setup</h4>
-	<app-card-manage-section></app-card-manage-section>
+	<div class="page-title"><h4>Setup Cards and Payees here</h4></div>
+	<div class="management-section flex-row">
+		<div class="cards-setup">
+			<app-setup-manage-section [type]="ITEM_TYPE.CARD"></app-setup-manage-section>
+		</div>
+		<div class="payees-setup">
+			<app-setup-manage-section [type]="ITEM_TYPE.PAYEE"></app-setup-manage-section>
+		</div>
+	</div>
 </div>

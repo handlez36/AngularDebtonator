@@ -4,6 +4,11 @@ export enum TABLE_MODE {
 	EDIT,
 }
 
+export const SETUP_ITEM_TYPE = {
+	CARD: 'cards',
+	PAYEE: 'payees',
+};
+
 export const SETUP_UPDATE_MODE = {
 	ADD: 'ADD',
 	EDIT: 'EDIT',

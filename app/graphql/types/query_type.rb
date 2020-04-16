@@ -34,9 +34,9 @@ module Types
     end
 
     # Responsible parties endpoint
-    field :responsible_parties, [Types::ResponsiblePartyType], null: false, description: "Responsible party field"
+    field :payees, [Types::ResponsiblePartyType], null: false, description: "Responsible party field"
     
-    def responsible_parties
+    def payees
       user = context[:current_user] || User.find(1)
       user.responsible_parties
     end

@@ -11,5 +11,9 @@ module Types
     field :create_card, mutation: Mutations::ManageCards::CreateCard
     field :update_card, mutation: Mutations::ManageCards::UpdateCard
     field :delete_card, mutation: Mutations::ManageCards::DeleteCard
+
+    field :create_payee, mutation: Mutations::ManageCards::CreateCard
+    field :update_payee, mutation: Mutations::ManageCards::UpdateCard
+    field :delete_payee, mutation: Mutations::ManageCards::DeleteCard
   end
 end

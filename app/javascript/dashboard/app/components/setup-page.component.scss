@@ -1,0 +1,17 @@
+app-setup-page {
+	width: 100%;
+	.setup-page {
+		.page-title {
+		}
+		.management-section {
+			justify-content: space-between;
+		}
+		.management-section .cards-setup .header-image {
+			background-image: url('./Setup/card-image.jpg');
+		}
+
+		.management-section .payees-setup .header-image {
+			background-image: url('./Setup/payee-image.jpg');
+		}
+	}
+}

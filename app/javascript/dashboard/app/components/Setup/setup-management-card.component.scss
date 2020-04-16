@@ -1,9 +1,15 @@
-.card-manage-section {
+.setup-management-card {
 	width: 45vw;
 	mat-card-header {
 		.header-image {
-			background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+			background-image: url('./card-image.jpg');
 			background-size: cover;
+			&.cards {
+				background-image: url('./card-image.jpg');
+			}
+			&.payees {
+				background-image: url('./payee-image.jpg');
+			}
 		}
 		mat-card-title {
 			margin-bottom: 0.3em !important;

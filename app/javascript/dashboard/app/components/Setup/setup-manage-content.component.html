@@ -4,8 +4,8 @@
 			<input
 				#newName
 				matInput
-				[value]="cardName"
-				[placeholder]="cardName === '' ? 'Name of card' : ''"
+				[value]="itemName"
+				[placeholder]="itemName === '' ? 'Name' : ''"
 				(keyup)="onNameChange(newName.value)"
 			/>
 		</mat-form-field>

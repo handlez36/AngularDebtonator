@@ -1,0 +1,34 @@
+<mat-card class="setup-management-card">
+	<ng-template
+		class="loader"
+		[tdLoading]="setup - manage - loader + '-' + type"
+		tdLoadingColor="warn"
+		tdLoadingType="linear"
+		[tdLoadingUntil]="true"
+	></ng-template>
+	<mat-card-header>
+		<div mat-card-avatar class="header-image"></div>
+		<mat-card-title> Manage {{ type }} </mat-card-title>
+		<mat-card-subtitle>You have {{ items.length }} {{ type }}</mat-card-subtitle>
+		<button mat-button color="warn" (click)="toggleShowContent()">Toggle</button>
+	</mat-card-header>
+	<mat-card-content [class]="showContent ? 'show' : 'hide'">
+		<app-setup-manage-content
+			[selectedItem]="selectedItem"
+			[mode]="mode"
+			(itemNameUpdated)="onUpdateItemName($event)"
+			(itemStatusUpdate)="onItemStatusUpdate($event)"
+		></app-setup-manage-content>
+	</mat-card-content>
+	<mat-card-footer>
+		<app-setup-manage-footer
+			[items]="items"
+			[selectedItem]="selectedItem"
+			[updatedName]="updatedItemName"
+			[itemStatus]="footerStatus"
+			[mode]="mode"
+			(addItem)="onStartAdd()"
+			(selectItem)="onItemSelect($event)"
+		></app-setup-manage-footer>
+	</mat-card-footer>
+</mat-card>

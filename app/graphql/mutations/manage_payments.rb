@@ -53,5 +53,45 @@ module Mutations
         { success: success, errors: errorResult}
       end
     end
+
+    class DeletePayment < BaseMutation
+      argument :id, [String], required: true
+
+      field :success, Types::BatchResponseType, null: true
+      field :errors, [Types::ModelErrorType], null: true
+
+      def resolve(params)
+        user = context[:current_user]
+        payments = user.payments.where(id: params[:id])
+        errors = []
+
+        if payments.empty?
+          errors << { message: "Payment(s) cannot be found." }
+          return { success: nil, errors: errors } 
+        end
+
+        linked_plan = payments.first.plan
+
+        payments.each do |payment|
+          delete_successful = payment.destroy
+
+          if !delete_successful
+            errors << { message: "Payment #{payment.id} could not be deleted"}
+          end
+
+          linked_plan_deleted_successfully = (delete_successful and linked_plan.payments.count == 0) ? 
+            linked_plan.destroy :
+            nil
+
+          if linked_plan_deleted_successfully == false
+            errors << { message: "Plan has not payments, but could not be deleted"}
+          end
+        end
+
+        success = errors.empty? ? 'success' : 'partial'
+        errorResult = errors.empty? ? nil : errors
+        { success: success, errors: errorResult}
+      end
+    end
   end
 end

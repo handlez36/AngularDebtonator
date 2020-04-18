@@ -6,12 +6,15 @@ import { Apollo } from 'apollo-angular';
 import * as Queries from './payment-queries';
 import * as PayplanQueries from './plans-queries';
 import * as ExpenseQueries from './expense-queries';
+import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PaymentService {
 	private payments: object[] = [];
+	private _paymentDeletionQueue: BehaviorSubject<any> = new BehaviorSubject({});
+	private paymentDeletionQueue: Observable<any> = this._paymentDeletionQueue.asObservable();
 
 	constructor(private apollo: Apollo, private userService: UserService) {
 		console.log('PaymentService.ts -- Payment Service being initiated');
@@ -32,6 +35,54 @@ export class PaymentService {
 				{ query: ExpenseQueries.retrieveExpenses()['query'] },
 			],
 		});
+	}
+
+	deletePayment(id: any[]) {
+		console.log('PaymentService.ts#deletePayment -- params: ', id);
+
+		return this.apollo.mutate({
+			mutation: Queries.deletePayment()['query'],
+			variables: { id },
+			refetchQueries: [
+				{ query: PayplanQueries.retrievePlans()['query'] },
+				{ query: ExpenseQueries.retrieveExpenses()['query'] },
+			],
+		});
+	}
+
+	getPendingDeleteQueue() {
+		return this.paymentDeletionQueue;
+	}
+
+	updatePendingQueue(planId, paymentId) {
+		const current = this._paymentDeletionQueue.getValue();
+
+		if (!current[planId]) {
+			current[planId] = [];
+		}
+
+		if (current[planId].includes(paymentId)) {
+			this.deleteFromPendingQueue(current, planId, paymentId);
+		} else {
+			this.addToPendingDeleteQueue(current, planId, paymentId);
+		}
+	}
+
+	addToPendingDeleteQueue(current, planId, paymentId) {
+		current[planId].push(paymentId);
+		this._paymentDeletionQueue.next(current);
+	}
+
+	deleteFromPendingQueue(current, planId, paymentId) {
+		const paymentIndex = current[planId].indexOf(paymentId);
+		if (paymentIndex >= 0) {
+			current[planId].splice(paymentIndex, 1);
+			this._paymentDeletionQueue.next(current);
+		}
+	}
+
+	clearPendingQueue() {
+		this._paymentDeletionQueue.next({});
 	}
 
 	// updateExpense(id, expenseId, params: object) {

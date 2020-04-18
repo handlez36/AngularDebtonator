@@ -21,6 +21,18 @@ export class PlanService {
 		return this.apollo.watchQuery(Queries.retrievePlans()).valueChanges;
 	}
 
+	lockPlan(id: string) {
+		return this.apollo.mutate({
+			mutation: Queries.lockPlan['query'],
+			variables: id,
+			refetchQueries: [
+				{
+					query: Queries.retrievePlans()['query'],
+				},
+			],
+		});
+	}
+
 	cachePlans(plans) {
 		this.plans = plans;
 	}

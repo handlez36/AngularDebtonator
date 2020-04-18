@@ -36,9 +36,9 @@ class Payplan < ActiveRecord::Base
     self.payments.each do |payment|
       # Archive all payments of this payplan
       payment.archived = true
-      status = payment.save
+      payment_archive_successful = payment.save
       
-      if status
+      if payment_archive_successful
         # Adjust the expense amt_charged, amt_pending, and amt_paid
         payment.expense.adjust_charge(payment.amt_paid)
 
@@ -46,6 +46,8 @@ class Payplan < ActiveRecord::Base
           payment.expense.archived = true
           payment.expense.save
         end
+      else
+        return false
       end
     end
   

@@ -3,6 +3,7 @@ import * as moment from 'moment';
 
 import { UserService } from './../../services/user.service';
 import { PlanService } from './../../services/plans.service';
+import { PaymentService } from './../../services/payment.service';
 import { Currency } from './../../services/currency';
 import templateStr from './pay-plan-section.html';
 import './pay-plan-section.scss';
@@ -20,15 +21,21 @@ export class PayPlanSection implements OnInit {
 	public sideNavOpen: string = '';
 	public selectedPayee: string = null;
 	public noteFilter: any = [];
+	public deleteQueue: any[] = [];
 	private currency = null;
 
-	constructor(private userService: UserService, private plansService: PlanService) {
+	constructor(
+		private userService: UserService,
+		private plansService: PlanService,
+		private paymentService: PaymentService,
+	) {
 		this.currency = new Currency();
 	}
 
 	ngOnInit() {
 		console.log('PayPlansSection.ts -- Initializing expenses component.');
 		this.retrievePlans();
+		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deleteQueue = queue));
 	}
 
 	ngOnChange() {
@@ -76,7 +83,12 @@ export class PayPlanSection implements OnInit {
 		const payees = Object.keys(breakdown);
 		const result = [];
 		payees.forEach(p => {
-			result.push({ payee: p, amt: breakdown[p]['amt'], payments: breakdown[p]['payments'] });
+			result.push({
+				id: plan['id'],
+				payee: p,
+				amt: breakdown[p]['amt'],
+				payments: breakdown[p]['payments'],
+			});
 		});
 
 		return result;
@@ -95,5 +107,9 @@ export class PayPlanSection implements OnInit {
 
 	setNoteFilter(event) {
 		this.noteFilter = event.noteFilters.join(';');
+	}
+
+	deletePayments() {
+		// Get delete payment ids from deleteQueue, and call payment service for deletion
 	}
 }

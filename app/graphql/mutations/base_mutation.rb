@@ -6,6 +6,13 @@ module Mutations
   #   object_class Types::BaseObject
   # end
 
+  def handleModelErrors(errors)
+    errors.map do |attribute, message|
+      path = ['attributes', attribute.to_s.camelize(:lower)]
+      { message: message, path: path}
+    end
+  end
+
   class BaseMutation < GraphQL::Schema::Mutation
     null false
   end

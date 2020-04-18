@@ -16,23 +16,11 @@ export const createPayments = () => {
 	};
 };
 
-export const createPaymentsOld = () => {
+export const deletePayment = () => {
 	return {
 		query: gql`
-			mutation createPayments(
-				$expenseId: [ID!]!
-				$date: [ISO8601DateTime!]!
-				$amtPaid: [String!]!
-				$responsibleParty: [String!]!
-				$howToPay: [String]
-			) {
-				createPayment(
-					expenseId: $expenseId
-					date: $date
-					amtPaid: $amtPaid
-					responsibleParty: $responsibleParty
-					howToPay: $howToPay
-				) {
+			mutation deletePayment($id: [ID!]!) {
+				deletePayment(id: $id) {
 					success
 					errors {
 						path

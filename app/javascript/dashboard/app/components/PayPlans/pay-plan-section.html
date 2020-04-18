@@ -23,7 +23,14 @@
 				</mat-card-title>
 				<mat-card-subtitle>
 					{{ plans.length + (plans.length > 1 ? ' plans' : ' plan')}}
-					<button mat-button (click)="details.toggle()">Toggle</button>
+					<button *ngIf="false" mat-button (click)="details.toggle()">Toggle</button>
+					<div
+						class="options-summary"
+						*ngIf="deleteQueue[selectedPlan] && deleteQueue[selectedPlan].length > 0"
+					>
+						{{ deleteQueue[selectedPlan].length }} payments selected.
+						<span class="delete-expenses" (click)="deletePayments()">Delete?</span>
+					</div>
 				</mat-card-subtitle>
 				<div layout="row" layout-align="start center" class="filter-bar pad-left-sm pad-right-sm">
 					<td-tab-select

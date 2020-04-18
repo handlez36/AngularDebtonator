@@ -1,5 +1,6 @@
 import { OnInit, Input, Component } from '@angular/core';
 
+import { PaymentService } from './../../services/payment.service';
 import { Currency } from './../../services/currency';
 import './pay-plan-payee-detail.component.scss';
 
@@ -7,7 +8,10 @@ import './pay-plan-payee-detail.component.scss';
 	selector: 'app-pay-plan-payee-detail',
 	template: `
 		<div class="pay-plan-payee-detail">
-			<div *ngFor="let payment of filteredPayments" class="payment-wrapper">
+			<div
+				*ngFor="let payment of filteredPayments"
+				[class]="'payment-wrapper' + getDeletionFlaggedClass(payment)"
+			>
 				<div class="payment">
 					<div class="primary_and_subtext">
 						<span class="retailer">{{ payment.expense.retailer }}</span>
@@ -19,7 +23,11 @@ import './pay-plan-payee-detail.component.scss';
 				</div>
 				<div class="date-row">
 					<div class="date">{{ payment.expense.date | date: 'MMM dd, yyyy' }}</div>
-					<mat-icon class="delete">delete</mat-icon>
+					<mat-icon
+						class="delete"
+						(click)="paymentService.updatePendingQueue(payment['payplan']['id'], payment['id'])"
+						>delete</mat-icon
+					>
 				</div>
 			</div>
 		</div>
@@ -32,14 +40,16 @@ export class PayPlanPayeeDetail implements OnInit {
 
 	public payments: any[] = [];
 	public filteredPayments: any[] = [];
+	public deleteQueue: any[] = [];
 	private currency = null;
 
-	constructor() {
+	constructor(private paymentService: PaymentService) {
 		this.currency = new Currency();
 	}
 
 	ngOnInit() {
 		this.parseData(this.planData);
+		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deleteQueue = queue));
 	}
 
 	ngOnChanges() {
@@ -60,12 +70,18 @@ export class PayPlanPayeeDetail implements OnInit {
 	}
 
 	applyFilters(noteFilter) {
-		console.log('Applying filter ', noteFilter);
 		if (noteFilter.length > 0) {
 			const filter = this.noteFilter.split(';');
 			this.filteredPayments = this.payments.filter(p => filter.includes(p.howToPay));
 		} else {
 			this.filteredPayments = this.payments;
 		}
+	}
+
+	getDeletionFlaggedClass(payment) {
+		const planId = payment['payplan']['id'];
+		const isflaggedForDeletion =
+			this.deleteQueue[planId] && this.deleteQueue[planId].includes(payment['id']);
+		return isflaggedForDeletion ? ' flagged' : '';
 	}
 }

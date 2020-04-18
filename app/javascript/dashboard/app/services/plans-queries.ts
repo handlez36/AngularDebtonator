@@ -41,3 +41,19 @@ export const retrievePlans = () => {
 		`,
 	};
 };
+
+export const lockPlan = () => {
+	return {
+		query: gql`
+			mutation lockPlan($id: String!) {
+				createExpense(id: $id) {
+					success
+					errors {
+						path
+						message
+					}
+				}
+			}
+		`,
+	};
+};

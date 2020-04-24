@@ -1,0 +1,22 @@
+<div class="archived-payplan">
+	<mat-card class="pay-plan-section">
+		<ng-template
+			class="loader"
+			tdLoading="archived-pay-plan-loader"
+			tdLoadingColor="warn"
+			tdLoadingType="linear"
+			[tdLoadingUntil]="!isLoading"
+		></ng-template>
+		<mat-card-header>
+			<mat-card-title>
+				Archived Payment Plans
+			</mat-card-title>
+			<mat-card-subtitle>
+				Subtitle
+			</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
+			<app-archived-data-table [plans]="plans" [columnLabels]="columns"></app-archived-data-table>
+		</mat-card-content>
+	</mat-card>
+</div>

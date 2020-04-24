@@ -3,8 +3,8 @@ import gql from 'graphql-tag';
 export const retrievePlans = () => {
 	return {
 		query: gql`
-			{
-				payPlans {
+			query payPlans($archived: Boolean) {
+				payPlans(archived: $archived) {
 					id
 					date
 					comments

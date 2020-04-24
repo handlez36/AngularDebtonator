@@ -15,8 +15,6 @@ export class App implements OnInit {
 	constructor(private userService: UserService) {}
 
 	ngOnInit() {
-		console.log('DashboardComponent.js -- Initializing dashboard component!!!');
-
 		this.user = this.getCurrentUser();
 		this.userService.setUser(this.user);
 		if (this.user['first_name']) {
@@ -34,7 +32,6 @@ export class App implements OnInit {
 	getCurrentUser() {
 		const dashboardComponent = document.querySelector('app-wrapper');
 
-		console.log('Dashboard Component: ', dashboardComponent);
 		if (dashboardComponent) {
 			const attributes = dashboardComponent.getAttribute('data-user');
 			return JSON.parse(attributes);

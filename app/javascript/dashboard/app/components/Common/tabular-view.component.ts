@@ -4,7 +4,6 @@ import {
 	TdDataTableSortingOrder,
 	TdDataTableService,
 	ITdDataTableSortChangeEvent,
-	ITdDataTableSelectEvent,
 } from '@covalent/core/data-table';
 import { TdDialogService } from '@covalent/core/dialogs';
 import { TdLoadingService, LoadingType, LoadingMode } from '@covalent/core/loading';
@@ -15,8 +14,6 @@ import { CurrencyPipe } from '@angular/common';
 import { ExpenseForm } from '../Forms/expense-form.component';
 import { PaymentForm } from '../Forms/payment-form.component';
 import { ExpenseService } from '../../services/expense.service';
-import { PaymentService } from '../../services/payment.service';
-import { UserService } from '../../services/user.service';
 import { Utils } from '../../services/utils.service';
 import { Currency } from '../../services/currency';
 import { TABLE_MODE } from '../../utils/constants';
@@ -76,20 +73,16 @@ export class TabularView implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log('TabularViewComponent.ts#ngOnInit()');
 		this.setDataAttributes();
 	}
 
 	ngOnChanges(props) {
-		console.log('TabularViewComponent.ts#ngOnChanges()');
 		this.setDataAttributes();
 	}
 
 	setDataAttributes() {
 		// Only populate the data variable if it has not yet been populated
-		// if (!this.formattedData && this.data && this.data.length > 0) {
 		if (this.data && this.data.length > 0) {
-			console.log('Num of expenses: ', this.data.length);
 			this.formattedData = this.data;
 			this.columns = this.formatColumns(this.data);
 			this.refreshTable();
@@ -116,21 +109,18 @@ export class TabularView implements OnInit {
 	}
 
 	onSort(sortEvent: ITdDataTableSortChangeEvent): void {
-		console.log('TabularView#sort');
 		this.sortBy = sortEvent.name;
 		this.sortOrder = sortEvent.order;
 		this.refreshTable();
 	}
 
 	filter(filterTerm: string): void {
-		console.log('TabularView#filter');
 		this.filterTerm = filterTerm;
 		this.pagingBar.navigateToPage(1);
 		this.refreshTable();
 	}
 
 	page(pagingEvent: IPageChangeEvent): void {
-		console.log('TabularView#refreshTable');
 		this.fromRow = pagingEvent.fromRow;
 		this.currentPage = pagingEvent.page;
 		this.pageSize = pagingEvent.pageSize;
@@ -195,7 +185,6 @@ export class TabularView implements OnInit {
 	}
 
 	onManage(mode, row = null) {
-		console.log('TabularView#add');
 		this.mode = mode;
 
 		let data = { cards: this.cards, payees: this.payees, ...row, mode };
@@ -224,29 +213,7 @@ export class TabularView implements OnInit {
 			});
 	}
 
-	addTest() {
-		this.mode = this.TABLE_MODE.ADD;
-		const payees = this.formattedData
-			? this.extractUniqueValues(this.formattedData, 'responsibleParty')
-			: [];
-		const cards = this.formattedData ? this.extractUniqueValues(this.formattedData, 'card') : [];
-		const dialogRef = this.dialog.open(ExpenseForm, {
-			width: '400px',
-			data: {
-				mode: 'EDIT',
-				date: '2020-04-01',
-				retailer: 'Walmart',
-				howToPay: 'TEST',
-				amtCharged: '10.00',
-				cards,
-				payees,
-			},
-		});
-	}
-
 	refreshTable(): void {
-		console.log('TabularView#refreshTable');
-
 		let newData: any[] = this.data;
 		if (this.cardFilter.length > 0) {
 			newData = newData.filter(data => this.cardFilter.includes(data.card.name));

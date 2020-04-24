@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 import { ExpenseService } from '../../services/expense.service';
 import { Currency } from '../../services/currency';
-
 import { PaymentService } from '../../services/payment.service';
 import './pay-plan-payee-summary.component.scss';
 
@@ -39,9 +38,7 @@ export class PayPlanPayeeSummary implements OnInit {
 		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deletionQueue = queue));
 	}
 
-	ngOnInit() {
-		console.log('Details: ', this.details);
-	}
+	ngOnInit() {}
 
 	onExpand(payee) {
 		this.detailRequested.emit({
@@ -49,20 +46,6 @@ export class PayPlanPayeeSummary implements OnInit {
 			payee: this.details['payee'],
 		});
 	}
-
-	// calculatePayeeTotal() {
-	// 	if (!this.details['payee']) return 0;
-
-	// 	const expenses = this.expenseService.getCachedExpenses();
-	// 	return (expenses || [])
-	// 		.filter(expense => expense['responsibleParty']['name'] === this.details['payee'])
-	// 		.reduce((total, expense) => this.currency.add(total, this.calculateAmtRemaining(expense)), 0);
-	// }
-
-	// calculateAmtRemaining(expense) {
-	// 	const amtLockedUp = this.currency.add(expense['amtPaid'], expense['amtPending']);
-	// 	return this.currency.subtract(expense['amtCharged'], amtLockedUp);
-	// }
 
 	showTotalWithPaymentsDeleted() {
 		const planId = this.details['id'];

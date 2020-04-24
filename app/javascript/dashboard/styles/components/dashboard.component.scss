@@ -8,8 +8,14 @@
 			padding: 2vh 1vw;
 			display: flex;
 			flex-direction: row;
-			app-pay-plan-section {
-				margin-left: 5em;
+			.dashboard-right-side {
+				padding-left: 5em;
+				app-pay-plan-section {
+					margin-top: 5em;
+				}
+				app-archived-payplan {
+					// margin-top: 2em;
+				}
 			}
 		}
 	}

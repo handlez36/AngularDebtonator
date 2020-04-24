@@ -1,0 +1,16 @@
+<div class="archived-data-table">
+	<td-data-table
+		[data]="planData"
+		[columns]="columns"
+		[clickable]="true"
+		[selectable]="true"
+		[multiple]="true"
+		[sortable]="true"
+		[sortBy]="columns.length > 0 ? sortBy : ''"
+		[sortOrder]="sortOrder"
+		(sortChange)="onSort($event)"
+		[(ngModel)]="selectedRows"
+		[style.height.%]="100"
+	>
+	</td-data-table>
+</div>

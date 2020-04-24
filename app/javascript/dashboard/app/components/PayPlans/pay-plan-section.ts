@@ -35,13 +35,8 @@ export class PayPlanSection implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log('PayPlansSection.ts -- Initializing expenses component.');
 		this.retrievePlans();
 		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deleteQueue = queue));
-	}
-
-	ngOnChange() {
-		console.log('NgOnChange...');
 	}
 
 	retrievePlans() {

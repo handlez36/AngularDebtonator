@@ -14,16 +14,13 @@ export class ExpenseService {
 	private expenses: object[] = [];
 	private id: string = null;
 
-	constructor(private apollo: Apollo, private userService: UserService) {
-		console.log('ExpenseService.ts -- Expense Service being initiated');
-	}
+	constructor(private apollo: Apollo, private userService: UserService) {}
 
 	getExpenses(filters: object = null) {
 		return this.apollo.watchQuery(ExpenseQueries.retrieveExpenses()).valueChanges;
 	}
 
 	createExpense(id, params: object) {
-		console.log('ExpenseService.ts#createExpense -- params: ', params);
 		const formattedDate = moment.utc(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
@@ -42,8 +39,6 @@ export class ExpenseService {
 	}
 
 	updateExpense(id, expenseId, params: object) {
-		console.log('ExpenseService.ts#updateExpense -- params: ', params);
-
 		const formattedDate = moment.utc(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 		return this.apollo.mutate({
 			mutation: ExpenseQueries.updateExpenses()['query'],
@@ -64,8 +59,6 @@ export class ExpenseService {
 	}
 
 	deleteExpenses(expenseId: any[]) {
-		console.log('ExpenseService.ts#deleteExpense');
-
 		return this.apollo
 			.mutate({
 				mutation: ExpenseQueries.deleteExpenses()['query'],

@@ -12,16 +12,12 @@ import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 	providedIn: 'root',
 })
 export class PaymentService {
-	private payments: object[] = [];
 	private _paymentDeletionQueue: BehaviorSubject<any> = new BehaviorSubject({});
 	private paymentDeletionQueue: Observable<any> = this._paymentDeletionQueue.asObservable();
 
-	constructor(private apollo: Apollo, private userService: UserService) {
-		console.log('PaymentService.ts -- Payment Service being initiated');
-	}
+	constructor(private apollo: Apollo, private userService: UserService) {}
 
 	createPayments(params: object) {
-		console.log('PaymentService.ts#createPayment -- params: ', params);
 		const formattedDate = moment.utc(params['date']).hour(8).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
@@ -38,8 +34,6 @@ export class PaymentService {
 	}
 
 	deletePayment(id: any[]) {
-		console.log('PaymentService.ts#deletePayment -- params: ', id);
-
 		return this.apollo.mutate({
 			mutation: Queries.deletePayment()['query'],
 			variables: { id },

@@ -22,7 +22,6 @@ export class ExpensesComponent implements OnInit {
 	GridTypeEnum = GridType;
 	expenseService: ExpenseService;
 	expenses: object[] = [];
-	// apiError: string = null;
 	apiError: any;
 	gridType: GridType = GridType.TABLE;
 
@@ -53,7 +52,6 @@ export class ExpensesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log('ExpensesComponent.ts -- Initializing expenses component.');
 		this.retrieveExpenses();
 	}
 
@@ -62,7 +60,6 @@ export class ExpensesComponent implements OnInit {
 	}
 
 	retrieveExpenses() {
-		console.log('ExpensesComponent#retrieveExpenses');
 		if (!this.expenseService) {
 			this.apiError = 'Sorry, the expenses Api cannot be called at the moment';
 			console.log('ERROR');
@@ -80,6 +77,5 @@ export class ExpensesComponent implements OnInit {
 			this.expenseService.cacheExpenses(this.expenses);
 			this.apiError = result.errors;
 		});
-		console.log('Expenses updated and now are ', this.expenses);
 	}
 }

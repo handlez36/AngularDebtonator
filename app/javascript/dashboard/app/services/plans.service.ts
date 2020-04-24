@@ -14,16 +14,17 @@ import { Observable, of } from 'rxjs';
 export class PlanService {
 	private plans;
 
-	constructor(private apollo: Apollo, private userService: UserService) {
-		console.log('PlanService.ts -- Plan Service being initiated');
-	}
+	constructor(private apollo: Apollo, private userService: UserService) {}
 
-	getPlans(filters: object = null) {
-		return this.apollo.watchQuery(Queries.retrievePlans()).valueChanges;
+	getPlans(archived: boolean = false) {
+		console.log('Archived: ', archived);
+		return this.apollo.watchQuery({
+			query: Queries.retrievePlans()['query'],
+			variables: { archived },
+		}).valueChanges;
 	}
 
 	lockPlan(id: string) {
-		console.log('Lock plan query ', Queries.lockPlan['query']);
 		return this.apollo.mutate({
 			mutation: Queries.lockPlan()['query'],
 			variables: { id },

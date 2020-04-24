@@ -59,6 +59,8 @@ import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.
 import { SetupManagementCard } from './components/Setup/setup-management-card.component';
 import { SetupManageFooter } from './components/Setup/setup-manage-footer.component';
 import { SetupManageContent } from './components/Setup/setup-manage-content.component';
+import { ArchivedPayPlan } from './components/ArchivedPayPlans/archived-payplans.component';
+import { ArchivedDataTable } from './components/ArchivedPayPlans/archived-data-table.component';
 
 /** Forms */
 import { ExpenseForm } from './components/Forms/expense-form.component';
@@ -125,6 +127,8 @@ const appRoutes: Routes = [
 		SetupManagementCard,
 		SetupManageContent,
 		SetupManageFooter,
+		ArchivedPayPlan,
+		ArchivedDataTable,
 	],
 	imports: [
 		RouterModule.forRoot(appRoutes, { enableTracing: false }),

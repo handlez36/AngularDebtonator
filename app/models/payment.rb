@@ -29,7 +29,8 @@ class Payment < ActiveRecord::Base
   # For a payment creation, return whether this belongs to a new payplan (new date/card),
   # or an existing payplan (existing date/card)
   def self.get_proper_plan(date, card_id, user)
-    plan = Payplan.where(:date => date, :user => user, :card => Card.find_by_id(card_id), :archived => false).first
+    # plan = Payplan.where(:date => date, :user => user, :card => Card.find_by_id(card_id), :archived => false).first
+    plan = Payplan.ondate(date).where(:user => user, :card => Card.find_by_id(card_id), :archived => false).first
     return (plan.nil?) ? Payplan.create(:date => date, :card_id => card_id, :user => user) : plan
   end
   

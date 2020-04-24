@@ -5,6 +5,7 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
 import * as Queries from './plans-queries';
+import * as ExpenseQueries from './expense-queries';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
@@ -22,13 +23,13 @@ export class PlanService {
 	}
 
 	lockPlan(id: string) {
+		console.log('Lock plan query ', Queries.lockPlan['query']);
 		return this.apollo.mutate({
-			mutation: Queries.lockPlan['query'],
-			variables: id,
+			mutation: Queries.lockPlan()['query'],
+			variables: { id },
 			refetchQueries: [
-				{
-					query: Queries.retrievePlans()['query'],
-				},
+				{ query: Queries.retrievePlans()['query'] },
+				{ query: ExpenseQueries.retrieveExpenses()['query'] },
 			],
 		});
 	}

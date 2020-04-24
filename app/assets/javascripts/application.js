@@ -17,5 +17,6 @@
 //= require turbolinks
 //= require jquery.easy-pie-chart
 //= require Chart.min
+//= require moment
 //= require excanvas
 //= require_tree .

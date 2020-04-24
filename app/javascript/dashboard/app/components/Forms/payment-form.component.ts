@@ -72,14 +72,20 @@ export class PaymentForm {
 				Fields.SelectField(
 					'responsibleParty',
 					"Who's paying",
-					data.payees.indexOf(expense.responsibleParty) || 0,
 					data.payees,
+					this.formatSelectedOption(expense['responsibleParty']),
+					// data.payees.indexOf(expense.responsibleParty) || 0,
+					// data.payees,
 				),
 				Fields.TextAreaField('howToPay', 'How to Pay?'),
 			];
 			return formElements;
 		}, {});
 	};
+
+	formatSelectedOption(element) {
+		return element ? { label: element['name'], value: element['id'] } : null;
+	}
 
 	expenseLabel(id) {
 		const matches = this.inputData.expenses.filter(item => item.id === id);

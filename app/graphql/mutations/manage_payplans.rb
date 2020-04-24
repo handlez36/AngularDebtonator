@@ -1,7 +1,7 @@
 module Mutations
   module ManagePayplans
     class LockPlan < BaseMutation
-      argument :id, String, required: true
+      argument :id, ID, required: true
 
       field :success, Boolean, null: true
       field :errors, [Types::ModelErrorType], null: true
@@ -11,7 +11,7 @@ module Mutations
         plan = user.payplans.current.find_by_id(params[:id])
         errors = []
 
-        if plan.nill?
+        if plan.nil?
           errors << { message: "Pay plan cannot be found." }
           return { success: nil, errors: errors } 
         end

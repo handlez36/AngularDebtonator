@@ -55,7 +55,7 @@ module Mutations
     end
 
     class DeletePayment < BaseMutation
-      argument :id, [String], required: true
+      argument :id, [ID], required: true
 
       field :success, Types::BatchResponseType, null: true
       field :errors, [Types::ModelErrorType], null: true
@@ -70,7 +70,7 @@ module Mutations
           return { success: nil, errors: errors } 
         end
 
-        linked_plan = payments.first.plan
+        linked_plan = payments.first.payplan
 
         payments.each do |payment|
           delete_successful = payment.destroy

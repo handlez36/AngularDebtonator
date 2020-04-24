@@ -37,15 +37,28 @@
 						[stretchTabs]="true"
 						[(value)]="selectedPlan"
 						(valueChange)="onPlanSelect(selectedPlan)"
+						*ngIf="plans.length > 0"
 					>
-						<td-tab-option *ngFor="let plan of plans" [value]="plan.id"
-							>{{ getPlanLabel(plan) }}</td-tab-option
-						>
+						<td-tab-option *ngFor="let plan of plans" [value]="plan.id">
+							<span class="plan-label">{{ getPlanLabel(plan) }}</span>
+							<div class="flex-row">
+								<span class="plan-total">{{ getPlanTotal(plan) | currency }}</span>
+								<div class="post-delete flex-row" *ngIf="getPostDeleteAmt(plan) !== null">
+									<mat-icon>play_arrow</mat-icon>
+									<span class="plan-total-post-delete"
+										>{{ getPostDeleteAmt(plan) | currency }}</span
+									>
+								</div>
+							</div>
+						</td-tab-option>
 					</td-tab-select>
 				</div>
 			</mat-card-header>
 			<mat-card-content>
 				<div *ngIf="breakdown && selectedPlan !== '' && selectedPlan !== null">
+					<span class="lock-plan flex-row" (click)="onConfirm(selectedPlan)"
+						><mat-icon>lock</mat-icon>Lock this plan</span
+					>
 					<app-plan-payee-summary
 						*ngFor="let payeeDetail of breakdown[selectedPlan]"
 						[class]="sideNavOpen && sideNavOpen === payeeDetail.payee ? 'selected' : ''"

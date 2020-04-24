@@ -24,7 +24,7 @@ export class ExpenseService {
 
 	createExpense(id, params: object) {
 		console.log('ExpenseService.ts#createExpense -- params: ', params);
-		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
+		const formattedDate = moment.utc(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
 			mutation: ExpenseQueries.createExpense()['query'],
@@ -44,7 +44,7 @@ export class ExpenseService {
 	updateExpense(id, expenseId, params: object) {
 		console.log('ExpenseService.ts#updateExpense -- params: ', params);
 
-		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
+		const formattedDate = moment.utc(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
 		return this.apollo.mutate({
 			mutation: ExpenseQueries.updateExpenses()['query'],
 			variables: {

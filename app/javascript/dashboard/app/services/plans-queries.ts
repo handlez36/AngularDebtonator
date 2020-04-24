@@ -45,8 +45,8 @@ export const retrievePlans = () => {
 export const lockPlan = () => {
 	return {
 		query: gql`
-			mutation lockPlan($id: String!) {
-				createExpense(id: $id) {
+			mutation lockPlan($id: ID!) {
+				lockPlan(id: $id) {
 					success
 					errors {
 						path

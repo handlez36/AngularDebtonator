@@ -22,7 +22,7 @@ export class PaymentService {
 
 	createPayments(params: object) {
 		console.log('PaymentService.ts#createPayment -- params: ', params);
-		const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
+		const formattedDate = moment.utc(params['date']).hour(8).format('YYYY-MM-DDThh:mm:ssZ');
 
 		return this.apollo.mutate({
 			mutation: Queries.createPayments()['query'],
@@ -56,7 +56,6 @@ export class PaymentService {
 
 	updatePendingQueue(planId, paymentId) {
 		const current = this._paymentDeletionQueue.getValue();
-
 		if (!current[planId]) {
 			current[planId] = [];
 		}
@@ -77,6 +76,9 @@ export class PaymentService {
 		const paymentIndex = current[planId].indexOf(paymentId);
 		if (paymentIndex >= 0) {
 			current[planId].splice(paymentIndex, 1);
+			if (current[planId].length < 1) {
+				delete current[planId];
+			}
 			this._paymentDeletionQueue.next(current);
 		}
 	}
@@ -84,81 +86,4 @@ export class PaymentService {
 	clearPendingQueue() {
 		this._paymentDeletionQueue.next({});
 	}
-
-	// updateExpense(id, expenseId, params: object) {
-	// 	console.log('ExpenseService.ts#updateExpense -- params: ', params);
-	// 	console.log('ExpenseService.ts#updateExpense -- id: ', id);
-
-	// 	const query = gql`
-	// 		mutation updateExpense(
-	// 			$userId: ID!
-	// 			$expenseId: ID!
-	// 			$date: ISO8601DateTime!
-	// 			$retailer: String!
-	// 			$amtCharged: String!
-	// 			$responsibleParty: String!
-	// 			$card: String!
-	// 			$howToPay: String
-	// 		) {
-	// 			updateExpense(
-	// 				userId: $userId
-	// 				expenseId: $expenseId
-	// 				date: $date
-	// 				retailer: $retailer
-	// 				amtCharged: $amtCharged
-	// 				responsibleParty: $responsibleParty
-	// 				card: $card
-	// 				howToPay: $howToPay
-	// 			) {
-	// 				id
-	// 			}
-	// 		}
-	// 	`;
-
-	// 	const formattedDate = moment(params['date']).format('YYYY-MM-DDThh:mm:ssZ');
-	// 	return this.apollo.mutate({
-	// 		mutation: Queries.updateExpenses()['query'],
-	// 		variables: {
-	// 			userId: id,
-	// 			expenseId,
-	// 			...params,
-	// 			amtCharged: `${params['amtCharged']}`,
-	// 			date: formattedDate,
-	// 		},
-	// 		refetchQueries: [
-	// 			{
-	// 				query: Queries.retrieveExpenses(id)['query'],
-	// 				variables: { id },
-	// 			},
-	// 		],
-	// 	});
-	// }
-
-	// deleteExpenses(id, expenseId: any[]) {
-	// 	console.log('ExpenseService.ts#deleteExpense');
-
-	// 	const query = gql`
-	// 		mutation deleteExpense($userId: ID!, $expenseId: [ID!]!) {
-	// 			deleteExpense(userId: $userId, expenseId: $expenseId) {
-	// 				success
-	// 			}
-	// 		}
-	// 	`;
-
-	// 	return this.apollo
-	// 		.mutate({
-	// 			mutation: Queries.deleteExpenses()['query'],
-	// 			variables: {
-	// 				userId: id,
-	// 				expenseId,
-	// 			},
-	// 			refetchQueries: [
-	// 				{
-	// 					query: Queries.retrieveExpenses(id)['query'],
-	// 					variables: { id },
-	// 				},
-	// 			],
-	// 		})
-	// 		.subscribe();
-	// }
 }

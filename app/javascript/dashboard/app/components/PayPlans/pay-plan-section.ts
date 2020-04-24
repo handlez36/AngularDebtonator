@@ -7,6 +7,7 @@ import { PaymentService } from './../../services/payment.service';
 import { Currency } from './../../services/currency';
 import templateStr from './pay-plan-section.html';
 import './pay-plan-section.scss';
+import { TdDialogService } from '@covalent/core/dialogs';
 
 @Component({
 	selector: 'app-pay-plan-section',
@@ -28,6 +29,7 @@ export class PayPlanSection implements OnInit {
 		private userService: UserService,
 		private plansService: PlanService,
 		private paymentService: PaymentService,
+		private _dialogService: TdDialogService,
 	) {
 		this.currency = new Currency();
 	}
@@ -53,8 +55,8 @@ export class PayPlanSection implements OnInit {
 				this.planIds.push(plan['id']);
 				this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 			});
-			this.plansService.cachePlans(this.plans);
-			this.selectedPlan = this.plans.length > 0 ? this.plans[0].id : '';
+			// this.plansService.cachePlans(this.plans);
+			this.plans.length < 1 ? this.resetPayPlanSection() : (this.selectedPlan = this.plans[0].id);
 			this.isLoading = false;
 		});
 	}
@@ -63,7 +65,23 @@ export class PayPlanSection implements OnInit {
 		if (!this.plans) return '';
 
 		const prettyDate = moment(plan['date']).format('MMM Do, YYYY');
-		return `${plan['card']['name']} - ${prettyDate}`;
+		return `${plan['card']['name']} (${prettyDate})`;
+	}
+
+	getPlanTotal(plan) {
+		if (!this.plans) return '';
+		return plan.payments.reduce((total, payment) => this.currency.add(total, payment.amtPaid), 0);
+	}
+
+	getPostDeleteAmt(plan) {
+		if (plan && plan.id && this.deleteQueue[plan.id]) {
+			const queuedIds = this.deleteQueue[plan.id];
+			return plan.payments
+				.filter(payment => !queuedIds.includes(payment.id))
+				.reduce((total, payment) => this.currency.add(total, payment.amtPaid), 0);
+		}
+
+		return null;
 	}
 
 	formatPayeeBreakdown(plan) {
@@ -97,6 +115,16 @@ export class PayPlanSection implements OnInit {
 	onPlanSelect(plan) {
 		this.sideNavOpen = '';
 		this.selectedPayee = null;
+		this.noteFilter = '';
+	}
+
+	resetPayPlanSection() {
+		this.sideNavOpen = '';
+		this.selectedPayee = null;
+		this.selectedPlan = '';
+		this.noteFilter = '';
+		this.planIds = [];
+		this.breakdown = null;
 	}
 
 	handleSideNavToggle(info) {
@@ -109,7 +137,47 @@ export class PayPlanSection implements OnInit {
 		this.noteFilter = event.noteFilters.join(';');
 	}
 
+	onConfirm(planId) {
+		this._dialogService
+			.openConfirm({
+				message: 'Are you sure?',
+				title: 'Confirm',
+				cancelButton: 'Nope',
+				acceptButton: 'Yep',
+			})
+			.afterClosed()
+			.subscribe((accept: boolean) => {
+				accept ? this.lockPayment(planId) : this._dialogService.closeAll();
+			});
+	}
+
+	lockPayment(planId) {
+		this.plansService.lockPlan(planId).subscribe(
+			status => {
+				if (status.data && status.data.lockPlan) {
+					status.data.lockPlan.success
+						? this.resetPayPlanSection()
+						: console.log(`Partial or full lock error!`);
+				}
+			},
+			err => console.log(`Error deleting payments: ${err}`),
+		);
+	}
+
 	deletePayments() {
-		// Get delete payment ids from deleteQueue, and call payment service for deletion
+		const ids = Object.keys(this.deleteQueue).reduce((idArr, plan) => {
+			return idArr.concat(this.deleteQueue[plan]);
+		}, []);
+
+		this.paymentService.deletePayment(ids).subscribe(
+			status => {
+				if (status.data && status.data.deletePayment) {
+					status.data.deletePayment.success === 'success'
+						? this.paymentService.clearPendingQueue()
+						: console.log(`Partial or full deletion error!`);
+				}
+			},
+			err => console.log(`Error deleting payments: ${err}`),
+		);
 	}
 }

@@ -6,6 +6,16 @@ class Payplan < ActiveRecord::Base
 
   scope :current, -> { where(:archived => false)}
   scope :archived, -> { where(:archived => true)}
+  scope :ondate, -> d do
+    begin
+      dt = DateTime.strptime(d.to_s, "%Y-%m-%dT%H:%M:%S%z")
+      start_dt = dt.beginning_of_day
+      end_dt = dt.end_of_day
+      where("date > ? and date < ?", start_dt, end_dt)
+    rescue => exception
+      return nil
+    end
+  end
   
   # Return the total amount to be paid for all payments attached to this payment plan
   def get_plan_total

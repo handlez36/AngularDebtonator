@@ -78,6 +78,7 @@ export const TextAreaField = (name, label, defaultVal = null) => ({
 });
 
 const optionSelections = data => {
+	console.log(`In optionsSelections with ${data}`);
 	const options: any[] = [];
 
 	data.forEach(p => options.push({ label: p['name'], value: p['id'] }));

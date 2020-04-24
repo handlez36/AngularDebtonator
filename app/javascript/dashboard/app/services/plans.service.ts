@@ -17,7 +17,6 @@ export class PlanService {
 	constructor(private apollo: Apollo, private userService: UserService) {}
 
 	getPlans(archived: boolean = false) {
-		console.log('Archived: ', archived);
 		return this.apollo.watchQuery({
 			query: Queries.retrievePlans()['query'],
 			variables: { archived },

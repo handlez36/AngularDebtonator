@@ -1,0 +1,18 @@
+app-archived-data-table {
+	.archived-data-table {
+		.td-data-table-scrollable {
+			max-height: 300px;
+		}
+		tbody {
+			.td-data-table-cell:last-child .td-data-table-cell-content-wrapper {
+				justify-content: flex-end;
+			}
+		}
+		.amt-paid {
+			.dollars,
+			.cents {
+				color: forestgreen;
+			}
+		}
+	}
+}

@@ -11,9 +11,10 @@ import './../../styles/components/dashboard.component.scss';
 			</div>
 			<div class="dashboard-right-side flex-col">
 				<app-archived-payplan></app-archived-payplan>
-				<app-pay-plan-section></app-pay-plan-section>
 			</div>
 		</div>
 	`,
 })
-export class DashboardPage {}
+export class DashboardPage {
+	//<app-pay-plan-section></app-pay-plan-section>
+}

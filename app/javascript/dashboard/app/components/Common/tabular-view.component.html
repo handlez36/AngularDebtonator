@@ -79,17 +79,12 @@
 				<ng-template tdDataTableTemplate="retailer" let-value="value">
 					<div class="retailer">{{ value }}</div>
 				</ng-template>
+
 				<ng-template tdDataTableTemplate="amtCharged" let-value="value">
-					<div class="amt_charged flex-row">
-						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
-						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
-					</div>
+					<app-amt-field [amt]="value"></app-amt-field>
 				</ng-template>
 				<ng-template tdDataTableTemplate="amtRemaining" let-value="value">
-					<div class="amt_remaining flex-row">
-						<span class="dollars">{{ splitDollarsAndCents(value, 'd') }}</span>
-						<span class="cents">{{ splitDollarsAndCents(value, 'c') }}</span>
-					</div>
+					<app-amt-field [amt]="value" customClass="amt_remaining"></app-amt-field>
 				</ng-template>
 				<ng-template tdDataTableTemplate="pending_paid" let-row="row">
 					<app-pending-paid

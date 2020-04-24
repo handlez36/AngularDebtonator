@@ -12,5 +12,11 @@
 		[(ngModel)]="selectedRows"
 		[style.height.%]="100"
 	>
+		<ng-template tdDataTableTemplate="date" let-value="value">
+			<app-date-field [date]="value"></app-date-field>
+		</ng-template>
+		<ng-template tdDataTableTemplate="amtPaid" let-value="value">
+			<app-amt-field [amt]="value" customClass="amt-paid"></app-amt-field>
+		</ng-template>
 	</td-data-table>
 </div>

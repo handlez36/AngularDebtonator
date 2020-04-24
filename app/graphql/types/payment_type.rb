@@ -1,7 +1,7 @@
 module Types
   class PaymentType < Types::BaseObject
     field :id, ID, null: false
-    field :expense, Types::ExpenseType, null: false
+    field :expense, Types::ExpenseType, null: true
     field :payplan, Types::PayplanType, null: false
     field :amt_paid, String, null: false
     field :date, GraphQL::Types::ISO8601DateTime, null: false

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 
 import templateString from './archived-payplans.component.html';
 import { PlanService } from './../../services/plans.service';
@@ -31,7 +32,7 @@ export class ArchivedPayPlan implements OnInit {
 
 	retrieveArchivedPlans() {
 		this.isLoading = true;
-		this.plansService.getPlans().subscribe(result => {
+		this.plansService.getPlans(true).subscribe(result => {
 			if (result.data && result.data['payPlans']) {
 				// this.plans = result.data['payPlans'];
 				this.plans = this.formatData(result.data['payPlans']);
@@ -41,15 +42,17 @@ export class ArchivedPayPlan implements OnInit {
 	}
 
 	formatData(data) {
-		return data.map(plan => {
-			return {
-				date: plan.date,
-				card: plan.card.name,
-				amtPaid: plan.payments.reduce(
-					(total, payment) => this.currency.add(total, payment.amtPaid),
-					0,
-				),
-			};
-		});
+		return data
+			.map(plan => {
+				return {
+					date: plan.date,
+					card: plan.card.name,
+					amtPaid: plan.payments.reduce(
+						(total, payment) => this.currency.add(total, payment.amtPaid),
+						0,
+					),
+				};
+			})
+			.sort((a, b) => (moment(a.date).isBefore(moment(b.date)) ? 1 : -1));
 	}
 }

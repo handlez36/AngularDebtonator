@@ -11,12 +11,12 @@
 			<mat-card-title>
 				Archived Payment Plans
 			</mat-card-title>
-			<mat-card-subtitle>
-				Subtitle
-			</mat-card-subtitle>
+			<mat-card-subtitle *ngIf="!!plans"> {{ plans.length }} archived plans </mat-card-subtitle>
 		</mat-card-header>
-		<mat-card-content>
-			<app-archived-data-table [plans]="plans" [columnLabels]="columns"></app-archived-data-table>
-		</mat-card-content>
+		<div>
+			<mat-card-content>
+				<app-archived-data-table [plans]="plans" [columnLabels]="columns"></app-archived-data-table>
+			</mat-card-content>
+		</div>
 	</mat-card>
 </div>

@@ -53,6 +53,7 @@ import { ExpenseSummary } from './components/Expenses/expense-summary.component'
 import { PendingPaidField } from './components/Expenses/pending-paid-field.component';
 import { CardPayeeField } from './components/Expenses/card-payee-field.component';
 import { DateField } from './components/Expenses/date-field.component';
+import { AmtField } from './components/Expenses/amt-field.component';
 import { PayPlanPayeeSummary } from './components/PayPlans/pay-plan-payee-summary.component';
 import { PayPlanPayeeDetail } from './components/PayPlans/pay-plan-payee-detail.component';
 import { PayPlanNotesFilter } from './components/PayPlans/pay-plan-notes-filter.component';
@@ -116,6 +117,7 @@ const appRoutes: Routes = [
 		PendingPaidField,
 		CardPayeeField,
 		DateField,
+		AmtField,
 		ExpenseForm,
 		PaymentForm,
 		ExpenseSummary,

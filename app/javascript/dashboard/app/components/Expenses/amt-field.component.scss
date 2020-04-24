@@ -1,0 +1,27 @@
+app-amt-field {
+	.amt-field,
+	.amt_charged,
+	.amt_remaining {
+		.dollars {
+			font-size: 24px;
+			font-weight: 600;
+			line-height: 24px;
+			align-self: flex-start;
+			color: slategray;
+		}
+		.cents {
+			font-size: 12px;
+			align-self: flex-start;
+			margin-left: 2px;
+			color: lightslategray;
+		}
+	}
+	.amt_remaining {
+		.dollars {
+			color: skyblue;
+		}
+		.cents {
+			color: lightskyblue;
+		}
+	}
+}

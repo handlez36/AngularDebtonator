@@ -38,7 +38,13 @@ export class PayPlanPayeeSummary implements OnInit {
 		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deletionQueue = queue));
 	}
 
-	ngOnInit() {}
+	ngOnInit() {
+		console.log('Initiating summary');
+	}
+
+	ngOnChanges() {
+		console.log('Summary - details: ', this.details);
+	}
 
 	onExpand(payee) {
 		this.detailRequested.emit({

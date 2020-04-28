@@ -7,6 +7,16 @@ app-archived-data-table {
 			.td-data-table-cell:last-child .td-data-table-cell-content-wrapper {
 				justify-content: flex-end;
 			}
+			tr {
+				cursor: pointer;
+				&:hover {
+					border-top: 2px solid lightcoral;
+					border-bottom: 2px solid lightcoral;
+				}
+				&:first-child {
+					border-top: unset;
+				}
+			}
 		}
 		.amt-paid {
 			.dollars,

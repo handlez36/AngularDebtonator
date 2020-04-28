@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, Input } from '@angular/core';
 import * as moment from 'moment';
 
 import { UserService } from './../../services/user.service';
@@ -14,6 +14,7 @@ import { TdDialogService } from '@covalent/core/dialogs';
 	template: templateStr,
 })
 export class PayPlanSection implements OnInit {
+	@Input() focusedPlan;
 	public plans: any[] = [];
 	public breakdown: any = null;
 	public planIds: string[] = [];
@@ -23,6 +24,7 @@ export class PayPlanSection implements OnInit {
 	public selectedPayee: string = null;
 	public noteFilter: any = [];
 	public deleteQueue: any[] = [];
+	public archiveMode: boolean = false;
 	private currency = null;
 
 	constructor(
@@ -35,8 +37,25 @@ export class PayPlanSection implements OnInit {
 	}
 
 	ngOnInit() {
-		this.retrievePlans();
+		if (!this.focusedPlan) {
+			this.retrievePlans();
+		}
 		this.paymentService.getPendingDeleteQueue().subscribe(queue => (this.deleteQueue = queue));
+	}
+
+	ngOnChanges() {
+		if (!!this.focusedPlan) {
+			const plan = this.focusedPlan;
+			console.log('Plan before breakdown: ', plan);
+			if (!this.breakdown) this.breakdown = {};
+			this.plans = [];
+			this.planIds.push(plan['id']);
+			this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
+			this.archiveMode = true;
+			this.selectedPlan = plan.id;
+			this.isLoading = false;
+			console.log('Breakdown: ', this.breakdown);
+		}
 	}
 
 	retrievePlans() {
@@ -53,6 +72,8 @@ export class PayPlanSection implements OnInit {
 			// this.plansService.cachePlans(this.plans);
 			this.plans.length < 1 ? this.resetPayPlanSection() : (this.selectedPlan = this.plans[0].id);
 			this.isLoading = false;
+			console.log('Retrieved plans');
+			console.log(' -- Breakdown is ', this.breakdown);
 		});
 	}
 
@@ -104,6 +125,7 @@ export class PayPlanSection implements OnInit {
 			});
 		});
 
+		console.log('Result: ', result);
 		return result;
 	}
 
@@ -126,6 +148,7 @@ export class PayPlanSection implements OnInit {
 		this.sideNavOpen = this.sideNavOpen === info.payee ? '' : info.payee;
 		this.noteFilter = '';
 		this.selectedPayee = info.expanded ? info.payee : null;
+		console.log('Selected payee ', this.selectedPayee);
 	}
 
 	setNoteFilter(event) {

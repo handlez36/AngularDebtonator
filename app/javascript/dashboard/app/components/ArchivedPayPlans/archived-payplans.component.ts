@@ -13,8 +13,10 @@ import './archived-payplans.component.scss';
 })
 export class ArchivedPayPlan implements OnInit {
 	public plans: any[] = null;
+	public rawPlans: any[] = null;
 	public isLoading: boolean = false;
 	public currency: any;
+	public focusedPlan: any = null;
 
 	private columns: object = {
 		date: { label: 'Date', width: 'md' },
@@ -28,23 +30,42 @@ export class ArchivedPayPlan implements OnInit {
 
 	ngOnInit() {
 		this.retrieveArchivedPlans();
+		this.plansService.focusedPlan.subscribe(
+			details => {
+				this.focusedPlan = this.findFocusedPlan(details);
+				console.log('Setting focused plan to ', this.focusedPlan);
+			},
+			err => console.log(`Error retrieving focused plan updates: ${err}`),
+		);
+	}
+
+	findFocusedPlan(id) {
+		if (!id) return null;
+
+		const matches = this.rawPlans.filter(plan => `${plan.id}` === `${id}`);
+		return matches && matches[0] ? matches[0] : null;
 	}
 
 	retrieveArchivedPlans() {
 		this.isLoading = true;
 		this.plansService.getPlans(true).subscribe(result => {
 			if (result.data && result.data['payPlans']) {
-				// this.plans = result.data['payPlans'];
+				this.rawPlans = result.data['payPlans'];
 				this.plans = this.formatData(result.data['payPlans']);
 				this.isLoading = false;
 			}
 		});
 	}
 
+	onPlanSelected(event) {
+		console.log(`Archived Payplan captured event `, event);
+	}
+
 	formatData(data) {
 		return data
 			.map(plan => {
 				return {
+					id: plan.id,
 					date: plan.date,
 					card: plan.card.name,
 					amtPaid: plan.payments.reduce(

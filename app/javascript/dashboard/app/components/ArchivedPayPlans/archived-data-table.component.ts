@@ -1,12 +1,16 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import {
 	ITdDataTableColumn,
 	TdDataTableSortingOrder,
 	TdDataTableService,
 	ITdDataTableSortChangeEvent,
+	ITdDataTableRowClickEvent,
 } from '@covalent/core/data-table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IPageChangeEvent, TdPagingBarComponent } from '@covalent/core/paging';
 
+import { ArchivedPlanDetail } from './archived-plan-detail.component';
+import { PlanService } from './../../services/plans.service';
 import templateString from './archived-data-table.component.html';
 import './archived-data-table.component.scss';
 
@@ -35,8 +39,20 @@ export class ArchivedDataTable {
 	public fromRow: any = 1;
 	public currentPage: any = 1;
 	public pageSize: any = 10;
+	public focusedPlan: any;
 
-	constructor(private _dataTableService: TdDataTableService) {}
+	constructor(
+		private _dataTableService: TdDataTableService,
+		private planService: PlanService,
+		public dialog: MatDialog,
+	) {}
+
+	ngOnInit() {
+		this.planService.focusedPlan.subscribe(
+			info => (this.focusedPlan = info),
+			err => console.log(`Error retreiving focused plan update: ${err}`),
+		);
+	}
 
 	ngOnChanges() {
 		this.setDataAttributes();
@@ -78,6 +94,14 @@ export class ArchivedDataTable {
 		this.currentPage = pagingEvent.page;
 		this.pageSize = pagingEvent.pageSize;
 		this.refreshTable();
+	}
+
+	onPlanSelected(plan: ITdDataTableRowClickEvent) {
+		this.planService.setFocusedPlan(plan.row['id']);
+		// const dialogRef = this.dialog.open(ArchivedPlanDetail, {
+		// 	width: '400px',
+		// 	data: { id: plan.row['id'] },
+		// });
 	}
 
 	refreshTable(): void {

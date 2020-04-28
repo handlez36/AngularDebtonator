@@ -1,20 +1,24 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { UserService } from './user.service';
-import * as moment from 'moment';
 import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 
 import * as Queries from './plans-queries';
 import * as ExpenseQueries from './expense-queries';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PlanService {
 	private plans;
+	private _focusedPlan: BehaviorSubject<any> = new BehaviorSubject(null);
+	private focusedPlanObs: Observable<any> = this._focusedPlan.asObservable();
 
 	constructor(private apollo: Apollo, private userService: UserService) {}
+
+	get focusedPlan() {
+		return this.focusedPlanObs;
+	}
 
 	getPlans(archived: boolean = false) {
 		return this.apollo.watchQuery({
@@ -32,6 +36,15 @@ export class PlanService {
 				{ query: ExpenseQueries.retrieveExpenses()['query'] },
 			],
 		});
+	}
+
+	setFocusedPlan(id) {
+		console.log(`ID is ${id}`);
+		this._focusedPlan.next(id);
+	}
+
+	removedFocusedPlan() {
+		this._focusedPlan.next(null);
 	}
 
 	cachePlans(plans) {

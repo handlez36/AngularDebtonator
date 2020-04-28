@@ -14,7 +14,9 @@ import './pay-plan-payee-detail.component.scss';
 			>
 				<div class="payment">
 					<div class="primary_and_subtext">
-						<span class="retailer">{{ payment.expense.retailer }}</span>
+						<span class="retailer">{{
+							payment.expense ? payment.expense.retailer : 'Unknown'
+						}}</span>
 						<span class="how">{{ payment.howToPay }}</span>
 					</div>
 					<div class="amt">
@@ -22,7 +24,10 @@ import './pay-plan-payee-detail.component.scss';
 					</div>
 				</div>
 				<div class="date-row">
-					<div class="date">{{ payment.expense.date | date: 'MMM dd, yyyy' }}</div>
+					<div *ngIf="payment.expense" class="date">
+						{{ payment.expense.date | date: 'MMM dd, yyyy' }}
+					</div>
+					<div *ngIf="!payment.expense" class="date">Unknown</div>
 					<mat-icon
 						class="delete"
 						(click)="paymentService.updatePendingQueue(payment['payplan']['id'], payment['id'])"
@@ -58,6 +63,8 @@ export class PayPlanPayeeDetail implements OnInit {
 	}
 
 	parseData(data) {
+		console.log('Filtering ', data);
+		console.log('Payee ', this.payee);
 		const matches = data.filter(data => data.payee === this.payee);
 		if (matches && matches[0]) {
 			this.payments = matches[0]['payments'].sort((a, b) => {
@@ -66,6 +73,7 @@ export class PayPlanPayeeDetail implements OnInit {
 				return 0;
 			});
 			this.filteredPayments = this.payments;
+			console.log('Filtered payments: ', this.filteredPayments);
 		}
 	}
 
@@ -79,7 +87,8 @@ export class PayPlanPayeeDetail implements OnInit {
 	}
 
 	getDeletionFlaggedClass(payment) {
-		const planId = payment['payplan']['id'];
+		// const planId = payment['payplan']['id'];
+		const planId = this.planData[0]['id'];
 		const isflaggedForDeletion =
 			this.deleteQueue[planId] && this.deleteQueue[planId].includes(payment['id']);
 		return isflaggedForDeletion ? ' flagged' : '';

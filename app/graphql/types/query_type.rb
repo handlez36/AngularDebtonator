@@ -22,8 +22,7 @@ module Types
     def pay_plans(archived:)
       user = context[:current_user]
       all_plans = user.payplans.includes(:card).includes(:payments)
-      # archived ? all_plans.archived : all_plans.current
-      archived ? all_plans.archived.last(10) : all_plans.current
+      archived ? all_plans.archived.last(5) : all_plans.current
     end
 
     # Cards endpoint

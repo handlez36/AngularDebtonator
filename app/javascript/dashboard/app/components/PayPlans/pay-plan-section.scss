@@ -3,84 +3,87 @@ app-pay-plan-section {
 	height: 460px;
 	box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
 		0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-	&.mat-card {
-		padding-left: 0;
-		padding-right: 0;
+	mat-sidenav-container {
+		height: 100%;
+		mat-sidenav {
+			width: 250px;
+		}
+		mat-sidenav-content section {
+			height: 100%;
+		}
 	}
-	.mat-card-header {
-		padding-left: 16px;
-		padding-right: 16px;
-		flex-direction: column;
-		.mat-card-header-text {
-			margin-left: 0;
-		}
-		.options-summary {
-			padding: 2vh 1vw;
-			background-color: silver;
-			color: white;
-			span {
-				cursor: pointer;
+	mat-card {
+		height: 100%;
+		.mat-card-header {
+			padding-left: 16px;
+			padding-right: 16px;
+			flex-direction: column;
+			.mat-card-header-text {
+				margin-left: 0;
 			}
-		}
-		.filter-bar .mat-tab-label {
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			.mat-tab-label-content {
+			.options-summary {
+				padding: 2vh 1vw;
+				background-color: silver;
+				color: white;
+				span {
+					cursor: pointer;
+				}
+			}
+			.filter-bar .mat-tab-label {
 				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				height: 5vh;
+				flex-direction: row;
+				justify-content: flex-start;
+				.mat-tab-label-content {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-start;
+					height: 5vh;
+				}
+				.plan-label {
+					font-size: 14px;
+					font-weight: 600;
+				}
+				.plan-total {
+					font-size: 16px;
+					font-weight: 600;
+					color: forestgreen;
+				}
+				mat-icon {
+					font-size: 20px;
+					color: darkblue;
+				}
+				.plan-total.pending-deletes {
+					color: red;
+					text-decoration: line-through;
+				}
+				.plan-total-post-delete {
+					font-size: 16px;
+					font-weight: 600;
+					color: darkblue;
+				}
 			}
-			.plan-label {
-				font-size: 14px;
+		}
+		.mat-card-content {
+			padding: 8px 16px 8px 16px;
+			.filter-section {
+				height: 200px;
+				overflow-y: auto;
+			}
+			.pay-plan-payee-summary {
+				margin-top: 8px;
+			}
+			.lock-plan {
+				margin-left: 0.5em;
+				cursor: pointer;
+				mat-icon {
+					width: 14px;
+					height: 14px;
+					font-size: 14px;
+				}
+				font-size: 12px;
 				font-weight: 600;
-			}
-			.plan-total {
-				font-size: 16px;
-				font-weight: 600;
-				color: forestgreen;
-			}
-			mat-icon {
-				font-size: 20px;
-				color: darkblue;
-			}
-			.plan-total.pending-deletes {
 				color: red;
-				text-decoration: line-through;
-			}
-			.plan-total-post-delete {
-				font-size: 16px;
-				font-weight: 600;
-				color: darkblue;
 			}
 		}
-	}
-	.mat-card-content {
-		padding: 8px 16px 8px 16px;
-		.pay-plan-payee-summary {
-			margin-top: 8px;
-		}
-		.lock-plan {
-			margin-left: 0.5em;
-			cursor: pointer;
-			mat-icon {
-				width: 14px;
-				height: 14px;
-				font-size: 14px;
-			}
-			font-size: 12px;
-			font-weight: 600;
-			color: red;
-		}
-	}
-	// }
-	mat-sidenav {
-		width: 250px;
-	}
-	.filter-section {
-		height: 200px;
-		// overflow-y: scroll;
-		overflow-y: auto;
 	}
 }

@@ -18,6 +18,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 import { CovalentDataTableModule } from '@covalent/core/data-table';
 import { CovalentTabSelectModule } from '@covalent/core/tab-select';
@@ -62,6 +63,7 @@ import { SetupManageFooter } from './components/Setup/setup-manage-footer.compon
 import { SetupManageContent } from './components/Setup/setup-manage-content.component';
 import { ArchivedPayPlan } from './components/ArchivedPayPlans/archived-payplans.component';
 import { ArchivedDataTable } from './components/ArchivedPayPlans/archived-data-table.component';
+import { ArchivedPlanDetail } from './components/ArchivedPayPlans/archived-plan-detail.component';
 
 /** Forms */
 import { ExpenseForm } from './components/Forms/expense-form.component';
@@ -131,6 +133,7 @@ const appRoutes: Routes = [
 		SetupManageFooter,
 		ArchivedPayPlan,
 		ArchivedDataTable,
+		ArchivedPlanDetail,
 	],
 	imports: [
 		RouterModule.forRoot(appRoutes, { enableTracing: false }),
@@ -160,6 +163,7 @@ const appRoutes: Routes = [
 		MatSidenavModule,
 		MatInputModule,
 		MatListModule,
+		MatExpansionModule,
 		CovalentLoadingModule,
 		ApolloModule,
 		HttpLinkModule,
@@ -167,6 +171,7 @@ const appRoutes: Routes = [
 	entryComponents: [
 		ExpenseForm,
 		PaymentForm,
+		ArchivedPlanDetail,
 		TdDynamicDatepickerComponent,
 		TdDynamicInputComponent,
 		TdDynamicSelectComponent,

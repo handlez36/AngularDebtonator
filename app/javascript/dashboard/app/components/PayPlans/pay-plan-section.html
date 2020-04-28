@@ -1,5 +1,4 @@
 <mat-sidenav-container>
-	<!-- <mat-sidenav #details position="end" [opened]="sideNavOpen" mode="side"> -->
 	<mat-sidenav #details position="end" [opened]="sideNavOpen != ''" mode="side">
 		<app-pay-plan-payee-detail
 			*ngIf="sideNavOpen"
@@ -12,7 +11,7 @@
 		<mat-card class="pay-plan-section">
 			<ng-template
 				class="loader"
-				tdLoading="pay-plan-loader"
+				[tdLoading]="'pay-plan-loader' + (archiveMode ? '-archived' : '')"
 				tdLoadingColor="warn"
 				tdLoadingType="linear"
 				[tdLoadingUntil]="!isLoading"
@@ -56,7 +55,10 @@
 			</mat-card-header>
 			<mat-card-content>
 				<div *ngIf="breakdown && selectedPlan !== '' && selectedPlan !== null">
-					<span class="lock-plan flex-row" (click)="onConfirm(selectedPlan)"
+					<span
+						*ngIf="focusedPlan === null"
+						class="lock-plan flex-row"
+						(click)="onConfirm(selectedPlan)"
 						><mat-icon>lock</mat-icon>Lock this plan</span
 					>
 					<app-plan-payee-summary

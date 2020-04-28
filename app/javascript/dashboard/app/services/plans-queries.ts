@@ -17,18 +17,18 @@ export const retrievePlans = () => {
 						id
 						amtPaid
 						date
-						payplan {
-							id
-						}
+						# payplan {
+						# 	id
+						# }
 						expense {
 							id
 							retailer
 							date
 						}
-						card {
-							id
-							name
-						}
+						# card {
+						# 	id
+						# 	name
+						# }
 						responsibleParty {
 							id
 							name

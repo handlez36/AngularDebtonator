@@ -1,5 +1,7 @@
-<div class="archived-payplan">
-	<mat-card class="pay-plan-section">
+<!-- <div [class]="'archived-payplan' + focusedPlan ? 'detail-view' : ''"> -->
+<div [class]="'archived-payplan' + (focusedPlan ? ' detail-view' : '')">
+	<app-pay-plan-section *ngIf="!!focusedPlan" [focusedPlan]="focusedPlan"></app-pay-plan-section>
+	<mat-card *ngIf="focusedPlan === null" class="pay-plan-section">
 		<ng-template
 			class="loader"
 			tdLoading="archived-pay-plan-loader"
@@ -9,13 +11,25 @@
 		></ng-template>
 		<mat-card-header>
 			<mat-card-title>
-				Archived Payment Plans
+				<div class="flex-row plan-label">
+					<mat-icon *ngIf="!!focusedPlan" (click)="plansService.removedFocusedPlan()"
+						>keyboard_arrow_left</mat-icon
+					>&nbsp;Archived Payment Plans
+				</div>
 			</mat-card-title>
-			<mat-card-subtitle *ngIf="!!plans"> {{ plans.length }} archived plans </mat-card-subtitle>
+			<mat-card-subtitle *ngIf="!!plans"
+				>&nbsp;Last {{ plans.length }} archived plans
+			</mat-card-subtitle>
 		</mat-card-header>
 		<div>
 			<mat-card-content>
-				<app-archived-data-table [plans]="plans" [columnLabels]="columns"></app-archived-data-table>
+				<app-archived-data-table
+					*ngIf="focusedPlan === null"
+					[plans]="plans"
+					[columnLabels]="columns"
+				></app-archived-data-table>
+				<!-- <div *ngIf="!!focusedPlan">Detail View</div> -->
+				<app-archived-plan-detail *ngIf="!!focusedPlan"></app-archived-plan-detail>
 			</mat-card-content>
 		</div>
 	</mat-card>

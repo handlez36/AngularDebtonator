@@ -46,15 +46,16 @@ export class PayPlanSection implements OnInit {
 	ngOnChanges() {
 		if (!!this.focusedPlan) {
 			const plan = this.focusedPlan;
-			console.log('Plan before breakdown: ', plan);
-			if (!this.breakdown) this.breakdown = {};
-			this.plans = [];
-			this.planIds.push(plan['id']);
-			this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
+
+			// if (!this.breakdown) this.breakdown = {};
+			// this.plans = [];
+			this.plans.push(plan);
+			this.processPlan(plan);
+			// this.planIds.push(plan['id']);
+			// this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 			this.archiveMode = true;
 			this.selectedPlan = plan.id;
 			this.isLoading = false;
-			console.log('Breakdown: ', this.breakdown);
 		}
 	}
 
@@ -63,18 +64,24 @@ export class PayPlanSection implements OnInit {
 		this.plansService.getPlans().subscribe(result => {
 			this.plans = result.data['payPlans'];
 			this.plans.forEach(plan => {
-				if (!this.breakdown) {
-					this.breakdown = {};
-				}
-				this.planIds.push(plan['id']);
-				this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
+				this.processPlan(plan);
+				// if (!this.breakdown) {
+				// 	this.breakdown = {};
+				// }
+				// this.planIds.push(plan['id']);
+				// this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 			});
 			// this.plansService.cachePlans(this.plans);
 			this.plans.length < 1 ? this.resetPayPlanSection() : (this.selectedPlan = this.plans[0].id);
 			this.isLoading = false;
-			console.log('Retrieved plans');
-			console.log(' -- Breakdown is ', this.breakdown);
 		});
+	}
+
+	processPlan(plan) {
+		if (!this.breakdown) this.breakdown = {};
+
+		this.planIds.push(plan['id']);
+		this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 	}
 
 	getPlanLabel(plan) {

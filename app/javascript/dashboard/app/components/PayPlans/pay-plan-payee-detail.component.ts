@@ -29,6 +29,7 @@ import './pay-plan-payee-detail.component.scss';
 					</div>
 					<div *ngIf="!payment.expense" class="date">Unknown</div>
 					<mat-icon
+						*ngIf="!archiveMode"
 						class="delete"
 						(click)="paymentService.updatePendingQueue(payment['payplan']['id'], payment['id'])"
 						>delete</mat-icon
@@ -42,6 +43,7 @@ export class PayPlanPayeeDetail implements OnInit {
 	@Input() planData: any[];
 	@Input() payee: string;
 	@Input() noteFilter: string = '';
+	@Input() archiveMode: boolean = false;
 
 	public payments: any[] = [];
 	public filteredPayments: any[] = [];

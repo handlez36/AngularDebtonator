@@ -5,10 +5,11 @@
 			[planData]="breakdown[selectedPlan]"
 			[payee]="sideNavOpen"
 			[noteFilter]="noteFilter"
+			[archiveMode]="archiveMode"
 		></app-pay-plan-payee-detail>
 	</mat-sidenav>
 	<section>
-		<mat-card class="pay-plan-section">
+		<mat-card [class]="'pay-plan-section' + (archiveMode ? ' archived' : '')">
 			<ng-template
 				class="loader"
 				[tdLoading]="'pay-plan-loader' + (archiveMode ? '-archived' : '')"
@@ -18,7 +19,10 @@
 			></ng-template>
 			<mat-card-header>
 				<mat-card-title>
-					Payment Plans
+					<mat-icon *ngIf="archiveMode" (click)="plansService.removedFocusedPlan()"
+						>keyboard_arrow_left</mat-icon
+					>
+					{{ archiveMode ? 'Details' : 'Payment Plan' }}
 				</mat-card-title>
 				<mat-card-subtitle>
 					{{ plans.length + (plans.length > 1 ? ' plans' : ' plan')}}

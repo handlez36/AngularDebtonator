@@ -47,12 +47,8 @@ export class PayPlanSection implements OnInit {
 		if (!!this.focusedPlan) {
 			const plan = this.focusedPlan;
 
-			// if (!this.breakdown) this.breakdown = {};
-			// this.plans = [];
 			this.plans.push(plan);
 			this.processPlan(plan);
-			// this.planIds.push(plan['id']);
-			// this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
 			this.archiveMode = true;
 			this.selectedPlan = plan.id;
 			this.isLoading = false;
@@ -60,18 +56,9 @@ export class PayPlanSection implements OnInit {
 	}
 
 	retrievePlans() {
-		// const userId = this.userService.getUserId();
 		this.plansService.getPlans().subscribe(result => {
 			this.plans = result.data['payPlans'];
-			this.plans.forEach(plan => {
-				this.processPlan(plan);
-				// if (!this.breakdown) {
-				// 	this.breakdown = {};
-				// }
-				// this.planIds.push(plan['id']);
-				// this.breakdown[plan['id']] = this.formatPayeeBreakdown(plan);
-			});
-			// this.plansService.cachePlans(this.plans);
+			this.plans.forEach(plan => this.processPlan(plan));
 			this.plans.length < 1 ? this.resetPayPlanSection() : (this.selectedPlan = this.plans[0].id);
 			this.isLoading = false;
 		});

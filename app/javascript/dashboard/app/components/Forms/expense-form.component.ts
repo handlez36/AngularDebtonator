@@ -10,6 +10,7 @@ import { AbstractControl, FormControl } from '@angular/forms';
 import * as moment from 'moment';
 
 import * as Fields from './Fields';
+import * as Validators from './../../utils/validators';
 import { ExpenseService } from './../../services/expense.service';
 import { UserService } from './../../services/user.service';
 import { TABLE_MODE } from '../../utils/constants';
@@ -41,16 +42,7 @@ export class ExpenseForm {
 
 	createFormElements(expense, mode): ITdDynamicElementConfig[] {
 		let formElements = [];
-		const amtTooLowValidation = [
-			{
-				validator: control => {
-					return mode === TABLE_MODE.EDIT &&
-						parseFloat(control.value) < parseFloat(expense.amtPending) + parseFloat(expense.amtPaid)
-						? { tooLow: true }
-						: undefined;
-				},
-			},
-		];
+		const amtTooLowValidation = [Validators.amtTooLowValidation(expense, mode === TABLE_MODE.EDIT)];
 
 		formElements = [
 			Fields.DateField(

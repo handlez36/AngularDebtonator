@@ -22,6 +22,7 @@ export const AmountField = (name, label, defaultVal, additionalValidations) => {
 		validators = validators.concat(additionalValidations);
 	}
 
+	console.log('Validations are ', validators);
 	return {
 		name,
 		label,

@@ -1,12 +1,4 @@
-import {
-	Component,
-	ViewChildren,
-	OnInit,
-	Inject,
-	Output,
-	EventEmitter,
-	QueryList,
-} from '@angular/core';
+import { Component, ViewChildren, Inject, QueryList } from '@angular/core';
 import { TdDynamicFormsComponent } from '@covalent/dynamic-forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
@@ -15,8 +7,8 @@ import * as moment from 'moment';
 import * as Fields from './Fields';
 import { Currency } from './../../services/currency';
 import { PaymentService } from './../../services/payment.service';
-import { UserService } from './../../services/user.service';
 import { Utils, ApiUtils, DATE_FORMATS } from './../../services/utils.service';
+import * as Validators from './../../utils/validators';
 import templateStr from './payment-form.component.html';
 import './payment-form.component.scss';
 
@@ -63,19 +55,22 @@ export class PaymentForm {
 	createFormElements = data => {
 		const { expenses } = data;
 		return expenses.reduce((formElements, expense) => {
+			const amtRemainingValidation = Validators.paymentAmtInvalid(expense);
+			const paymentDateValidation = Validators.paymentDateTooEarly(expense);
+
 			if (!formElements[expense.id]) formElements[expense.id] = [];
 
 			formElements[expense.id] = [
 				Fields.HiddenInputField('expenseId', '', expense.id),
-				Fields.DateField('date', 'Payment Date', moment()),
-				Fields.AmountField('amtPaid', 'Pay How Much', expense.amtRemaining, null),
+				Fields.DateField('date', 'Payment Date', moment(), [paymentDateValidation]),
+				Fields.AmountField('amtPaid', 'Pay How Much', expense.amtRemaining, [
+					amtRemainingValidation,
+				]),
 				Fields.SelectField(
 					'responsibleParty',
 					"Who's paying",
 					data.payees,
 					this.formatSelectedOption(expense['responsibleParty']),
-					// data.payees.indexOf(expense.responsibleParty) || 0,
-					// data.payees,
 				),
 				Fields.TextAreaField('howToPay', 'How to Pay?'),
 			];
@@ -102,7 +97,6 @@ export class PaymentForm {
 		const matches = this.inputData.expenses.filter(item => item.id === id);
 		if (!matches || matches.length < 0) return '';
 
-		console.log('Forms: ', this.forms);
 		const expense = matches[0];
 		return `${this.currency.subtract(expense.amtRemaining, 0)} left!!!`;
 	}
@@ -148,7 +142,6 @@ export class PaymentForm {
 	}
 
 	handleResponse(response) {
-		console.log('Response: ', response);
 		if (response.success === 'success') {
 			this.dialogRef.close();
 		} else if (response.errors) {

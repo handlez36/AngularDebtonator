@@ -1,4 +1,7 @@
 {
+	"scripts": {
+		"start": "node dashboard.js"
+	},
 	"dependencies": {
 		"@angular/animations": "^9.1.0",
 		"@angular/cdk": "^9.2.0",

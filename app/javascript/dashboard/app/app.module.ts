@@ -93,7 +93,8 @@ export function getFactoryParams(httpLink) {
 		}),
 	};
 	const link = httpLink.create({
-		uri: 'http://localhost:5000/graphql',
+		// uri: 'http://localhost:5000/graphql',
+		uri: 'https://angular-debtonator.herokuapp.com:5000/graphql',
 		...httpOptions,
 	});
 	const cache = new InMemoryCache();

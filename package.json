@@ -1,6 +1,9 @@
 {
 	"scripts": {
-		"start": "node javascript/packs/dashboard.js"
+		"ng": "ng",
+		"start": "ls && ls dist && node dist/dashboard.js",
+		"build": "ng build",
+		"postinstall": "ng build --output-path dist"
 	},
 	"dependencies": {
 		"@angular/animations": "^9.1.0",

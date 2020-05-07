@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"start": "ls && ls dist && node dashboard.js"
+		"start": "ls && node public/packs/js/dashboard-*.js"
 	},
 	"dependencies": {
 		"@angular/animations": "^9.1.0",

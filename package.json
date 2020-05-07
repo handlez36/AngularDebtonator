@@ -1,6 +1,7 @@
 {
 	"scripts": {
-		"start": "ls && node public/packs/js/dashboard-*.js"
+		"start": "ls && node dist/dashboard-*.js",
+		"heroku-postbuild": "ng build --prod"
 	},
 	"dependencies": {
 		"@angular/animations": "^9.1.0",

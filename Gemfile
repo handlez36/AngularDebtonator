@@ -64,7 +64,7 @@ gem 'will_paginate', '3.1.0'
 
 gem 'simple-spreadsheet'
 
-gem 'carrierwave', '~> 2.0'
+gem 'carrierwave', '~> 2.1'
 
 gem 'pry'
 
